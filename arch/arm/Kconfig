@@ -42,6 +42,7 @@ config ARM
 	select HAVE_BPF_JIT if NET
 	select FAST_LANE
 	select FAST_LANE_ARM
+	select GENERIC_SMP_IDLE_THREAD
 	help
 	  The ARM series is a line of low-power-consumption RISC chip designs
 	  licensed by ARM Ltd and targeted at embedded applications and
