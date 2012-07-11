@@ -2308,7 +2308,6 @@ unsigned long this_cpu_load(void)
 	return this->cpu_load[0];
 }
 
-
 #ifdef CONFIG_INTELLI_HOTPLUG
 unsigned long avg_nr_running(void)
 {
