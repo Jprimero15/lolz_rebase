@@ -2331,18 +2331,6 @@ unsigned long avg_nr_running(void)
 }
 EXPORT_SYMBOL(avg_nr_running);
 
-unsigned long get_avg_nr_running(unsigned int cpu)
-{
-        struct rq *q;
-
-        if (cpu >= nr_cpu_ids)
-                return 0;
-
-        q = cpu_rq(cpu);
-
-        return q->ave_nr_running;
-}
-
 unsigned long avg_cpu_nr_running(unsigned int cpu)
 {
 	unsigned int seqcnt, ave_nr_running;
@@ -2375,6 +2363,34 @@ unsigned long this_cpu_loadx(int i)
 	return this->cpu_load[i];
 }
 #endif /* CONFIG_RUNTIME_COMPCACHE */
+
+u64 nr_running_integral(unsigned int cpu)
+{
+        unsigned int seqcnt;
+        u64 integral;
+        struct rq *q;
+
+        if (cpu >= nr_cpu_ids)
+                return 0;
+
+        q = cpu_rq(cpu);
+
+        /*
+         * Update average to avoid reading stalled value if there were
+         * no run-queue changes for a long time. On the other hand if
+         * the changes are happening right now, just read current value
+         * directly.
+         */
+
+        seqcnt = read_seqcount_begin(&q->ave_seqcnt);
+        integral = do_nr_running_integral(q);
+        if (read_seqcount_retry(&q->ave_seqcnt, seqcnt)) {
+                read_seqcount_begin(&q->ave_seqcnt);
+                integral = q->nr_running_integral;
+        }
+
+        return integral;
+}
 
 /*
  * Global load-average calculations
