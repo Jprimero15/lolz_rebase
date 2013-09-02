@@ -970,7 +970,6 @@ static inline void inc_nr_running(struct rq *rq)
 #ifdef CONFIG_INTELLI_HOTPLUG
 	struct nr_stats_s *nr_stats = &per_cpu(runqueue_stats, rq->cpu);
 #endif
-	sched_update_nr_prod(cpu_of(rq), rq->nr_running, true);
 #ifdef CONFIG_INTELLI_HOTPLUG
 	write_seqcount_begin(&nr_stats->ave_seqcnt);
 	nr_stats->ave_nr_running = do_avg_nr_running(rq);
@@ -987,7 +986,6 @@ static inline void dec_nr_running(struct rq *rq)
 #ifdef CONFIG_INTELLI_HOTPLUG
 	struct nr_stats_s *nr_stats = &per_cpu(runqueue_stats, rq->cpu);
 #endif
-	sched_update_nr_prod(cpu_of(rq), rq->nr_running, false);
 #ifdef CONFIG_INTELLI_HOTPLUG
 	write_seqcount_begin(&nr_stats->ave_seqcnt);
 	nr_stats->ave_nr_running = do_avg_nr_running(rq);
