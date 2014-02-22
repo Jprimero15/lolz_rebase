@@ -3329,13 +3329,13 @@ static int taiko_hphl_dac_event(struct snd_soc_dapm_widget *w,
 						 WCD9XXX_CLSH_REQ_ENABLE,
 						 WCD9XXX_CLSH_EVENT_PRE_DAC);
 
-		/*ret = wcd9xxx_mbhc_get_impedance(&taiko_p->mbhc,
+		ret = wcd9xxx_mbhc_get_impedance(&taiko_p->mbhc,
 					&impedl, &impedr);
-		if (!ret) */
-		wcd9xxx_clsh_imped_config(codec, 0);
-		/* else
-			dev_err(codec->dev, "Failed to get mbhc impedance %d\n",
-						ret); */
+		if (!ret)
+			wcd9xxx_clsh_imped_config(codec, impedl);
+		//else
+		//	dev_err(codec->dev, "Failed to get mbhc impedance %d\n",
+		//				ret);
 		break;
 	case SND_SOC_DAPM_POST_PMD:
 		snd_soc_update_bits(codec, TAIKO_A_CDC_CLK_RDAC_CLK_EN_CTL,
@@ -4349,7 +4349,7 @@ int taiko_write(struct snd_soc_codec *codec, unsigned int reg,
 EXPORT_SYMBOL(taiko_write);
 #endif
 
-#ifndef CONFIG_SOUND_CONTROL_HAX_3_GPL 
+#ifndef CONFIG_SOUND_CONTROL_HAX_3_GPL
 static
 #endif
 unsigned int taiko_read(struct snd_soc_codec *codec,
