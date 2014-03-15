@@ -26,6 +26,7 @@
 #include <linux/slab.h>
 #include <linux/input.h>
 #include <linux/time.h>
+#include <linux/cpu_boost.h>
 
 struct cpu_sync {
 	struct task_struct *thread;
@@ -38,6 +39,7 @@ struct cpu_sync {
 	int src_cpu;
 	unsigned int boost_min;
 	unsigned int input_boost_min;
+	unsigned int task_load;
 	unsigned int input_boost_freq;
 };
 
@@ -49,13 +51,20 @@ module_param(boost_ms, uint, 0644);
 static unsigned int sync_threshold;
 module_param(sync_threshold, uint, 0644);
 
-static unsigned int input_boost_enabled = 0;
+static unsigned int input_boost_enabled = 1;
 module_param(input_boost_enabled, uint, 0644);
 
 static unsigned int input_boost_ms = 40;
 module_param(input_boost_ms, uint, 0644);
 
+static unsigned int migration_load_threshold = 15;
+module_param(migration_load_threshold, uint, 0644);
+
+static bool load_based_syncs;
+module_param(load_based_syncs, bool, 0644);
+
 static struct delayed_work input_boost_rem;
+
 static u64 last_input_time;
 
 static struct kthread_work input_boost_work;
@@ -131,7 +140,8 @@ module_param_cb(input_boost_freq, &param_ops_input_boost_freq, NULL, 0644);
  * again each time the CPU comes back up. We can use CPUFREQ_START to figure
  * out a CPU is coming online instead of registering for hotplug notifiers.
  */
-static int boost_adjust_notify(struct notifier_block *nb, unsigned long val, void *data)
+static int boost_adjust_notify(struct notifier_block *nb, unsigned long val,
+				void *data)
 {
 	struct cpufreq_policy *policy = data;
 	unsigned int cpu = policy->cpu;
@@ -144,6 +154,18 @@ static int boost_adjust_notify(struct notifier_block *nb, unsigned long val, voi
 	case CPUFREQ_ADJUST:
 		if (!b_min && !ib_min)
 			break;
+
+		ib_min = min((s->input_boost_min == UINT_MAX ?
+			policy->max : s->input_boost_min), policy->max);
+
+		/*
+		 * If we're not resetting the boost and if the new boosted freq
+		 * is below or equal to the current min freq, bail early
+		 */
+		if (ib_min) {
+			if (ib_min <= policy->min)
+				break;
+		}
 
 		min = max(b_min, ib_min);
 		min = min(min, policy->max);
@@ -194,6 +216,28 @@ static void update_policy_online(void)
 	put_online_cpus();
 }
 
+void do_input_boost_max()
+{
+	unsigned int i;
+	struct cpu_sync *i_sync_info;
+
+	if (!cpu_boost_worker_thread)
+		return;
+
+ 	cancel_delayed_work_sync(&input_boost_rem);
+
+ 	for_each_possible_cpu(i) {
+		i_sync_info = &per_cpu(sync_info, i);
+		i_sync_info->input_boost_min = UINT_MAX;
+	}
+
+ 	update_policy_online();
+
+ 	queue_delayed_work(system_power_efficient_wq,
+		&input_boost_rem, msecs_to_jiffies(
+			input_boost_ms < 1500 ? 1500 : input_boost_ms));
+}
+
 static void do_input_boost_rem(struct work_struct *work)
 {
 	unsigned int i;
@@ -218,10 +262,11 @@ static int boost_mig_sync_thread(void *data)
 	struct cpufreq_policy dest_policy;
 	struct cpufreq_policy src_policy;
 	unsigned long flags;
+	unsigned int req_freq;
 
-	while(1) {
-		wait_event_interruptible(s->sync_wq, s->pending ||
-					kthread_should_stop());
+	while (1) {
+		wait_event_interruptible(s->sync_wq,
+					s->pending || kthread_should_stop());
 
 		if (kthread_should_stop())
 			break;
@@ -239,33 +284,40 @@ static int boost_mig_sync_thread(void *data)
 		if (ret)
 			continue;
 
-		if (dest_policy.cur >= src_policy.cur ) {
-			pr_debug("No sync. CPU%d@%dKHz >= CPU%d@%dKHz\n",
-				 dest_cpu, dest_policy.cur, src_cpu, src_policy.cur);
+		req_freq = max((dest_policy.max * s->task_load) / 100,
+							src_policy.cur);
+
+		if (req_freq <= dest_policy.cpuinfo.min_freq) {
+			pr_debug("No sync. Sync Freq:%u\n", req_freq);
 			continue;
 		}
 
-		if (sync_threshold && (dest_policy.cur >= sync_threshold))
-			continue;
+		if (sync_threshold)
+			req_freq = min(sync_threshold, req_freq);
 
 		cancel_delayed_work_sync(&s->boost_rem);
-		if (sync_threshold) {
-			if (src_policy.cur >= sync_threshold)
-				s->boost_min = sync_threshold;
-			else
-				s->boost_min = src_policy.cur;
-		} else {
-			s->boost_min = src_policy.cur;
-		}
+
+		s->boost_min = req_freq;
+
 		/* Force policy re-evaluation to trigger adjust notifier. */
 		get_online_cpus();
+		if (cpu_online(src_cpu))
+			/*
+			 * Send an unchanged policy update to the source
+			 * CPU. Even though the policy isn't changed from
+			 * its existing boosted or non-boosted state
+			 * notifying the source CPU will let the governor
+			 * know a boost happened on another CPU and that it
+			 * should re-evaluate the frequency at the next timer
+			 * event without interference from a min sample time.
+			 */
+			cpufreq_update_policy(src_cpu);
 		if (cpu_online(dest_cpu)) {
 			cpufreq_update_policy(dest_cpu);
 			queue_delayed_work_on(dest_cpu, system_power_efficient_wq,
 				&s->boost_rem, msecs_to_jiffies(boost_ms));
 		} else {
 			s->boost_min = 0;
-			pr_debug("Resetting boost_min to 0\n");
 		}
 		put_online_cpus();
 	}
@@ -274,18 +326,32 @@ static int boost_mig_sync_thread(void *data)
 }
 
 static int boost_migration_notify(struct notifier_block *nb,
-				unsigned long dest_cpu, void *arg)
+				unsigned long unused, void *arg)
 {
+	struct migration_notify_data *mnd = arg;
 	unsigned long flags;
-	struct cpu_sync *s = &per_cpu(sync_info, dest_cpu);
+	struct cpu_sync *s = &per_cpu(sync_info, mnd->dest_cpu);
+
+	if (load_based_syncs && (mnd->load <= migration_load_threshold))
+		return NOTIFY_OK;
+
+	if (load_based_syncs && ((mnd->load < 0) || (mnd->load > 100))) {
+		pr_err("cpu-boost:Invalid load: %d\n", mnd->load);
+		return NOTIFY_OK;
+	}
 
 	if (!boost_ms)
 		return NOTIFY_OK;
 
-	pr_debug("Migration: CPU%d --> CPU%d\n", (int) arg, (int) dest_cpu);
+	/* Avoid deadlock in try_to_wake_up() */
+	if (s->thread == current)
+		return NOTIFY_OK;
+
+	pr_debug("Migration: CPU%d --> CPU%d\n", mnd->src_cpu, mnd->dest_cpu);
 	spin_lock_irqsave(&s->lock, flags);
 	s->pending = true;
-	s->src_cpu = (int) arg;
+	s->src_cpu = mnd->src_cpu;
+	s->task_load = load_based_syncs ? mnd->load : 0;
 	spin_unlock_irqrestore(&s->lock, flags);
 	/*
 	* Avoid issuing recursive wakeup call, as sync thread itself could be
