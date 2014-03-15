@@ -18,7 +18,6 @@
 #include <linux/notifier.h>
 #include <linux/cpufreq.h>
 #include <linux/cpu.h>
-#include <linux/kthread.h>
 #include <linux/sched.h>
 #include <linux/jiffies.h>
 #include <linux/kthread.h>
@@ -38,10 +37,17 @@ struct cpu_sync {
 	int src_cpu;
 	unsigned int boost_min;
 	unsigned int input_boost_min;
+	unsigned int task_load;
 	unsigned int input_boost_freq;
 };
 
 static DEFINE_PER_CPU(struct cpu_sync, sync_info);
+static struct workqueue_struct *cpu_boost_wq;
+
+static struct work_struct input_boost_work;
+
+bool cpuboost_enable = true;
+module_param(cpuboost_enable, bool, 0644);
 
 static unsigned int boost_ms;
 module_param(boost_ms, uint, 0644);
@@ -55,12 +61,16 @@ module_param(input_boost_enabled, uint, 0644);
 static unsigned int input_boost_ms = 40;
 module_param(input_boost_ms, uint, 0644);
 
-static struct delayed_work input_boost_rem;
-static u64 last_input_time;
+static unsigned int migration_load_threshold = 15;
+module_param(migration_load_threshold, uint, 0644);
 
-static struct kthread_work input_boost_work;
-static struct kthread_worker cpu_boost_worker;
-static struct task_struct *cpu_boost_worker_thread;
+static bool load_based_syncs;
+module_param(load_based_syncs, bool, 0644);
+
+static struct delayed_work input_boost_rem;
+
+static u64 last_input_time;
+#define MIN_INPUT_INTERVAL (150 * USEC_PER_MSEC)
 
 static int set_input_boost_freq(const char *buf, const struct kernel_param *kp)
 {
@@ -131,7 +141,8 @@ module_param_cb(input_boost_freq, &param_ops_input_boost_freq, NULL, 0644);
  * again each time the CPU comes back up. We can use CPUFREQ_START to figure
  * out a CPU is coming online instead of registering for hotplug notifiers.
  */
-static int boost_adjust_notify(struct notifier_block *nb, unsigned long val, void *data)
+static int boost_adjust_notify(struct notifier_block *nb, unsigned long val,
+				void *data)
 {
 	struct cpufreq_policy *policy = data;
 	unsigned int cpu = policy->cpu;
@@ -139,6 +150,8 @@ static int boost_adjust_notify(struct notifier_block *nb, unsigned long val, voi
 	unsigned int b_min = s->boost_min;
 	unsigned int ib_min = s->input_boost_min;
 	unsigned int min;
+
+	if (!cpuboost_enable) return NOTIFY_OK;
 
 	switch (val) {
 	case CPUFREQ_ADJUST:
@@ -218,10 +231,11 @@ static int boost_mig_sync_thread(void *data)
 	struct cpufreq_policy dest_policy;
 	struct cpufreq_policy src_policy;
 	unsigned long flags;
+	unsigned int req_freq;
 
-	while(1) {
-		wait_event_interruptible(s->sync_wq, s->pending ||
-					kthread_should_stop());
+	while (1) {
+		wait_event_interruptible(s->sync_wq,
+					s->pending || kthread_should_stop());
 
 		if (kthread_should_stop())
 			break;
@@ -239,29 +253,26 @@ static int boost_mig_sync_thread(void *data)
 		if (ret)
 			continue;
 
-		if (dest_policy.cur >= src_policy.cur ) {
-			pr_debug("No sync. CPU%d@%dKHz >= CPU%d@%dKHz\n",
-				 dest_cpu, dest_policy.cur, src_cpu, src_policy.cur);
+		req_freq = max((dest_policy.max * s->task_load) / 100,
+							src_policy.cur);
+
+		if (req_freq <= dest_policy.cpuinfo.min_freq) {
+			pr_debug("No sync. Sync Freq:%u\n", req_freq);
 			continue;
 		}
 
-		if (sync_threshold && (dest_policy.cur >= sync_threshold))
-			continue;
+		if (sync_threshold)
+			req_freq = min(sync_threshold, req_freq);
 
 		cancel_delayed_work_sync(&s->boost_rem);
-		if (sync_threshold) {
-			if (src_policy.cur >= sync_threshold)
-				s->boost_min = sync_threshold;
-			else
-				s->boost_min = src_policy.cur;
-		} else {
-			s->boost_min = src_policy.cur;
-		}
+
+		s->boost_min = req_freq;
+
 		/* Force policy re-evaluation to trigger adjust notifier. */
 		get_online_cpus();
 		if (cpu_online(dest_cpu)) {
 			cpufreq_update_policy(dest_cpu);
-			queue_delayed_work_on(dest_cpu, system_power_efficient_wq,
+			queue_delayed_work_on(dest_cpu, cpu_boost_wq,
 				&s->boost_rem, msecs_to_jiffies(boost_ms));
 		} else {
 			s->boost_min = 0;
@@ -274,18 +285,34 @@ static int boost_mig_sync_thread(void *data)
 }
 
 static int boost_migration_notify(struct notifier_block *nb,
-				unsigned long dest_cpu, void *arg)
+				unsigned long unused, void *arg)
 {
+	struct migration_notify_data *mnd = arg;
 	unsigned long flags;
-	struct cpu_sync *s = &per_cpu(sync_info, dest_cpu);
+	struct cpu_sync *s = &per_cpu(sync_info, mnd->dest_cpu);
+
+	if (load_based_syncs && (mnd->load <= migration_load_threshold))
+		return NOTIFY_OK;
+
+	if (load_based_syncs && ((mnd->load < 0) || (mnd->load > 100))) {
+		pr_err("cpu-boost:Invalid load: %d\n", mnd->load);
+		return NOTIFY_OK;
+	}
+
+	if (!cpuboost_enable) return NOTIFY_OK;
 
 	if (!boost_ms)
 		return NOTIFY_OK;
 
-	pr_debug("Migration: CPU%d --> CPU%d\n", (int) arg, (int) dest_cpu);
+	/* Avoid deadlock in try_to_wake_up() */
+	if (s->thread == current)
+		return NOTIFY_OK;
+
+	pr_debug("Migration: CPU%d --> CPU%d\n", mnd->src_cpu, mnd->dest_cpu);
 	spin_lock_irqsave(&s->lock, flags);
 	s->pending = true;
-	s->src_cpu = (int) arg;
+	s->src_cpu = mnd->src_cpu;
+	s->task_load = load_based_syncs ? mnd->load : 0;
 	spin_unlock_irqrestore(&s->lock, flags);
 	/*
 	* Avoid issuing recursive wakeup call, as sync thread itself could be
@@ -305,7 +332,7 @@ static struct notifier_block boost_migration_nb = {
 	.notifier_call = boost_migration_notify,
 };
 
-static void do_input_boost(struct kthread_work *work)
+static void do_input_boost(struct work_struct *work)
 {
 	unsigned int i;
 	struct cpu_sync *i_sync_info;
@@ -322,8 +349,8 @@ static void do_input_boost(struct kthread_work *work)
 	/* Update policies for all online CPUs */
 	update_policy_online();
 
-	queue_delayed_work(system_power_efficient_wq,
-		&input_boost_rem, msecs_to_jiffies(input_boost_ms));
+	queue_delayed_work(cpu_boost_wq, &input_boost_rem,
+					msecs_to_jiffies(input_boost_ms));
 }
 
 static void cpuboost_input_event(struct input_handle *handle,
@@ -335,13 +362,13 @@ static void cpuboost_input_event(struct input_handle *handle,
 		return;
 
 	now = ktime_to_us(ktime_get());
-	if ((now - last_input_time) < (input_boost_ms * USEC_PER_MSEC))
+	if (now - last_input_time < MIN_INPUT_INTERVAL)
 		return;
 
-	if (queuing_blocked(&cpu_boost_worker, &input_boost_work))
+	if (work_pending(&input_boost_work))
 		return;
 
-	queue_kthread_work(&cpu_boost_worker, &input_boost_work);
+	queue_work(cpu_boost_wq, &input_boost_work);
 	last_input_time = ktime_to_us(ktime_get());
 }
 
@@ -420,17 +447,12 @@ static int cpu_boost_init(void)
 {
 	int cpu, ret;
 	struct cpu_sync *s;
-	struct sched_param param = { .sched_priority = MAX_RT_PRIO - 2 };
 
-	init_kthread_worker(&cpu_boost_worker);
-	cpu_boost_worker_thread = kthread_run(kthread_worker_fn,
-		&cpu_boost_worker, "cpu_boost_worker_thread");
-	if (IS_ERR(cpu_boost_worker_thread))
+	cpu_boost_wq = alloc_workqueue("cpuboost_wq", WQ_HIGHPRI, 0);
+	if (!cpu_boost_wq)
 		return -EFAULT;
 
-	sched_setscheduler(cpu_boost_worker_thread, SCHED_FIFO, &param);
-
-	init_kthread_work(&input_boost_work, do_input_boost);
+	INIT_WORK(&input_boost_work, do_input_boost);
 	INIT_DELAYED_WORK(&input_boost_rem, do_input_boost_rem);
 
 	for_each_possible_cpu(cpu) {
