@@ -385,6 +385,8 @@ static void cpufreq_lolznappy_timer(unsigned long data)
 	cpu_load = loadadjfreq / pcpu->policy->cur;
 	this_hispeed_freq = max(hispeed_freq, pcpu->policy->min);
 
+	cpufreq_notify_utilization(pcpu->policy, cpu_load);
+
 	if (cpu_load >= go_hispeed_load) {
 		if (pcpu->policy->cur < this_hispeed_freq) {
 			new_freq = this_hispeed_freq;
