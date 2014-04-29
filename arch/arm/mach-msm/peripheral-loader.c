@@ -918,7 +918,7 @@ void write_hw_rev_to_smem(unsigned int hw_rev)
 
 static int __init msm_pil_init(void)
 {
-	ion = msm_ion_client_create(UINT_MAX, "pil");
+	ion = msm_ion_client_create("pil");
 	if (IS_ERR(ion)) /* Can't support relocatable images */
 		ion = NULL;
 #ifdef CONFIG_ARCH_MSM8226

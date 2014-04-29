@@ -273,7 +273,11 @@ int msm_jpeg_platform_init(struct platform_device *pdev,
 	*base = jpeg_base;
 	*irq  = jpeg_irq;
 
+<<<<<<< HEAD
 	pgmn_dev->jpeg_client = msm_ion_client_create(-1, pdev->name);
+=======
+	pgmn_dev->jpeg_client = msm_ion_client_create("camera-jpeg");
+>>>>>>> 3f87f7d... ion: msm: remove superfluous function argument
 	JPEG_DBG("%s:%d] success\n", __func__, __LINE__);
 
 	return rc;
