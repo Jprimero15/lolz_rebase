@@ -1379,7 +1379,7 @@ static int mdss_dsi_cmd_dma_tx(struct mdss_dsi_ctrl_pdata *ctrl,
 
 	ret = wait_for_completion_timeout(&ctrl->dma_comp,
 				msecs_to_jiffies(DMA_TX_TIMEOUT));
-				
+
 	if (ret <= 0) {
 		u32 reg_val, status, mask;
 
@@ -1397,7 +1397,7 @@ static int mdss_dsi_cmd_dma_tx(struct mdss_dsi_ctrl_pdata *ctrl,
 			ret = 1;
 		}
 	}
-				
+
 	if (ret == 0) {
 		pr_err("dma tx timeout!!\n");
 			mdss_dsi_debug_check_te(pdata);
@@ -1786,14 +1786,10 @@ static int dsi_event_thread(void *data)
 	spin_lock_init(&ev->event_lock);
 
 	while (1) {
-		ret = wait_event_interruptible(ev->event_q,
+		while (wait_event_interruptible(ev->event_q,
 			(ev->event_pndx != ev->event_gndx) ||
-			kthread_should_stop());
+			kthread_should_stop()) != 0);
 
-		if (ret) {
-			pr_debug("%s: interrupted", __func__);
-			continue;
-		}
 		spin_lock_irqsave(&ev->event_lock, flag);
 		evq = &ev->todo_list[ev->event_gndx++];
 		todo = evq->todo;
