@@ -42,7 +42,6 @@ struct notifier_block cpu_hotplug;
 struct cpu_load_data {
 	cputime64_t prev_cpu_idle;
 	cputime64_t prev_cpu_wall;
-	cputime64_t prev_cpu_iowait;
 	unsigned int avg_load_maxfreq;
 	unsigned int samples;
 	unsigned int window_size;
@@ -54,23 +53,46 @@ struct cpu_load_data {
 
 static DEFINE_PER_CPU(struct cpu_load_data, cpuload);
 
-static inline cputime64_t get_cpu_iowait_time(unsigned int cpu,
-							cputime64_t *wall)
+static inline u64 get_cpu_idle_time_jiffy(unsigned int cpu, u64 *wall)
 {
-	u64 iowait_time = get_cpu_iowait_time_us(cpu, wall);
+	u64 idle_time;
+	u64 cur_wall_time;
+	u64 busy_time;
 
-	if (iowait_time == -1ULL)
-		return 0;
+	cur_wall_time = jiffies64_to_cputime64(get_jiffies_64());
 
-	return iowait_time;
+	busy_time  = kcpustat_cpu(cpu).cpustat[CPUTIME_USER];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SYSTEM];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_IRQ];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SOFTIRQ];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_STEAL];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
+
+	idle_time = cur_wall_time - busy_time;
+	if (wall)
+		*wall = jiffies_to_usecs(cur_wall_time);
+
+	return jiffies_to_usecs(idle_time);
+}
+
+static inline cputime64_t get_cpu_idle_time(unsigned int cpu, cputime64_t *wall)
+{
+	u64 idle_time = get_cpu_idle_time_us(cpu, NULL);
+
+	if (idle_time == -1ULL)
+		return get_cpu_idle_time_jiffy(cpu, wall);
+	else
+		idle_time += get_cpu_iowait_time_us(cpu, wall);
+
+	return idle_time;
 }
 
 static int update_average_load(unsigned int freq, unsigned int cpu)
 {
 	int ret;
-	unsigned int idle_time, wall_time, iowait_time;
+	unsigned int idle_time, wall_time;
 	unsigned int cur_load, load_at_max_freq;
-	cputime64_t cur_wall_time, cur_idle_time, cur_iowait_time;
+	cputime64_t cur_wall_time, cur_idle_time;
 	struct cpu_load_data *pcpu = &per_cpu(cpuload, cpu);
 	struct cpufreq_policy policy;
 
@@ -78,20 +100,13 @@ static int update_average_load(unsigned int freq, unsigned int cpu)
         if (ret)
                 return -EINVAL;
 
-	cur_idle_time = get_cpu_idle_time(cpu, &cur_wall_time, 0);
-	cur_iowait_time = get_cpu_iowait_time(cpu, &cur_wall_time);
+	cur_idle_time = get_cpu_idle_time(cpu, &cur_wall_time);
 
 	wall_time = (unsigned int) (cur_wall_time - pcpu->prev_cpu_wall);
 	pcpu->prev_cpu_wall = cur_wall_time;
 
 	idle_time = (unsigned int) (cur_idle_time - pcpu->prev_cpu_idle);
 	pcpu->prev_cpu_idle = cur_idle_time;
-
-	iowait_time = (unsigned int) (cur_iowait_time - pcpu->prev_cpu_iowait);
-	pcpu->prev_cpu_iowait = cur_iowait_time;
-
-	if (idle_time >= iowait_time)
-		idle_time -= iowait_time;
 
 	if (unlikely(!wall_time || wall_time < idle_time))
 		return 0;
@@ -221,6 +236,25 @@ static ssize_t hotplug_disable_show(struct kobject *kobj,
 }
 
 static struct kobj_attribute hotplug_disabled_attr = __ATTR_RO(hotplug_disable);
+
+#ifdef CONFIG_BRICKED_HOTPLUG
+unsigned int get_rq_info(void)
+{
+	unsigned long flags = 0;
+	unsigned int rq = 0;
+
+	spin_lock_irqsave(&rq_lock, flags);
+
+	rq = rq_info.rq_avg;
+	rq_info.rq_avg = 0;
+
+	spin_unlock_irqrestore(&rq_lock, flags);
+
+	return rq;
+}
+EXPORT_SYMBOL(get_rq_info);
+#endif
+
 static void def_work_fn(struct work_struct *work)
 {
 	int64_t diff;
@@ -279,7 +313,7 @@ static ssize_t run_queue_smt_mgr_avg_show(struct kobject *kobj,
 		sum_avg = 0;
 		sum_avg_cnt = 0;
 	}
-	
+
 	if(sum_avg_cnt==0) {
 		val = 0;
 	} else {
