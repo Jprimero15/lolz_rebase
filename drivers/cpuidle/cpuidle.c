@@ -157,14 +157,21 @@ int cpuidle_idle_call(void)
 
 	trace_cpu_idle_rcuidle(next_state, dev->cpu);
 
+	if (need_resched()) {
+		dev->last_residency = 0;
+		local_irq_enable();
+		entered_state = next_state;
+		goto exit;
+	}
+
 	if (cpuidle_state_is_coupled(dev, drv, next_state))
 		entered_state = cpuidle_enter_state_coupled(dev, drv,
 							    next_state);
 	else
 		entered_state = cpuidle_enter_state(dev, drv, next_state);
 
-	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, dev->cpu);
 
+exit:
 	/* give the governor an opportunity to reflect on the outcome */
 	if (cpuidle_curr_governor->reflect)
 		cpuidle_curr_governor->reflect(dev, entered_state);
