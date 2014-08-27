@@ -588,15 +588,14 @@ static void smp_callback(void *v)
 static int cpuidle_latency_notify(struct notifier_block *b,
 		unsigned long l, void *v)
 {
-#if 0
-	/* when drivers request new latency requirement, it does not necessary
-	 * to immediately wake up another cpu by sending cross-cpu IPI, we can
-	 * consider the new latency to be taken into effect after next wakeup
-	 * from idle, this can save the unnecessary wakeup cost, and reduce the
-	 * risk that drivers may request latency in irq disabled context.
-	 */
-	smp_call_function(smp_callback, NULL, 1);
-#endif
+	const struct cpumask *cpus;
+
+	cpus = v ?: cpu_online_mask;
+
+	preempt_disable();
+	smp_call_function_many(cpus, smp_callback, NULL, 1);
+	preempt_enable();
+
 	return NOTIFY_OK;
 }
 
