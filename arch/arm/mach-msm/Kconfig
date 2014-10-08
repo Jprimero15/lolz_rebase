@@ -4925,6 +4925,13 @@ config SEC_SMART_MGR_RUNQUEUE_AVG
 	bool "Samsung added for read current run queue"
 	help
 	  Support for Smart MGR function.
+
+config PVS_LEVEL_INTERFACE
+	bool "Expose PVS level information in sys fs (Boeffla-Kernel)"
+        default y
+	help
+	 Allow PVS level to be shown in Boeffla-Config app
+
 endif
 
 config KERNEL_TEXT_MPU_PROT
