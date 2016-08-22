@@ -7,7 +7,7 @@
  * Copyright (C) 2010 Texas Instruments Inc.
  *
  * Authors: Liam Girdwood <lrg@ti.com>
- *          Mark Brown <broonie@opensource.wolfsonmicro.com>       
+ *          Mark Brown <broonie@opensource.wolfsonmicro.com>
  *
  *  This program is free software; you can redistribute  it and/or modify it
  *  under  the terms of  the GNU General  Public License as published by the
@@ -498,7 +498,8 @@ static int soc_pcm_close(struct snd_pcm_substream *substream)
 		} else {
 			/* start delayed pop wq here for playback streams */
 			codec_dai->pop_wait = 1;
-			schedule_delayed_work(&rtd->delayed_work,
+			queue_delayed_work(system_power_efficient_wq,
+				&rtd->delayed_work,
 				msecs_to_jiffies(rtd->pmdown_time));
 		}
 	} else {
