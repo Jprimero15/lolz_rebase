@@ -65,8 +65,6 @@
 #define ADRENO_DEFAULT_PWRSCALE_POLICY  NULL
 #endif
 
-void adreno_debugfs_init(struct kgsl_device *device);
-
 #define ADRENO_ISTORE_START 0x5000 /* Istore offset */
 
 #define ADRENO_NUM_CTX_SWITCH_ALLOWED_BEFORE_DRAW	50
@@ -849,12 +847,6 @@ static inline unsigned int adreno_getreg(struct adreno_device *adreno_dev,
 		return ADRENO_REG_REGISTER_MAX;
 	return adreno_dev->gpudev->reg_offsets->offsets[offset_name];
 }
-
-#ifdef CONFIG_DEBUG_FS
-void adreno_debugfs_init(struct kgsl_device *device);
-#else
-static inline void adreno_debugfs_init(struct kgsl_device *device) { }
-#endif
 
 /**
  * adreno_gpu_fault() - Return the current state of the GPU
