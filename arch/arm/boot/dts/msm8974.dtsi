@@ -2611,6 +2611,10 @@
 			<0xfe05300c 0x4>;
 		reg-names = "avtimer_lsb_addr", "avtimer_msb_addr";
 	};
+
+	qcom,bam_dmux@fc834000 {
+		qcom,fast-shutdown;
+	};
 };
 
 &gdsc_venus {
