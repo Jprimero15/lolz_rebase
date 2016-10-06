@@ -33,7 +33,7 @@ config TOUCHSCREEN_MMS252
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called melfas-ts.
-	  
+
 config TOUCHSCREEN_MMS300
 	tristate "MELFAS MMS300 touchscreen driver"
 	depends on I2C
@@ -1143,6 +1143,7 @@ config TOUCHSCREEN_GT9XX
 config TOUCHSCREEN_ZINITIX_BT531
 	tristate "ZINITIX BT531 I2C Touchscreen"
 	depends on I2C
+
 	help
 	  Say Y here if you have Zinitix BT531 I2C touchscreen,
 	  such as BT531, connected to your system.
@@ -1151,6 +1152,10 @@ config TOUCHSCREEN_ZINITIX_BT531
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called BT531.
+
+config STATE_NOTIFIER
+        bool "State Notifier"
+	default y
 
 source "drivers/input/touchscreen/wacom/Kconfig"
 source "drivers/input/touchscreen/gt9xx/Kconfig"
