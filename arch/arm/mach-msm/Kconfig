@@ -4173,7 +4173,7 @@ config MSM_RUN_QUEUE_STATS
 config MSM_RUN_QUEUE_STATS_BE_CONSERVATIVE
 	bool "Use a more conservative computation for RQ Stats"
 	depends on MSM_RUN_QUEUE_STATS
-	default n
+	default y
 	help
 	  Enable more conservative computation of load and size of the run
 	  queue.
