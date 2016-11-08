@@ -45,6 +45,12 @@ config CPU_FREQ_STAT_DETAILS
 
 	  If in doubt, say N.
 
+config CPU_BOOST
+	bool "CPU Boost control"
+	default y
+	help
+	  This driver supports input boost.
+
 config CPU_FREQ_LIMIT
 	bool "CPU frequency limit API"
 	default n
