@@ -570,6 +570,9 @@ static struct rchan *create_channel(unsigned subbuf_size, unsigned n_subbufs)
 {
 	struct rchan *chan;
 
+	pr_info("kgsl: cffdump: relay: create_channel: subbuf_size %u, "
+		"n_subbufs %u, dir 0x%pK\n", subbuf_size, n_subbufs, dir);
+
 	chan = relay_open("cpu", dir, subbuf_size,
 			  n_subbufs, &relay_callbacks, NULL);
 	if (!chan) {
