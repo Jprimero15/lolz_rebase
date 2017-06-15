@@ -1,3 +1,4 @@
+EXTRA_CFLAGS += -Wno-bool-compare -Wno-logical-not-parentheses
 mdss-mdp3-objs = mdp3.o mdp3_dma.o mdp3_ctrl.o dsi_status_v2.o
 ifeq ($(TARGET_BUILD_VARIANT),user)
 EXTRA_CFLAGS += -DDLOG_USER_VARIANT
@@ -158,3 +159,4 @@ endif
 
 obj-$(CONFIG_FB_MSM_MDSS_HX8394C_TFT_VIDEO_720P_PANEL) += isl98611-backlight.o
 
+obj-$(CONFIG_FB_MSM_MDSS_KCAL_CTRL) += mdss_mdp_kcal_ctrl.o
