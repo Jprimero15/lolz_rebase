@@ -286,7 +286,7 @@ int sps_bam_enable(struct sps_bam *dev)
 					(irq_handler_t) bam_isr,
 					IRQF_TRIGGER_RISING, "sps", dev);
 				SPS_DBG(
-					"sps:BAM %pa uses edge for IRQ# %d\n",
+					"sps:BAM 0x%x uses edge for IRQ# %d\n",
 					BAM_ID(dev), dev->props.irq);
 			} else {
 				result = request_irq(dev->props.irq,
@@ -294,11 +294,11 @@ int sps_bam_enable(struct sps_bam *dev)
 					IRQF_TRIGGER_HIGH | IRQF_NO_SUSPEND,
 					"sps", dev);
 				SPS_DBG(
-					"sps:BAM %pa uses level for IRQ# %d\n",
+					"sps:BAM 0x%x uses level for IRQ# %d\n",
 					BAM_ID(dev), dev->props.irq);
 			}
 		} else {
-			SPS_DBG1("sps:BAM %pa does not have an vaild IRQ# %d\n",
+			SPS_DBG1("sps:BAM 0x%x does not have an vaild IRQ# %d\n",
 				BAM_ID(dev), dev->props.irq);
 		}
 
