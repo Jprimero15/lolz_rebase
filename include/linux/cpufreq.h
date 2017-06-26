@@ -128,7 +128,7 @@ struct cpufreq_policy {
 	struct cpufreq_real_policy	user_policy;
 
 	struct list_head        policy_list;
-	struct kobject		kobj;
+	struct kobject		*kobj;
 	struct completion	kobj_unregister;
 	/*
 	 * The rules for this semaphore:
@@ -143,6 +143,12 @@ struct cpufreq_policy {
 	 *     __cpufreq_governor(data, CPUFREQ_GOV_POLICY_EXIT);
 	 */
 	struct rw_semaphore	rwsem;
+};
+
+/* contains per cpu sysfs info ./sys/devices/ssytem/cpu/cpu#/cpufreq */
+struct cpufreq_cpu_sysinfo {
+	struct cpufreq_policy *cpu_policy; /* policy for online cpu */
+	struct kobject cpu_kobj; /* per cpu kobject */
 };
 
 #define CPUFREQ_ADJUST		(0)
