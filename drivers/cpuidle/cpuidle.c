@@ -82,23 +82,14 @@ int cpuidle_play_dead(void)
 	struct cpuidle_device *dev = __this_cpu_read(cpuidle_devices);
 	struct cpuidle_driver *drv = cpuidle_get_driver();
 	int i, dead_state = -1;
-	int power_usage = -1;
 
 	if (!drv)
 		return -ENODEV;
 
 	/* Find lowest-power state that supports long-term idle */
-	for (i = CPUIDLE_DRIVER_STATE_START; i < drv->state_count; i++) {
-		struct cpuidle_state *s = &drv->states[i];
-
-		if (s->power_usage < power_usage && s->enter_dead) {
-			power_usage = s->power_usage;
-			dead_state = i;
-		}
-	}
-
-	if (dead_state != -1)
-		return drv->states[dead_state].enter_dead(dev, dead_state);
+	for (i = drv->state_count - 1; i >= CPUIDLE_DRIVER_STATE_START; i--)
+		if (drv->states[i].enter_dead)
+			return drv->states[i].enter_dead(dev, i);
 
 	return -ENODEV;
 }
@@ -293,7 +284,6 @@ static void poll_idle_init(struct cpuidle_driver *drv)
 	state->power_usage = -1;
 	state->flags = 0;
 	state->enter = poll_idle;
-	state->disable = 0;
 }
 #else
 static void poll_idle_init(struct cpuidle_driver *drv) {}
