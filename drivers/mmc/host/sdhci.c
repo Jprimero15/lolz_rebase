@@ -176,8 +176,8 @@ static void sdhci_dump_state(struct sdhci_host *host)
 		atomic_read(&mmc->parent->power.usage_count),
 		mmc->parent->power.disable_depth);
 	if (mmc->card) {
-		pr_info("%s: card->cid : %08x%08x%08x%08x\n", mmc_hostname(mmc), 
-				mmc->card->raw_cid[0], mmc->card->raw_cid[1], 
+		pr_info("%s: card->cid : %08x%08x%08x%08x\n", mmc_hostname(mmc),
+				mmc->card->raw_cid[0], mmc->card->raw_cid[1],
 				mmc->card->raw_cid[2], mmc->card->raw_cid[3]);
 	}
 }
@@ -3301,8 +3301,32 @@ struct sdhci_host *sdhci_alloc_host(struct device *dev,
 
 	return host;
 }
-
 EXPORT_SYMBOL_GPL(sdhci_alloc_host);
+
+#ifdef CONFIG_SMP
+static void sdhci_set_pmqos_req_type(struct sdhci_host *host)
+{
+	/*
+	 * The default request type PM_QOS_REQ_ALL_CORES is
+	 * applicable to all CPU cores that are online and
+	 * this would have a power impact when there are more
+	 * number of CPUs. This new PM_QOS_REQ_AFFINE_IRQ request
+	 * type shall update/apply the vote only to that CPU to
+	 * which this IRQ's affinity is set to.
+	 * PM_QOS_REQ_AFFINE_CORES request type is used for targets that have
+	 * little cluster and will update/apply the vote to all the cores in
+	 * the little cluster.
+	 */
+	if (host->pm_qos_req_dma.type == PM_QOS_REQ_AFFINE_CORES)
+		host->pm_qos_req_dma.cpus_affine.bits[0] = 0x0F;
+	else if (host->pm_qos_req_dma.type == PM_QOS_REQ_AFFINE_IRQ)
+		host->pm_qos_req_dma.irq = host->irq;
+}
+#else
+static void sdhci_set_pmqos_req_type(struct sdhci_host *host)
+{
+}
+#endif
 
 int sdhci_add_host(struct sdhci_host *host)
 {
@@ -3346,9 +3370,9 @@ int sdhci_add_host(struct sdhci_host *host)
 	#endif
 		/* Custom: An external level shifter on SDC3 */
 		caps[0] |= (SDHCI_CAN_VDD_330 | SDHCI_CAN_VDD_300 | SDHCI_CAN_VDD_180);
-		/* 
-		 * Disable SD 3.0 feature 
-		 * But, 8974pro after HW_GPIO_06 uses SDR50 Mode 
+		/*
+		 * Disable SD 3.0 feature
+		 * But, 8974pro after HW_GPIO_06 uses SDR50 Mode
 		 */
 #if defined(CONFIG_SEC_K_PROJECT) || defined(CONFIG_SEC_PATEK_PROJECT)
 		caps[1] &= (u32) ~(SDHCI_SUPPORT_SDR104 | SDHCI_SUPPORT_DDR50);
@@ -3778,6 +3802,7 @@ int sdhci_add_host(struct sdhci_host *host)
 
 	if (host->cpu_dma_latency_us) {
 		host->pm_qos_timeout_us = 10000; /* default value */
+		sdhci_set_pmqos_req_type(host);
 		pm_qos_add_request(&host->pm_qos_req_dma,
 				PM_QOS_CPU_DMA_LATENCY, PM_QOS_DEFAULT_VALUE);
 
