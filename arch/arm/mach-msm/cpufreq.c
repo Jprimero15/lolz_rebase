@@ -29,11 +29,9 @@
 #include <linux/clk.h>
 #include <linux/err.h>
 #include <linux/platform_device.h>
+#include <linux/of.h>
 #include <trace/events/power.h>
-#include <mach/socinfo.h>
 #include <mach/cpufreq.h>
-
-#include "acpuclock.h"
 
 #ifdef CONFIG_DEBUG_FS
 #include <linux/debugfs.h>
@@ -53,7 +51,7 @@ static unsigned int freq_index[NR_CPUS];
 static unsigned int max_freq_index;
 static struct cpufreq_frequency_table *freq_table;
 static unsigned int *l2_khz;
-static bool is_clk;
+static bool is_sync;
 static unsigned long *mem_bw;
 
 struct cpufreq_work_struct {
@@ -163,6 +161,7 @@ static int set_cpu_freq(struct cpufreq_policy *policy, unsigned int new_freq,
 	int saved_sched_rt_prio = -EINVAL;
 	struct cpufreq_freqs freqs;
 	struct sched_param param = { .sched_priority = MAX_RT_PRIO-1 };
+	unsigned long rate;
 
 #ifdef CONFIG_SEC_DVFS
 	if (lower_limit_freq || upper_limit_freq) {
@@ -191,7 +190,7 @@ static int set_cpu_freq(struct cpufreq_policy *policy, unsigned int new_freq,
 
 	/*
 	 * Put the caller into SCHED_FIFO priority to avoid cpu starvation
-	 * in the acpuclk_set_rate path while increasing frequencies
+	 * while increasing frequencies
 	 */
 
 	if (freqs.new > freqs.old && current->policy != SCHED_FIFO) {
@@ -203,32 +202,12 @@ static int set_cpu_freq(struct cpufreq_policy *policy, unsigned int new_freq,
 	cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
 
 	trace_cpu_frequency_switch_start(freqs.old, freqs.new, policy->cpu);
-	if (is_clk) {
-		unsigned long rate = new_freq * 1000;
-#ifdef CONFIG_SEC_PM
-		extern int jig_boot_clk_limit;
-
-		if (jig_boot_clk_limit == 1) { //limit 1.5Ghz to block whitescreen during 50 secs on JIG
-			unsigned long long t = sched_clock();
-			do_div(t, 1000000000);
-			if (t <= 50 && rate > 1574400000)
-				rate = 1574400000;
-			else if (t > 50) {		// no need to check after 50 sec
-				jig_boot_clk_limit = 0;
-			}
-		}
-#endif
-		rate = clk_round_rate(cpu_clk[policy->cpu], rate);
-		ret = clk_set_rate(cpu_clk[policy->cpu], rate);
-		if (!ret) {
-			freq_index[policy->cpu] = index;
-			update_l2_bw(NULL);
-		}
-	} else {
-		ret = acpuclk_set_rate(policy->cpu, new_freq, SETRATE_CPUFREQ);
-	}
-
+	rate = new_freq * 1000;
+	rate = clk_round_rate(cpu_clk[policy->cpu], rate);
+	ret = clk_set_rate(cpu_clk[policy->cpu], rate);
 	if (!ret) {
+		freq_index[policy->cpu] = index;
+		update_l2_bw(NULL);
 		trace_cpu_frequency_switch_end(policy->cpu);
 		cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
 	}
@@ -309,10 +288,7 @@ static int msm_cpufreq_verify(struct cpufreq_policy *policy)
 
 static unsigned int msm_cpufreq_get_freq(unsigned int cpu)
 {
-	if (is_clk)
-		return clk_get_rate(cpu_clk[cpu]) / 1000;
-
-	return acpuclk_get_rate(cpu);
+	return clk_get_rate(cpu_clk[cpu]) / 1000;
 }
 
 struct cpu_freq {
@@ -393,24 +369,25 @@ static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 	int ret = 0;
 	struct cpufreq_frequency_table *table;
 	struct cpufreq_work_struct *cpu_work = NULL;
-	int cpu;
 
 	table = cpufreq_frequency_get_table(policy->cpu);
 	if (table == NULL)
 		return -ENODEV;
 	/*
-	 * In some SoC, some cores are clocked by same source, and their
-	 * frequencies can not be changed independently. Find all other
-	 * CPUs that share same clock, and mark them as controlled by
-	 * same policy.
+	 * In some SoC, cpu cores' frequencies can not
+	 * be changed independently. Each cpu is bound to
+	 * same frequency. Hence set the cpumask to all cpu.
 	 */
-	for_each_possible_cpu(cpu)
-		if (cpu_clk[cpu] == cpu_clk[policy->cpu])
-			cpumask_set_cpu(cpu, policy->cpus);
+	if (is_sync)
+		cpumask_setall(policy->cpus);
 
 	cpu_work = &per_cpu(cpufreq_work, policy->cpu);
 	INIT_WORK(&cpu_work->work, set_cpu_work);
 	init_completion(&cpu_work->complete);
+
+	/* synchronous cpus share the same policy */
+	if (!cpu_clk[policy->cpu])
+		return 0;
 
 	if (cpufreq_frequency_table_cpuinfo(policy, table)) {
 #ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
@@ -431,10 +408,7 @@ static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 	*/
 #endif
 
-	if (is_clk)
-		cur_freq = clk_get_rate(cpu_clk[policy->cpu])/1000;
-	else
-		cur_freq = acpuclk_get_rate(policy->cpu);
+	cur_freq = clk_get_rate(cpu_clk[policy->cpu])/1000;
 
 	if (cpufreq_frequency_table_target(policy, table, cur_freq,
 	    CPUFREQ_RELATION_H, &index) &&
@@ -455,9 +429,6 @@ static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 			policy->cpu, cur_freq, table[index].frequency);
 	policy->cur = table[index].frequency;
 
-	policy->cpuinfo.transition_latency =
-		acpuclk_get_switch_time() * NSEC_PER_USEC;
-
 	return 0;
 }
 
@@ -468,17 +439,6 @@ static int __cpuinit msm_cpufreq_cpu_callback(struct notifier_block *nfb,
 	int rc;
 
 	switch (action & ~CPU_TASKS_FROZEN) {
-	case CPU_ONLINE:
-		per_cpu(cpufreq_suspend, cpu).device_suspended = 0;
-		break;
-	case CPU_DOWN_PREPARE:
-		mutex_lock(&per_cpu(cpufreq_suspend, cpu).suspend_mutex);
-		per_cpu(cpufreq_suspend, cpu).device_suspended = 1;
-		mutex_unlock(&per_cpu(cpufreq_suspend, cpu).suspend_mutex);
-		break;
-	case CPU_DOWN_FAILED:
-		per_cpu(cpufreq_suspend, cpu).device_suspended = 0;
-		break;
 	case CPU_DYING:
 		clk_disable(cpu_clk[cpu]);
 		clk_disable(l2_clk);
@@ -488,39 +448,31 @@ static int __cpuinit msm_cpufreq_cpu_callback(struct notifier_block *nfb,
 	 * before the CPU is brought up.
 	 */
 	case CPU_DEAD:
-		if (is_clk) {
-			clk_unprepare(cpu_clk[cpu]);
-			clk_unprepare(l2_clk);
-			update_l2_bw(NULL);
-		}
+		clk_unprepare(cpu_clk[cpu]);
+		clk_unprepare(l2_clk);
+		update_l2_bw(NULL);
 		break;
 	case CPU_UP_CANCELED:
-		if (is_clk) {
-			clk_unprepare(cpu_clk[cpu]);
-			clk_unprepare(l2_clk);
-			update_l2_bw(NULL);
-		}
+		clk_unprepare(cpu_clk[cpu]);
+		clk_unprepare(l2_clk);
+		update_l2_bw(NULL);
 		break;
 	case CPU_UP_PREPARE:
-		if (is_clk) {
-			rc = clk_prepare(l2_clk);
-			if (rc < 0)
-				return NOTIFY_BAD;
-			rc = clk_prepare(cpu_clk[cpu]);
-			if (rc < 0)
-				return NOTIFY_BAD;
-			update_l2_bw(&cpu);
-		}
+		rc = clk_prepare(l2_clk);
+		if (rc < 0)
+			return NOTIFY_BAD;
+		rc = clk_prepare(cpu_clk[cpu]);
+		if (rc < 0)
+			return NOTIFY_BAD;
+		update_l2_bw(&cpu);
 		break;
 	case CPU_STARTING:
-		if (is_clk) {
-			rc = clk_enable(l2_clk);
-			if (rc < 0)
-				return NOTIFY_BAD;
-			rc = clk_enable(cpu_clk[cpu]);
-			if (rc < 0)
-				return NOTIFY_BAD;
-		}
+		rc = clk_enable(l2_clk);
+		if (rc < 0)
+			return NOTIFY_BAD;
+		rc = clk_enable(cpu_clk[cpu]);
+		if (rc < 0)
+			return NOTIFY_BAD;
 		break;
 	default:
 		break;
@@ -752,10 +704,14 @@ static int __init msm_cpufreq_probe(struct platform_device *pdev)
 	for_each_possible_cpu(cpu) {
 		snprintf(clk_name, sizeof(clk_name), "cpu%d_clk", cpu);
 		c = devm_clk_get(dev, clk_name);
-		if (IS_ERR(c))
-			return PTR_ERR(c);
-		cpu_clk[cpu] = c;
+		if (!IS_ERR(c))
+			cpu_clk[cpu] = c;
+		else
+			is_sync = true;
 	}
+
+	if (!cpu_clk[0])
+		return -ENODEV;
 
 	ret = cpufreq_parse_dt(dev);
 	if (ret)
@@ -770,8 +726,6 @@ static int __init msm_cpufreq_probe(struct platform_device *pdev)
 		pr_err("devfreq governor registration failed\n");
 		return ret;
 	}
-
-	is_clk = true;
 
 #ifdef CONFIG_DEBUG_FS
 	if (!debugfs_create_file("msm_cpufreq", S_IRUGO, NULL, NULL,

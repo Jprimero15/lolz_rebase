@@ -223,6 +223,22 @@ void cpuidle_resume_and_unlock(void)
 	mutex_unlock(&cpuidle_lock);
 }
 
+/* Currently used in suspend/resume path to suspend cpuidle */
+void cpuidle_pause(void)
+{
+	mutex_lock(&cpuidle_lock);
+	cpuidle_uninstall_idle_handler();
+	mutex_unlock(&cpuidle_lock);
+}
+
+/* Currently used in suspend/resume path to resume cpuidle */
+void cpuidle_resume(void)
+{
+	mutex_lock(&cpuidle_lock);
+	cpuidle_install_idle_handler();
+	mutex_unlock(&cpuidle_lock);
+}
+
 EXPORT_SYMBOL_GPL(cpuidle_resume_and_unlock);
 
 /* Currently used in suspend/resume path to suspend cpuidle */
