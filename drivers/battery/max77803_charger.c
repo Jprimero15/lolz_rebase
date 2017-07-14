@@ -22,7 +22,6 @@
 
 #define ENABLE 1
 #define DISABLE 0
-#define USB_MAX_AMPS 1200
 
 #define RECOVERY_DELAY		3000
 #define RECOVERY_CNT		5
@@ -527,7 +526,6 @@ static void max77803_set_charge_current(struct max77803_charger_data *charger,
 			__func__, reg_data, cur);
 }
 
-/*
 static int max77803_get_charge_current(struct max77803_charger_data *charger)
 {
 	u8 reg_data;
@@ -543,7 +541,6 @@ static int max77803_get_charge_current(struct max77803_charger_data *charger)
 	pr_debug("%s: get charge current: %dmA\n", __func__, get_current);
 	return get_current;
 }
-*/
 
 /* in soft regulation, current recovery operation */
 static void max77803_recovery_work(struct work_struct *work)
@@ -871,19 +868,11 @@ static int sec_chg_get_property(struct power_supply *psy,
 		break;
 	case POWER_SUPPLY_PROP_CURRENT_MAX:
 		//AOSP expects the charging current to be in microamperes frameworks/base/core/java/android/os/BatteryManager.java L256
-		//Only apply correction if using AC.
-		if (charger->charging_current_max > USB_MAX_AMPS)
-			val->intval = charger->charging_current_max * 1000;
-		else
-			val->intval = charger->charging_current_max;
+		val->intval = charger->charging_current_max * 1000;
 		break;
 	case POWER_SUPPLY_PROP_CURRENT_AVG:
 		//AOSP expects the charging current to be in microamperes frameworks/base/core/java/android/os/BatteryManager.java L263
-		//Only apply correction if using AC.
-		if (charger->charging_current_max > USB_MAX_AMPS)
-			val->intval = max77803_get_input_current(charger) * 1000;
-		else
-			val->intval = max77803_get_input_current(charger);
+		val->intval = charger->charging_current * 1000;
 		break;
 	case POWER_SUPPLY_PROP_CURRENT_NOW:
 		val->intval = max77803_get_input_current(charger);
