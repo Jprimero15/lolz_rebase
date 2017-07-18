@@ -44,7 +44,6 @@
 #include <linux/gpio.h>
 #include <linux/miscdevice.h>
 #include <linux/uaccess.h>
-#include <linux/earlysuspend.h>
 #include <linux/io.h>
 #include <linux/hrtimer.h>
 

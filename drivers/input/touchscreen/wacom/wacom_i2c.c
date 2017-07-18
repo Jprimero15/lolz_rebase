@@ -22,8 +22,6 @@
 #include <linux/i2c.h>
 #include <linux/wacom_i2c.h>
 
-#include <linux/earlysuspend.h>
-
 #include <linux/uaccess.h>
 #include "wacom_i2c_func.h"
 #include "wacom_i2c_flash.h"
@@ -69,7 +67,7 @@ static void wacom_enable_irq(struct wacom_i2c *wac_i2c, bool enable)
 #endif
 		}
 	}
-	
+
 #if defined(CONFIG_SEC_LT03_PROJECT) || defined(CONFIG_SEC_VIENNA_PROJECT)
   mutex_unlock(&wac_i2c->irq_lock);
 #endif
@@ -466,7 +464,7 @@ static ssize_t epen_firm_update_status_show(struct device *dev,
 {
 	struct wacom_i2c *wac_i2c = dev_get_drvdata(dev);
 
-	dev_info(&wac_i2c->client->dev, 
+	dev_info(&wac_i2c->client->dev,
 			"%s:(%d)\n", __func__,
 			wac_i2c->wac_feature->firm_update_status);
 
@@ -685,7 +683,7 @@ static ssize_t epen_firmware_update_store(struct device *dev,
 			goto failure;
 		dev_info(&wac_i2c->client->dev,
 			"%s: Start firmware flashing (UMS image).\n",
-			__func__);	
+			__func__);
 		ums_binary = true;
 		break;
 	/*kernel*/
@@ -1157,13 +1155,13 @@ static int wacom_firmware_update(struct wacom_i2c *wac_i2c)
 	if (ret)
 		goto failure;
 
-	if (wac_i2c->wac_feature->fw_ic_version < wac_i2c->wac_feature->fw_version) {	
+	if (wac_i2c->wac_feature->fw_ic_version < wac_i2c->wac_feature->fw_version) {
 		/*start firm update*/
 		dev_info(&wac_i2c->client->dev,
 				"%s: Start firmware flashing (kernel image).\n",
-				__func__);		
+				__func__);
 		mutex_lock(&wac_i2c->lock);
-		wacom_enable_irq(wac_i2c, false);		
+		wacom_enable_irq(wac_i2c, false);
 		wac_i2c->wac_feature->firm_update_status = 1;
 		ret = wacom_i2c_firm_update(wac_i2c);
 		if (ret)
@@ -1181,10 +1179,10 @@ static int wacom_firmware_update(struct wacom_i2c *wac_i2c)
 	return ret;
 
 	update_err:
-		wacom_i2c_set_firm_data(NULL);	
+		wacom_i2c_set_firm_data(NULL);
 		wac_i2c->wac_feature->firm_update_status = -1;
 		wacom_enable_irq(wac_i2c, true);
-		mutex_unlock(&wac_i2c->lock);		
+		mutex_unlock(&wac_i2c->lock);
 	failure:
 		return ret;
 }
@@ -1397,9 +1395,9 @@ static int wacom_i2c_remove(struct i2c_client *client)
 	struct wacom_i2c *wac_i2c = i2c_get_clientdata(client);
 
 	free_irq(client->irq, wac_i2c);
-#ifdef WACOM_PDCT_WORK_AROUND	
+#ifdef WACOM_PDCT_WORK_AROUND
 	free_irq(wac_i2c->irq_pdct, wac_i2c);
-#endif	
+#endif
 	free_irq(wac_i2c->irq_pen_insert, wac_i2c);
 
 	cancel_delayed_work_sync(&wac_i2c->resume_work);

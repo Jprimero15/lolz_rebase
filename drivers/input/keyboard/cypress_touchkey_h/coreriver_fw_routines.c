@@ -10,7 +10,6 @@
  */
 
 #include <linux/delay.h>
-#include <linux/earlysuspend.h>
 #include <linux/firmware.h>
 #include <linux/gpio.h>
 #include <linux/i2c.h>
@@ -484,7 +483,7 @@ static int tc360_write_fw(struct cypress_touchkey_info *info)
 		dev_info(&client->dev, "dcr_rd_cnt=%d\n", dcr_rd_cnt);
 #endif
 		isp_master_recv(info, 0xd9, &val);
-		
+
 		if (info->fw_img->data[addr] != val) {
 			dev_err(&client->dev, "fail to verify at %#x (%#x)\n",
 				addr, info->fw_img->data[addr]);
@@ -538,7 +537,7 @@ write_fw:
 		}
 	}
 	dev_info(&client->dev, "succeed in writing/verify fw\n");
-	
+
 	cypress_power_onoff(info,0);
 	msleep(TC360_POWERON_DELAY);
 	cypress_power_onoff(info,1);
