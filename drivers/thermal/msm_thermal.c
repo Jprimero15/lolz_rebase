@@ -33,7 +33,6 @@
 #include <linux/sysfs.h>
 #include <linux/types.h>
 #include <linux/io.h>
-#include <linux/hrtimer.h>
 #include <linux/thermal.h>
 #include <mach/rpm-regulator.h>
 #include <mach/rpm-regulator-smd.h>
@@ -60,11 +59,7 @@ static struct delayed_work temp_log_work;
 static bool core_control_enabled;
 static uint32_t cpus_offlined;
 static DEFINE_MUTEX(core_control_mutex);
-static uint32_t wakeup_ms;
-static struct hrtimer thermal_rtc_hrtimer;
-static struct kobject *tt_kobj;
 static struct kobject *cc_kobj;
-static struct work_struct timer_work;
 static struct task_struct *hotplug_task;
 static struct task_struct *freq_mitigation_task;
 static struct task_struct *thermal_monitor_task;
@@ -1365,6 +1360,10 @@ static void __ref check_temp(struct work_struct *work)
 		goto reschedule;
 	}
 
+	do_core_control(temp);
+	do_psm();
+	do_ocr();
+
 	if (!limit_init) {
 		ret = msm_thermal_get_freq_table();
 		if (ret)
@@ -1373,10 +1372,7 @@ static void __ref check_temp(struct work_struct *work)
 			limit_init = 1;
 	}
 
-	do_core_control(temp);
 	do_vdd_restriction();
-	do_psm();
-	do_ocr();
 	do_freq_control(temp);
 
 reschedule:
@@ -1404,7 +1400,7 @@ static void __ref msm_therm_temp_log(struct work_struct *work)
 			tsens_dev.sensor_num = i;
 			tsens_get_temp(&tsens_dev, &temp);
 			ret = sprintf(buffer + added, "(%d --- %ld)", i, temp);
-			added += ret;						
+			added += ret;
 		}
 		pr_debug("%s", buffer);
 	}
@@ -1435,41 +1431,6 @@ static int __ref msm_thermal_cpu_callback(struct notifier_block *nfb,
 static struct notifier_block __refdata msm_thermal_cpu_notifier = {
 	.notifier_call = msm_thermal_cpu_callback,
 };
-
-static void thermal_rtc_setup(void)
-{
-	ktime_t wakeup_time;
-	ktime_t curr_time;
-
-	curr_time = ktime_get_boottime();
-	wakeup_time = ktime_add_us(curr_time,
-			(wakeup_ms * USEC_PER_MSEC));
-	hrtimer_start_range_ns(&thermal_rtc_hrtimer, wakeup_time,
-			ULONG_MAX, HRTIMER_MODE_ABS);
-	pr_debug("%s: Current Time: %ld %ld, Alarm set to: %ld %ld\n",
-			KBUILD_MODNAME,
-			ktime_to_timeval(curr_time).tv_sec,
-			ktime_to_timeval(curr_time).tv_usec,
-			ktime_to_timeval(wakeup_time).tv_sec,
-			ktime_to_timeval(wakeup_time).tv_usec);
-
-}
-
-static void timer_work_fn(struct work_struct *work)
-{
-	sysfs_notify(tt_kobj, NULL, "wakeup_ms");
-}
-
-enum hrtimer_restart thermal_rtc_callback(struct hrtimer *timer)
-{
-	struct timespec ts;
-	get_monotonic_boottime(&ts);
-	schedule_work(&timer_work);
-	pr_debug("%s: Time on alarm expiry: %ld %ld\n", KBUILD_MODNAME,
-			ts.tv_sec, ts.tv_nsec / 1000);
-
-	return HRTIMER_NORESTART;
-}
 
 static int hotplug_notify(enum thermal_trip_type type, int temp, void *data)
 {
@@ -2122,52 +2083,6 @@ static __refdata struct attribute_group cc_attr_group = {
 	.attrs = cc_attrs,
 };
 
-static ssize_t show_wakeup_ms(struct kobject *kobj,
-		struct kobj_attribute *attr, char *buf)
-{
-	return snprintf(buf, PAGE_SIZE, "%d\n", wakeup_ms);
-}
-
-static ssize_t store_wakeup_ms(struct kobject *kobj,
-		struct kobj_attribute *attr, const char *buf, size_t count)
-{
-	int ret;
-	ret = kstrtouint(buf, 10, &wakeup_ms);
-
-	if (ret) {
-		pr_err("%s: Trying to set invalid wakeup timer\n",
-				KBUILD_MODNAME);
-		return ret;
-	}
-
-	if (wakeup_ms > 0) {
-		thermal_rtc_setup();
-		pr_debug("%s: Timer started for %ums\n", KBUILD_MODNAME,
-				wakeup_ms);
-	} else {
-		ret = hrtimer_cancel(&thermal_rtc_hrtimer);
-		if (ret)
-			pr_debug("%s: Timer canceled\n", KBUILD_MODNAME);
-		else
-			pr_debug("%s: No active timer present to cancel\n",
-					KBUILD_MODNAME);
-
-	}
-	return count;
-}
-
-static __refdata struct kobj_attribute timer_attr =
-__ATTR(wakeup_ms, 0644, show_wakeup_ms, store_wakeup_ms);
-
-static __refdata struct attribute *tt_attrs[] = {
-	&timer_attr.attr,
-	NULL,
-};
-
-static __refdata struct attribute_group tt_attr_group = {
-	.attrs = tt_attrs,
-};
-
 static __init int msm_thermal_add_cc_nodes(void)
 {
 	struct kobject *module_kobj = NULL;
@@ -2198,41 +2113,6 @@ static __init int msm_thermal_add_cc_nodes(void)
 done_cc_nodes:
 	if (cc_kobj)
 		kobject_del(cc_kobj);
-	return ret;
-}
-
-static __init int msm_thermal_add_timer_nodes(void)
-{
-	struct kobject *module_kobj = NULL;
-	int ret = 0;
-
-	module_kobj = kset_find_obj(module_kset, KBUILD_MODNAME);
-	if (!module_kobj) {
-		pr_err("%s: cannot find kobject for module\n",
-			KBUILD_MODNAME);
-		ret = -ENOENT;
-		goto failed;
-	}
-
-	tt_kobj = kobject_create_and_add("thermal_timer", module_kobj);
-	if (!tt_kobj) {
-		pr_err("%s: cannot create timer kobj\n",
-				KBUILD_MODNAME);
-		ret = -ENOMEM;
-		goto failed;
-	}
-
-	ret = sysfs_create_group(tt_kobj, &tt_attr_group);
-	if (ret) {
-		pr_err("%s: cannot create group\n", KBUILD_MODNAME);
-		goto failed;
-	}
-
-	return 0;
-
-failed:
-	if (tt_kobj)
-		kobject_del(tt_kobj);
 	return ret;
 }
 
@@ -3404,14 +3284,6 @@ int __init msm_thermal_late_init(void)
 	msm_thermal_add_vdd_rstr_nodes();
 	msm_thermal_add_ocr_nodes();
 	msm_thermal_add_default_temp_limit_nodes();
-	hrtimer_init(&thermal_rtc_hrtimer,
-			CLOCK_BOOTTIME,
-			HRTIMER_MODE_ABS);
-	thermal_rtc_hrtimer.function=
-			&thermal_rtc_callback;
-	INIT_WORK(&timer_work, timer_work_fn);
-	msm_thermal_add_timer_nodes();
-
 	interrupt_mode_init();
 	return 0;
 }
