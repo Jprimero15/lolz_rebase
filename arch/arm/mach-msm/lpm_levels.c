@@ -138,6 +138,8 @@ static int msm_pm_sleep_time_override;
 module_param_named(sleep_time_override,
 	msm_pm_sleep_time_override, int, S_IRUGO | S_IWUSR | S_IWGRP);
 
+static uint64_t suspend_wake_time;
+
 static int msm_pm_sleep_sec_debug;
 module_param_named(secdebug,
 	msm_pm_sleep_sec_debug, int, S_IRUGO | S_IWUSR | S_IWGRP);
@@ -394,8 +396,11 @@ static void lpm_system_prepare(struct lpm_system_state *system_state,
 		}
 
 
+		if (!suspend_wake_time)
+			suspend_wake_time =  msm_pm_sleep_time_override;
+
 		if (!from_idle)
-			us = USEC_PER_SEC * msm_pm_sleep_time_override;
+			us = USEC_PER_SEC * suspend_wake_time;
 
 		do_div(us, USEC_PER_SEC/SCLK_HZ);
 		sclk = (uint32_t)us;
@@ -473,6 +478,21 @@ s32 msm_cpuidle_get_deep_idle_latency(void)
 		return level->pwr.latency_us;
 }
 
+void lpm_suspend_wake_time(uint64_t wakeup_time)
+{
+	if (wakeup_time <= 0) {
+		suspend_wake_time = msm_pm_sleep_time_override;
+		return;
+	}
+
+	if (msm_pm_sleep_time_override &&
+		(msm_pm_sleep_time_override < wakeup_time))
+		suspend_wake_time = msm_pm_sleep_time_override;
+	else
+		suspend_wake_time = wakeup_time;
+}
+EXPORT_SYMBOL(lpm_suspend_wake_time);
+
 static int lpm_cpu_callback(struct notifier_block *cpu_nb,
 	unsigned long action, void *hcpu)
 {
@@ -524,8 +544,7 @@ static noinline int lpm_cpu_power_select(struct cpuidle_device *dev, int *index)
 	if (!sys_state.cpu_level)
 		return -EINVAL;
 
-	if (!dev->cpu)
-		next_event_us = (uint32_t)(ktime_to_us(get_next_event_time()));
+	next_event_us = (uint32_t)(ktime_to_us(get_next_event_time(dev->cpu)));
 
 	for (i = 0; i < sys_state.num_cpu_levels; i++) {
 		struct lpm_cpu_level *level = &sys_state.cpu_level[i];
@@ -586,7 +605,7 @@ static noinline int lpm_cpu_power_select(struct cpuidle_device *dev, int *index)
 		}
 	}
 
-	if (modified_time_us && !dev->cpu)
+	if (modified_time_us)
 		msm_pm_set_timer(modified_time_us);
 
 	return best_level;
