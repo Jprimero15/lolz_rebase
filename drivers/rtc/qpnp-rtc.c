@@ -20,6 +20,7 @@
 #include <linux/spmi.h>
 #include <linux/spinlock.h>
 #include <linux/spmi.h>
+#include <linux/alarmtimer.h>
 #if defined(CONFIG_PM8926_BATTERY_CHECK_INTERRUPT)
 #include <linux/qpnp/qpnp-adc.h>
 #include <linux/power_supply.h>
@@ -77,9 +78,10 @@ extern int poweroff_charging;
 							(arr[3] << 24))
 
 /* Module parameter to control power-on-alarm */
-static bool poweron_alarm;
+bool poweron_alarm;
 module_param(poweron_alarm, bool, 0644);
 MODULE_PARM_DESC(poweron_alarm, "Enable/Disable power-on alarm");
+EXPORT_SYMBOL(poweron_alarm);
 
 #if defined(CONFIG_PM8926_BATTERY_CHECK_INTERRUPT)
 static enum power_supply_property pm8926_battery_props[] = {
@@ -115,7 +117,7 @@ struct qpnp_rtc {
 	bool lpm_mode;
 	bool alarm_irq_flag;
 	struct wake_lock alarm_wake_lock;
-#endif	
+#endif
 };
 
 #if defined(CONFIG_RTC_AUTO_PWRON)
@@ -691,9 +693,9 @@ sapa_rtc_getalarm(struct device *dev, struct rtc_wkalrm *alarm)
 		alarm->enabled = 0x1;
 	else
 		alarm->enabled = 0x0;
-	
+
 	pr_info("%s [SAPA] : %d, %d\n",__func__,rtc_dd->lpm_mode, alarm->enabled);
-	
+
 	if(poweroff_charging && sapa_saved_time.enabled)
 	{
 		rtc_tm_to_time(&b, &secs_rtc);
@@ -726,7 +728,7 @@ sapa_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alarm)
 	unsigned long secs, secs_rtc;//, irq_flags;
 	struct qpnp_rtc *rtc_dd = dev_get_drvdata(dev);
 	struct rtc_time rtc_tm;
-	
+
 	if (!alarm->enabled) {
 		pr_info("[SAPA] Try to clear :  %4d-%02d-%02d %02d:%02d:%02d\n",
 			alarm->time.tm_year, alarm->time.tm_mon, alarm->time.tm_mday,
@@ -737,12 +739,12 @@ sapa_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alarm)
 
 			ctrl_reg = (rtc_dd->alarm_ctrl_reg1 | BIT_RTC_ALARM_ENABLE);
 			rc = qpnp_write_wrapper(rtc_dd, &ctrl_reg,rtc_dd->alarm_base + REG_OFFSET_ALARM_CTRL1, 1);
-			
+
 			if (rc) {
 				dev_err(dev, "Write to ALARM cntrol reg failed\n");
 				goto rtc_rw_fail;
 			}
-			
+
 			return 0;
 		}
 
@@ -753,7 +755,7 @@ sapa_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alarm)
 			pr_err("[SAPA] Write to RTC ALARM registers failed\n");
 			goto rtc_rw_fail;
 		}
-		
+
 		sapa_saved_time.enabled = 0;  // disable pwr on alarm to prevent retrying
 		sapa_store_kparam(alarm);
 
@@ -1211,6 +1213,9 @@ static int __devinit qpnp_rtc_probe(struct spmi_device *spmi)
 		goto fail_rtc_enable;
 	}
 
+	/* Init power_on_alarm after adding rtc device */
+	power_on_alarm_init();
+
 	/* Request the alarm IRQ */
 	rc = request_any_context_irq(rtc_dd->rtc_alarm_irq,
 				 qpnp_alarm_trigger, IRQF_TRIGGER_RISING,
@@ -1393,7 +1398,7 @@ static void qpnp_rtc_shutdown(struct spmi_device *spmi)
 	u8 ctrl_reg;
 	int rc;
 	struct qpnp_rtc *rtc_dd = dev_get_drvdata(&spmi->dev);
-	
+
 	shutdown_loaded = 1;
 	qpnp_rtc0_resetbootalarm(&spmi->dev);
 
