@@ -158,11 +158,11 @@ VPATH		:= $(srctree)$(if $(KBUILD_EXTMOD),:$(KBUILD_EXTMOD))
 
 export srctree objtree VPATH
 
-
+CCACHE := ccache
 # SUBARCH tells the usermode build what the underlying arch is.  That is set
 # first, and if a usermode build is happening, the "ARCH=um" on the command
 # line overrides the setting of ARCH below.  If a native build is happening,
-# then ARCH is assigned, getting whatever value it gets normally, and 
+# then ARCH is assigned, getting whatever value it gets normally, and
 # SUBARCH is subsequently ignored.
 
 SUBARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ \
@@ -193,7 +193,7 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ \
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
 export KBUILD_BUILDHOST := $(SUBARCH)
 ARCH		?= $(SUBARCH)
-CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
+CROSS_COMPILE	?= $(CCACHE) $(CONFIG_CROSS_COMPILE:"%"=%)
 
 # Architecture as present in compile.h
 UTS_MACHINE 	:= $(ARCH)
@@ -243,10 +243,10 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
 	  else echo sh; fi ; fi)
 
-HOSTCC       = gcc
-HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
-HOSTCXXFLAGS = -O2
+HOSTCC       = $(CCACHE) gcc
+HOSTCXX      = $(CCACHE) g++
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -fgcse-las -std=gnu99
+HOSTCXXFLAGS = -O2 -fgcse-las
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -289,7 +289,7 @@ export KBUILD_CHECKSRC KBUILD_SRC KBUILD_EXTMOD
 #         cmd_cc_o_c       = $(CC) $(c_flags) -c -o $@ $<
 #
 # If $(quiet) is empty, the whole command will be printed.
-# If it is set to "quiet_", only the short version will be printed. 
+# If it is set to "quiet_", only the short version will be printed.
 # If it is set to "silent_", nothing will be printed at all, since
 # the variable $(silent_cmd_cc_o_c) doesn't exist.
 #
@@ -330,7 +330,7 @@ include $(srctree)/scripts/Kbuild.include
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
-REAL_CC		= $(CROSS_COMPILE)gcc
+REAL_CC		= $(CCACHE) $(CROSS_COMPILE)gcc
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -363,6 +363,38 @@ CFLAGS_KERNEL	=
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
+# An -O2 extended optimization set for ARM devices,
+# more precisely the Cortex-A15 with NEON support.
+ifdef CONFIG_FAST_LANE
+ifeq ($(CONFIG_FAST_LANE_ARM),y)
+FAST_LANE_ARM_OPT := -mtune=cortex-a15 \
+	-mcpu=cortex-a15 \
+	-mfpu=neon-vfpv4 \
+	-marm \
+	-munaligned-access \
+	-mvectorize-with-neon-quad
+else
+FAST_LANE_ARM_OPT :=
+endif
+FAST_LANE_OPT_FLAGS := -g0 \
+	-DNDEBUG \
+	-ffast-math \
+	-fforce-addr \
+	-fgcse-after-reload \
+	-fgcse-las \
+	-fgcse-sm \
+	-fivopts \
+	-fno-strict-aliasing \
+	-fomit-frame-pointer \
+	-fpredictive-commoning \
+	-fsingle-precision-constant \
+	-fsched-spec-load \
+	-fsched-spec-load-dangerous \
+	-ftree-partial-pre \
+	-ftree-vectorize \
+	-funsafe-math-optimizations \
+	$(FAST_LANE_ARM_OPT)
+endif
 
 # Use LINUXINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
@@ -375,11 +407,30 @@ KBUILD_CPPFLAGS := -D__KERNEL__
 
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
+		   -fomit-frame-pointer \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -fno-delete-null-pointer-checks
-KBUILD_AFLAGS_KERNEL :=
-KBUILD_CFLAGS_KERNEL :=
+		   -fno-delete-null-pointer-checks \
+		   -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -ffast-math \
+		   -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
+		   -Wno-sizeof-pointer-memaccess \
+		   -Wpsabi \
+		   -Wno-bool-compare -Wno-logical-not-parentheses -Wno-incompatible-pointer-types \
+		   -Wno-tautological-compare -Wno-unused-const-variable \
+		   -Wno-misleading-indentation \
+		   -Wno-pointer-compare \
+		   -Wno-format-truncation -Wno-duplicate-decl-specifier -Wno-memset-elt-size \
+		   -Wno-bool-operation -Wno-int-in-bool-context -Wno-parentheses \
+		   -Wno-switch-unreachable -Wno-stringop-overflow -Wno-format-overflow \
+		   $(FAST_LANE_OPT_FLAGS) \
+		   -std=gnu89
+
+KBUILD_CFLAGS	+=  -s -pipe -fno-pic -mfloat-abi=softfp
+KBUILD_CFLAGS	+= -Wno-unused -O2 -falign-functions=16 -falign-loops=16
+KBUILD_CFLAGS	+= --param l1-cache-size=32 --param l1-cache-line-size=32 --param l2-cache-size=2048
+
+KBUILD_AFLAGS_KERNEL := $(FAST_LANE_OPT_FLAGS)
+KBUILD_CFLAGS_KERNEL := $(FAST_LANE_OPT_FLAGS)
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 KBUILD_AFLAGS_MODULE  := -DMODULE
 KBUILD_CFLAGS_MODULE  := -DMODULE -fno-pic
@@ -570,7 +621,7 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -O2 -falign-functions=16 -falign-loops=16 $(call cc-disable-warning,maybe-uninitialized,)
 endif
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
@@ -816,8 +867,8 @@ define rule_vmlinux__
 	fi;
 	$(verify_kallsyms)
 
-	$(if $(CONFIG_CRYPTO_FIPS),						
-	@$(kecho) '  FIPS : Generating hmac of crypto and updating vmlinux... ';	
+	$(if $(CONFIG_CRYPTO_FIPS),
+	@$(kecho) '  FIPS : Generating hmac of crypto and updating vmlinux... ';
 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/fips_crypto_hmac.sh $(objtree)/vmlinux $(objtree)/System.map)
 endef
 
@@ -866,7 +917,7 @@ endef
 # First command is ':' to allow us to use + in front of this rule
 cmd_ksym_ld = $(cmd_vmlinux__)
 define rule_ksym_ld
-	: 
+	:
 	+$(call cmd,vmlinux_version)
 	$(call cmd,vmlinux__)
 	$(Q)echo 'cmd_$@ := $(cmd_vmlinux__)' > $(@D)/.$(@F).cmd
@@ -946,7 +997,7 @@ modpost-init := $(filter-out init/built-in.o, $(vmlinux-init))
 vmlinux.o: $(modpost-init) $(vmlinux-main) FORCE
 	$(call if_changed_rule,vmlinux-modpost)
 
-# The actual objects are generated when descending, 
+# The actual objects are generated when descending,
 # make sure no implicit rule kicks in
 $(sort $(vmlinux-init) $(vmlinux-main)) $(vmlinux-lds): $(vmlinux-dirs) ;
 
@@ -1536,7 +1587,7 @@ endif
 	$(build)=$(build-dir) $(@:.ko=.o)
 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
 
-# FIXME Should go into a make.lib or something 
+# FIXME Should go into a make.lib or something
 # ===========================================================================
 
 quiet_cmd_rmdirs = $(if $(wildcard $(rm-dirs)),CLEAN   $(wildcard $(rm-dirs)))
