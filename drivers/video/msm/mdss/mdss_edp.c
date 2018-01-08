@@ -1395,71 +1395,77 @@ static int edp_event_thread(void *data)
 	struct mdss_edp_drv_pdata *ep;
 	unsigned long flag;
 	u32 todo = 0;
+	int ret;
 
 	ep = (struct mdss_edp_drv_pdata *)data;
 
 	pr_info("%s: start\n", __func__);
 
 	while (1) {
-		wait_event(ep->event_q, (ep->event_pndx != ep->event_gndx));
-		while (1) {
-			spin_lock_irqsave(&ep->event_lock, flag);
-			if (ep->event_pndx == ep->event_gndx) {
-				spin_unlock_irqrestore(&ep->event_lock, flag);
-				break;
-			}
-			todo = ep->event_todo_list[ep->event_gndx];
-			ep->event_todo_list[ep->event_gndx++] = 0;
-			ep->event_gndx %= HPD_EVENT_MAX;
+		ret = wait_event_interruptible(ep->event_q,
+			(ep->event_pndx != ep->event_gndx) ||
+			kthread_should_stop());
+
+		if (ret) {
+			pr_debug("%s: interrupted", __func__);
+            continue;
+		}
+
+		spin_lock_irqsave(&ep->event_lock, flag);
+		if (ep->event_pndx == ep->event_gndx) {
 			spin_unlock_irqrestore(&ep->event_lock, flag);
+			break;
+		}
+		todo = ep->event_todo_list[ep->event_gndx];
+		ep->event_todo_list[ep->event_gndx++] = 0;
+		ep->event_gndx %= HPD_EVENT_MAX;
+		spin_unlock_irqrestore(&ep->event_lock, flag);
 
-			pr_info("%s: todo=%x\n", __func__, todo);
+		pr_info("%s: todo=%x\n", __func__, todo);
 
-			if (todo == 0)
-				continue;
+		if (todo == 0)
+			continue;
 
-			if (todo & EV_EDID_READ)
-				mdss_edp_edid_read(ep, 0);
+		if (todo & EV_EDID_READ)
+			mdss_edp_edid_read(ep, 0);
 
-			if (todo & EV_DPCD_CAP_READ)
-				mdss_edp_dpcd_cap_read(ep);
+		if (todo & EV_DPCD_CAP_READ)
+			mdss_edp_dpcd_cap_read(ep);
 
-			if (todo & EV_DPCD_STATUS_READ)
-				mdss_edp_dpcd_status_read(ep);
+		if (todo & EV_DPCD_STATUS_READ)
+			mdss_edp_dpcd_status_read(ep);
 
-			if (todo & EV_LINK_TRAIN) {
-				if (!edp_power_state) {
-					msleep(120);
-					if (gpio_get_value(ep->gpio_panel_hpd)) {
-						pr_err("%s : hpd detected count_recovery = %d \n", __func__, count_recovery);
-						msleep(230); /* NDRA LDI REQUIREMENT  350ms delay*/
-						tcon_interanl_clock();
-						mdss_edp_do_link_train(ep);
+		if (todo & EV_LINK_TRAIN) {
+			if (!edp_power_state) {
+				msleep(120);
+				if (gpio_get_value(ep->gpio_panel_hpd)) {
+					pr_err("%s : hpd detected count_recovery = %d \n", __func__, count_recovery);
+					msleep(230); /* NDRA LDI REQUIREMENT  350ms delay*/
+					tcon_interanl_clock();
+					mdss_edp_do_link_train(ep);
 #if defined(CONFIG_FB_MSM_EDP_SAMSUNG)
-						edp_power_state = 1;
-						edp_backlight_enable();
-						mdss_edp_set_backlight(&ep->panel_data, ep->current_bl);
-						complete(&edp_power_sync);
+					edp_power_state = 1;
+					edp_backlight_enable();
+					mdss_edp_set_backlight(&ep->panel_data, ep->current_bl);
+					complete(&edp_power_sync);
 #endif
-					}
-					else {
-						count_recovery++;
-						gpio_set_value(ep->gpio_panel_en, 0);
-						msleep(100);
-						gpio_set_value(ep->gpio_panel_en, 1);
-						pr_err("%s : hpd is not detected, do gpio_panel_en reset = %d \n", __func__, count_recovery);
-					}
+				} else {
+					count_recovery++;
+					gpio_set_value(ep->gpio_panel_en, 0);
+					msleep(100);
+					gpio_set_value(ep->gpio_panel_en, 1);
+					pr_err("%s : hpd is not detected, do gpio_panel_en reset = %d \n", __func__, count_recovery);
 				}
 			}
-			if (todo & EV_VIDEO_READY)
-				mdss_edp_video_ready(ep);
-
-			if (todo & EV_IDLE_PATTERNS_SENT)
-				mdss_edp_idle_patterns_sent(ep);
-
-			if (todo & EV_IDLE_PATTERNS_SENT)
-				mdss_edp_idle_patterns_sent(ep);
 		}
+		if (todo & EV_VIDEO_READY)
+			mdss_edp_video_ready(ep);
+
+		if (todo & EV_IDLE_PATTERNS_SENT)
+			mdss_edp_idle_patterns_sent(ep);
+
+		if (todo & EV_IDLE_PATTERNS_SENT)
+			mdss_edp_idle_patterns_sent(ep);
 	}
 	return 0;
 }
