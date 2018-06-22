@@ -95,7 +95,7 @@ enum hci_ibs_clock_state_vote_e {
 };
 
 static unsigned long wake_retrans = 1;
-static unsigned long tx_idle_delay = msecs_to_jiffies(2000);
+static unsigned long tx_idle_delay = (HZ*2);
 
 struct hci_ibs_cmd {
 	u8 cmd;
