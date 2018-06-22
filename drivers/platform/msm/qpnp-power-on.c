@@ -22,6 +22,7 @@
 #include <linux/interrupt.h>
 #include <linux/input.h>
 #include <linux/log2.h>
+#include <linux/sec_class.h>
 #include <linux/qpnp/power-on.h>
 #ifdef CONFIG_SEC_DEBUG
 #include <mach/sec_debug.h>
