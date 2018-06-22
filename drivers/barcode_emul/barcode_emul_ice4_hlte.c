@@ -91,7 +91,7 @@
 #define BOARD_REV03 3
 #define BOARD_REV07 3
 
-extern int system_rev;
+extern unsigned int system_rev;
 
 struct barcode_emul_data {
 	struct i2c_client		*client;
