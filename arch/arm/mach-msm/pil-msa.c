@@ -142,12 +142,12 @@ static void pil_msa_pbl_disable_clks(struct q6v5_data *drv)
 static int pil_msa_wait_for_mba_ready(struct q6v5_data *drv)
 {
 	struct device *dev = drv->desc.dev;
-	int ret;
+	int ret, timeout_us = pbl_mba_boot_timeout_ms * 1000;
 	u32 status;
 
 	/* Wait for PBL completion. */
 	ret = readl_poll_timeout(drv->rmb_base + RMB_PBL_STATUS, status,
-		status != 0, POLL_INTERVAL_US, pbl_mba_boot_timeout_ms * 1000);
+		status != 0, POLL_INTERVAL_US, timeout_us);
 	if (ret) {
 		dev_err(dev, "PBL boot timed out\n");
 		return ret;
@@ -159,7 +159,7 @@ static int pil_msa_wait_for_mba_ready(struct q6v5_data *drv)
 
 	/* Wait for MBA completion. */
 	ret = readl_poll_timeout(drv->rmb_base + RMB_MBA_STATUS, status,
-		status != 0, POLL_INTERVAL_US, pbl_mba_boot_timeout_ms * 1000);
+		status != 0, POLL_INTERVAL_US, timeout_us);
 	if (ret) {
 		dev_err(dev, "MBA boot timed out\n");
 		return ret;
@@ -298,7 +298,7 @@ static int pil_msa_mba_init_image(struct pil_desc *pil,
 	void *mdata_virt;
 	dma_addr_t mdata_phys;
 	s32 status;
-	int ret;
+	int ret, timeout_us = modem_auth_timeout_ms * 1000;
 	DEFINE_DMA_ATTRS(attrs);
 
 	dma_set_attr(DMA_ATTR_STRONGLY_ORDERED, &attrs);
@@ -321,7 +321,7 @@ static int pil_msa_mba_init_image(struct pil_desc *pil,
 	writel_relaxed(CMD_META_DATA_READY, drv->rmb_base + RMB_MBA_COMMAND);
 	ret = readl_poll_timeout(drv->rmb_base + RMB_MBA_STATUS, status,
 		status == STATUS_META_DATA_AUTH_SUCCESS || status < 0,
-		POLL_INTERVAL_US, modem_auth_timeout_ms * 1000);
+		POLL_INTERVAL_US, timeout_us);
 	if (ret) {
 		dev_err(pil->dev, "MBA authentication of headers timed out\n");
 	} else if (status < 0) {
@@ -363,13 +363,13 @@ static int pil_msa_mba_verify_blob(struct pil_desc *pil, phys_addr_t phy_addr,
 static int pil_msa_mba_auth(struct pil_desc *pil)
 {
 	struct mba_data *drv = container_of(pil, struct mba_data, desc);
-	int ret;
+	int ret, timeout_us = modem_auth_timeout_ms * 1000;
 	s32 status;
 
 	/* Wait for all segments to be authenticated or an error to occur */
 	ret = readl_poll_timeout(drv->rmb_base + RMB_MBA_STATUS, status,
 			status == STATUS_AUTH_COMPLETE || status < 0,
-			50, modem_auth_timeout_ms * 1000);
+			50, timeout_us);
 	if (ret) {
 		dev_err(pil->dev, "MBA authentication of image timed out\n");
 	} else if (status < 0) {
