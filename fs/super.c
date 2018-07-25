@@ -643,6 +643,78 @@ void iterate_supers_type(struct file_system_type *type,
 EXPORT_SYMBOL(iterate_supers_type);
 
 /**
+ *	thaw_supers - call thaw_super() for all superblocks
+ */
+void thaw_supers(void)
+{
+	struct super_block *sb, *p = NULL;
+
+	spin_lock(&sb_lock);
+	list_for_each_entry(sb, &super_blocks, s_list) {
+		if (hlist_unhashed(&sb->s_instances))
+			continue;
+		sb->s_count++;
+		spin_unlock(&sb_lock);
+
+		if (sb->s_flags & MS_FROZEN) {
+			thaw_super(sb);
+			sb->s_flags &= ~MS_FROZEN;
+		}
+
+		spin_lock(&sb_lock);
+		if (p)
+			__put_super(p);
+		p = sb;
+	}
+	if (p)
+		__put_super(p);
+	spin_unlock(&sb_lock);
+}
+
+/**
+ *	freeze_supers - call freeze_super() for all superblocks
+ */
+int freeze_supers(void)
+{
+	struct super_block *sb, *p = NULL;
+	int error = 0;
+	spin_lock(&sb_lock);
+
+	/*
+	 * Freeze in reverse order so filesystems depending on others are
+	 * frozen in the right order (eg. loopback on ext3).
+	 */
+	list_for_each_entry_reverse(sb, &super_blocks, s_list) {
+		if (hlist_unhashed(&sb->s_instances))
+			continue;
+		sb->s_count++;
+		spin_unlock(&sb_lock);
+
+		if (sb->s_root && sb->s_frozen != SB_FREEZE_TRANS
+		    && !(sb->s_flags & MS_RDONLY)) {
+			error = freeze_super(sb);
+			if (!error)
+				sb->s_flags |= MS_FROZEN;
+		}
+
+		spin_lock(&sb_lock);
+		if (error)
+			break;
+		if (p)
+			__put_super(p);
+		p = sb;
+	}
+	if (p)
+		__put_super(p);
+	spin_unlock(&sb_lock);
+
+	if (error)
+		thaw_supers();
+
+	return error;
+}
+
+/**
  *	get_super - get the superblock of a device
  *	@bdev: device to get the superblock for
  *	

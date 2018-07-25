@@ -31,6 +31,54 @@
 
 #include "power.h"
 
+#ifdef CONFIG_SUSPEND_FREEZER
+static inline int suspend_freeze_processes(void)
+{
+	int error;
+
+	error = freeze_processes();
+	/*
+	 * freeze_processes() automatically thaws every task if freezing
+	 * fails. So we need not do anything extra upon error.
+	 */
+	if (error)
+		return error;
+
+	error = freeze_supers();
+	if (error) {
+		thaw_processes();
+		return error;
+	}
+
+	error = freeze_kernel_threads();
+	/*
+	 * freeze_kernel_threads() thaws only kernel threads upon freezing
+	 * failure. So we have to thaw the userspace tasks ourselves.
+	 */
+	if (error) {
+		thaw_supers();
+		thaw_processes();
+	}
+
+	return error;
+}
+
+static inline void suspend_thaw_processes(void)
+{
+	thaw_supers();
+	thaw_processes();
+}
+#else /* !CONFIG_SUSPEND_FREEZER */
+static inline int suspend_freeze_processes(void)
+{
+	return 0;
+}
+
+static inline void suspend_thaw_processes(void)
+{
+}
+#endif /* !CONFIG_SUSPEND_FREEZER */
+
 const char *const pm_states[PM_SUSPEND_MAX] = {
 	[PM_SUSPEND_FREEZE]	= "freeze",
 #ifdef CONFIG_EARLYSUSPEND
