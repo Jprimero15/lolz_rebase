@@ -1157,6 +1157,11 @@ config STATE_NOTIFIER
         bool "State Notifier"
 	default y
 
+config TOUCHSCREEN_DOUBLETAP2WAKE
+        tristate "DoubleTap2Wake for touchscreens"
+        select TOUCHSCREEN_PREVENT_SLEEP
+        default y
+
 source "drivers/input/touchscreen/wacom/Kconfig"
 source "drivers/input/touchscreen/gt9xx/Kconfig"
 source "drivers/input/touchscreen/synaptics/Kconfig"
