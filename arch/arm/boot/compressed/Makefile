@@ -29,6 +29,7 @@ AFLAGS_head.o += -DFIPS_KERNEL_RAM_BASE=0x00008000
 endif
 HEAD	= head.o
 OBJS	+= misc.o decompress.o
+CFLAGS_decompress.o := -Os
 FONTC	= $(srctree)/drivers/video/console/font_acorn_8x8.c
 
 # string library code (-Os is enforced to keep it much smaller)
