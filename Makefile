@@ -365,7 +365,6 @@ CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 # An -O2 extended optimization set for ARM devices,
 # more precisely the Cortex-A15 with NEON support.
-ifdef CONFIG_FAST_LANE
 ifeq ($(CONFIG_FAST_LANE_ARM),y)
 FAST_LANE_ARM_OPT := -mtune=cortex-a15 \
 	-mcpu=cortex-a15 \
@@ -376,24 +375,26 @@ FAST_LANE_ARM_OPT := -mtune=cortex-a15 \
 else
 FAST_LANE_ARM_OPT :=
 endif
+ifeq ($(CONFIG_FAST_LANE),y)
 FAST_LANE_OPT_FLAGS := -g0 \
+	$(FAST_LANE_ARM_OPT) \
 	-DNDEBUG \
-	-ffast-math \
+	-funsafe-math-optimizations \
 	-fforce-addr \
-	-fgcse-after-reload \
 	-fgcse-las \
 	-fgcse-sm \
+	-fgcse-after-reload \
 	-fivopts \
-	-fno-strict-aliasing \
-	-fomit-frame-pointer \
-	-fpredictive-commoning \
-	-fsingle-precision-constant \
+	-fmodulo-sched \
+        -fmodulo-sched-allow-regmoves \
 	-fsched-spec-load \
 	-fsched-spec-load-dangerous \
 	-ftree-partial-pre \
 	-ftree-vectorize \
-	-funsafe-math-optimizations \
-	$(FAST_LANE_ARM_OPT)
+        -funswitch-loops \
+        -fpredictive-commoning
+else
+FAST_LANE_OPT_FLAGS :=
 endif
 
 # Use LINUXINCLUDE when you must reference the include/ directory.
@@ -406,23 +407,32 @@ LINUXINCLUDE    := -I$(srctree)/arch/$(hdr-arch)/include \
 KBUILD_CPPFLAGS := -D__KERNEL__
 
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
-		   -fno-strict-aliasing -fno-common \
-		   -fomit-frame-pointer \
-		   -Werror-implicit-function-declaration \
-		   -Wno-format-security \
-		   -fno-delete-null-pointer-checks \
-		   -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -ffast-math \
-		   -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
-		   -Wno-sizeof-pointer-memaccess \
-		   -Wpsabi \
-		   -Wno-bool-compare -Wno-logical-not-parentheses -Wno-incompatible-pointer-types \
-		   -Wno-tautological-compare -Wno-unused-const-variable \
-		   -Wno-misleading-indentation \
-		   -Wno-pointer-compare \
-		   -Wno-format-truncation -Wno-duplicate-decl-specifier -Wno-memset-elt-size \
-		   -Wno-bool-operation -Wno-int-in-bool-context -Wno-parentheses \
-		   -Wno-switch-unreachable -Wno-stringop-overflow -Wno-format-overflow \
 		   $(FAST_LANE_OPT_FLAGS) \
+		   -fomit-frame-pointer \
+		   -fno-common \
+		   -fno-strict-aliasing \
+		   -fno-delete-null-pointer-checks \
+   		   -Werror-implicit-function-declaration \
+		   -Wpsabi \
+                   -Wno-attributes \
+		   -Wno-format-security \
+		   -Wno-sizeof-pointer-memaccess \
+		   -Wno-parentheses \
+		   -Wno-format-overflow \
+		   -Wno-stringop-overflow \
+		   -Wno-switch-unreachable \
+		   -Wno-int-in-bool-context \
+		   -Wno-bool-operation \
+		   -Wno-memset-elt-size \
+		   -Wno-duplicate-decl-specifier \
+		   -Wno-format-truncation \
+		   -Wno-pointer-compare \
+		   -Wno-misleading-indentation \
+		   -Wno-unused-const-variable \
+		   -Wno-tautological-compare \
+		   -Wno-incompatible-pointer-types \
+		   -Wno-logical-not-parentheses \
+		   -Wno-bool-compare \
 		   -std=gnu89
 
 KBUILD_CFLAGS	+=  -s -pipe -fno-pic -mfloat-abi=softfp
