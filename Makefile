@@ -415,6 +415,11 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
    		   -Werror-implicit-function-declaration \
 		   -Wpsabi \
                    -Wno-attributes \
+                   -Wno-restrict \
+                   -Wno-array-bounds \
+                   -Wno-packed-not-aligned \
+                   -Wno-address-of-packed-member \
+                   -Wno-stringop-truncation \
 		   -Wno-format-security \
 		   -Wno-sizeof-pointer-memaccess \
 		   -Wno-parentheses \
