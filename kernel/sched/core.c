@@ -3758,7 +3758,6 @@ need_resched:
 		 */
 		cpu = smp_processor_id();
 		rq = cpu_rq(cpu);
-<<<<<<< HEAD
 
 #ifdef CONFIG_SEC_DEBUG
 		sec_debug_task_sched_log(cpu, rq->curr);
