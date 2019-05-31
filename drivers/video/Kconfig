@@ -2436,3 +2436,9 @@ config FB_SH_MOBILE_MERAM
 	  2 YCbCr framebuffers to be configured.
 
 endmenu
+
+config KLAPSE
+    bool CONFIG_KLAPSE
+    default y
+    help
+        A simple rgb dynamic lapsing module similar to LineageOS' livedisplay
