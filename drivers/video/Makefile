@@ -17,6 +17,9 @@ obj-y				  += backlight/
 
 obj-$(CONFIG_EXYNOS_VIDEO)     += exynos/
 
+# k-lapse
+obj-$(CONFIG_KLAPSE)    += klapse/klapse.o
+
 obj-$(CONFIG_FB_CFB_FILLRECT)  += cfbfillrect.o
 obj-$(CONFIG_FB_CFB_COPYAREA)  += cfbcopyarea.o
 obj-$(CONFIG_FB_CFB_IMAGEBLIT) += cfbimgblt.o
@@ -165,5 +168,5 @@ obj-$(CONFIG_FB_MXS)		  += mxsfb.o
 # the test framebuffer is last
 obj-$(CONFIG_FB_VIRTUAL)          += vfb.o
 
-#video output switch sysfs driver
+# video output switch sysfs driver
 obj-$(CONFIG_VIDEO_OUTPUT_CONTROL) += output.o
