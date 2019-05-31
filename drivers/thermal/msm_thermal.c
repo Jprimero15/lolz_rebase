@@ -141,7 +141,9 @@ static void check_temp(struct work_struct *work)
 	}
 
 reschedule:
-	schedule_delayed_work_on(0, &check_temp_work, msecs_to_jiffies(250));
+	queue_delayed_work_on(0, system_power_efficient_wq,
+              &check_temp_work,
+              msecs_to_jiffies(250));
 }
 
 static int __devinit msm_thermal_dev_probe(struct platform_device *pdev)
@@ -161,7 +163,8 @@ static int __devinit msm_thermal_dev_probe(struct platform_device *pdev)
         memcpy(&msm_thermal_info, &data, sizeof(struct msm_thermal_data));
 
         INIT_DELAYED_WORK(&check_temp_work, check_temp);
-        schedule_delayed_work_on(0, &check_temp_work, 5);
+        queue_delayed_work_on(0, system_power_efficient_wq,
+                         &check_temp_work, 5);
 
 	cpufreq_register_notifier(&msm_thermal_cpufreq_notifier,
 			CPUFREQ_POLICY_NOTIFIER);
