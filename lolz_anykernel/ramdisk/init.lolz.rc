@@ -14,19 +14,54 @@
 # GNU General Public License for more details.
 #
 
+on early-init
+    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
+    setprop sys.io.scheduler "bfq"
+
 on property:sys.boot_completed=1
     stop mpdecision
 
-    # Disable Kernel Panic
-    write /proc/sys/vm/panic_on_oom 0
-    write /proc/sys/kernel/panic 0
-    write /proc/sys/kernel/panic_on_oops 0
+    # CPUFREQ Settings   
+    chown system.system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system.system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chown system.system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chown system.system /sys/devices/system/cpu/cpu0/online
+    chmod 0664 /sys/devices/system/cpu/cpu0/online
+    chown system.system /sys/devices/system/cpu/cpu1/online  
+    chmod 0664 /sys/devices/system/cpu/cpu1/online
+    chown system.system /sys/devices/system/cpu/cpu2/online  
+    chmod 0664 /sys/devices/system/cpu/cpu2/online
+    chown system.system /sys/devices/system/cpu/cpu3/online  
+    chmod 0664 /sys/devices/system/cpu/cpu3/online
+
+    # CPU0
+    write /sys/devices/system/cpu/cpu0/online 1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2265600
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 268800
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
+
+    # CPU1
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 2265600
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 268800
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor interactive
+
+    # CPU2
+    write /sys/devices/system/cpu/cpu2/online 1
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 2265600
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 268800
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor interactive
+
+    # CPU3
+    write /sys/devices/system/cpu/cpu3/online 1
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 2265600
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 268800
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor interactive
 
     # Interactive tweaks
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "interactive"
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "interactive"
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "interactive"
     write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay "20000 1190400:60000 1728000:74000 1958400:82000 2265600:120000"
     write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 99
     write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1190400
@@ -36,21 +71,13 @@ on property:sys.boot_completed=1
     write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 40000
     write /sys/devices/system/cpu/cpufreq/interactive/timer_slack 80000
 
-    # Set Min and Max CPU freq
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 268800
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 268800
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 268800
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 268800
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2265600
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 2265600
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 2265600
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 2265600
-
     # Set TCP Congestion
     chmod 777 /proc/sys/net/ipv4/tcp_congestion_control
     write /proc/sys/net/ipv4/tcp_congestion_control "westwood"
 
     # Set I/O Scheduler
+    write /sys/block/mmcblk1/queue/read_ahead_kb 1024
+    write /sys/block/mmcblk0/queue/read_ahead_kb 1024
     write /sys/block/mmcblk1/queue/scheduler "bfq"
     write /sys/block/mmcblk0/queue/scheduler "cfq"
 
@@ -62,11 +89,6 @@ on property:sys.boot_completed=1
     write /sys/class/kgsl/kgsl-3d0/max_gpuclk "450000000"
 
     # Set Adreno Idler
-    write /sys/module/adreno_idler/parameters/adreno_idler_active "Y"
     write /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 30
     write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 15
     write /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 10000
-
-    # AutoSMP Settings
-    write /sys/kernel/autosmp/conf/min_boost_freq 268800
-
