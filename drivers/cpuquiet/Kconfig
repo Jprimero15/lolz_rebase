@@ -2,6 +2,7 @@ menu "CPUQuiet Framework"
 
 config CPU_QUIET
 	bool "CPUQuiet Framework"
+        default y
 	help
 	 Cpuquiet implements pluggable policies for forcing cpu cores into a
 	 quiescent state. Appropriate policies will save power without hurting
@@ -42,7 +43,7 @@ config CPU_QUIET_GOVERNOR_RQBALANCE
 
 choice
 	prompt "Default CPUQuiet governor"
-	default CPU_QUIET_DEFAULT_GOV_USERSPACE
+	default CPU_QUIET_DEFAULT_GOV_RQBALANCE
 	help
 	 This option sets which CPUQuiet governor shall be loaded at
 	 startup. If in doubt, select 'userspace'.
@@ -69,7 +70,7 @@ endchoice
 config CPU_QUIET_MSM
 	bool "MSM CPUquiet Driver"
 	depends on HOTPLUG_CPU && ARCH_MSM
-	default n
+	default y
 	help
 	 This is the CPUquiet driver for MSM SoCs. It supports
 	 automatic hotplugging of CPU cores using the CPUquiet
