@@ -27,6 +27,8 @@ source "drivers/gpu/ion/Kconfig"
 
 source "drivers/gpu/msm/Kconfig"
 
+source "drivers/video/klapse/Kconfig"
+
 config VGASTATE
        tristate
        default n
@@ -2436,9 +2438,3 @@ config FB_SH_MOBILE_MERAM
 	  2 YCbCr framebuffers to be configured.
 
 endmenu
-
-config KLAPSE
-    bool CONFIG_KLAPSE
-    default y
-    help
-        A simple rgb dynamic lapsing module similar to LineageOS' livedisplay
