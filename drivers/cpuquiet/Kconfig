@@ -23,7 +23,7 @@ config CPU_QUIET_GOVERNOR_USERSPACE
 
 config CPU_QUIET_GOVERNOR_RUNNABLE
 	bool "'runnable threads' governor"
-	default y
+	default n
 	help
 	 Scale the number of CPUs online depending on the number of runnable
 	 threads.  This governor will scale the number of CPUs online depending
