@@ -3,7 +3,7 @@
 #
 # LolZ-Kernel Configuration
 # Custom Kernel for HLTE Oreo and Pie based ROMs
-# Author: jprimero15 <jprimero155@gmail.com>
+# Author: Joshua Primero <jprimero155@gmail.com>
 #
 # This script is licensed under the terms of the GNU General Public 
 # License version 2, as published by the Free Software Foundation, 
@@ -72,7 +72,7 @@ on property:sys.boot_completed=1
     write /sys/devices/system/cpu/cpufreq/interactive/timer_slack 80000
 
     # Set TCP Congestion
-    chmod 777 /proc/sys/net/ipv4/tcp_congestion_control
+    chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
     write /proc/sys/net/ipv4/tcp_congestion_control "westwood"
 
     # Set I/O Scheduler
