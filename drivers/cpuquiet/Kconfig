@@ -43,7 +43,7 @@ config CPU_QUIET_GOVERNOR_RQBALANCE
 
 choice
 	prompt "Default CPUQuiet governor"
-	default CPU_QUIET_DEFAULT_GOV_RQBALANCE
+	default CPU_QUIET_DEFAULT_GOV_USERSPACE
 	help
 	 This option sets which CPUQuiet governor shall be loaded at
 	 startup. If in doubt, select 'userspace'.
