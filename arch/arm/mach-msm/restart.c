@@ -414,9 +414,8 @@ static void msm_restart_prepare(const char *cmd)
 		printk(KERN_NOTICE "%s : restart_reason = 0x%x\n",
 				__func__, __raw_readl(restart_reason));
 	}
-#ifdef CONFIG_SEC_DEBUG
 	else {
-		printk(KERN_NOTICE "%s: clear reset flag\n", __func__);
+		printk(KERN_NOTICE "%s : clear reset flag\n", __func__);
 			warm_reboot_set = 1;
 #ifdef CONFIG_USER_RESET_DEBUG
 		if(poweroff_charging) {
@@ -426,7 +425,6 @@ static void msm_restart_prepare(const char *cmd)
 #endif
 		__raw_writel(0x12345678, restart_reason);
 	}
-#endif
 	printk(KERN_NOTICE "%s : restart_reason = 0x%x\n",
 			__func__, __raw_readl(restart_reason));
 	printk(KERN_NOTICE "%s : warm_reboot_set = %d\n",
