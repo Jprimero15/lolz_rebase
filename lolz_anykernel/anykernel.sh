@@ -1,4 +1,4 @@
-# AnyKernel2 Ramdisk Mod Script
+# AnyKernel3 Ramdisk Mod Script
 # osm0sis @ xda-developers
 # Modified by jprimero15 @ xda-developers
 
@@ -10,15 +10,15 @@ do.devicecheck=1
 do.modules=0
 do.cleanup=1
 do.cleanuponabort=0
-device.name1=hltexx
-device.name2=hlte
-device.name3=hltekor
-device.name4=hltetmo
-device.name5=hltechn
-device.name6=hltespr
-device.name7=hltecan
-device.name8=hlteskt
-device.name9=hltedcm
+device.name1=hlte
+device.name2=hltecan
+device.name3=hltechn
+device.name4=hltedcm
+device.name5=hltekor
+device.name6=hlteskt
+device.name7=hltespr
+device.name8=hltetmo
+device.name9=hltexx
 supported.versions=8.1.0, 9
 '; } # end properties
 
@@ -30,17 +30,19 @@ ramdisk_compression=auto;
 
 ## AnyKernel methods (DO NOT CHANGE)
 # import patching functions/variables - see for reference
-. /tmp/anykernel/tools/ak2-core.sh;
+. tools/ak3-core.sh;
 
 
 ## AnyKernel file attributes
 # set permissions/ownership for included ramdisk files
 chmod -R 750 $ramdisk/*;
+chmod -R 640 $ramdisk/fstab.qcom
 chown -R root:root $ramdisk/*;
 
 
 ## AnyKernel install
 dump_boot;
+
 
 # begin ramdisk changes
 
@@ -51,14 +53,9 @@ insert_line init.qcom.rc "init.lolz.rc" after "import init.target.rc" "import in
 
 # init.target.rc
 backup_file init.target.rc;
-replace_section init.target.rc "service mpdecision" " " "#service mpdecision /vendor/bin/mpdecision --avg_comp\n#   class main\n#   user root\n#   group root readproc\n#   disabled";
-
-# permissive mode
-patch_cmdline "androidboot.selinux=permissive" "androidboot.selinux=permissive"
 
 # end ramdisk changes
 
 write_boot;
-
 ## end install
 

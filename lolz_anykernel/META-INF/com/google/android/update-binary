@@ -1,10 +1,16 @@
 #!/sbin/sh
-# AnyKernel2 Backend (DO NOT CHANGE)
+# AnyKernel3 Backend (DO NOT CHANGE)
 # osm0sis @ xda-developers
 
 OUTFD=/proc/self/fd/$2;
 ZIPFILE="$3";
-DIR=`dirname "$ZIPFILE"`;
+
+ps | grep zygote | grep -v grep >/dev/null && BOOTMODE=true || BOOTMODE=false;
+$BOOTMODE || ps -A 2>/dev/null | grep zygote | grep -v grep >/dev/null && BOOTMODE=true;
+
+$BOOTMODE && DIR=/sdcard || DIR=$(dirname "$ZIPFILE");
+
+test "$home" || home=/tmp/anykernel;
 
 ui_print() {
   until [ ! "$1" ]; do
@@ -24,27 +30,27 @@ int2ver() {
   fi;
 }
 cleanup() {
-  cd /tmp;
-  rm -rf /tmp/anykernel;
+  cd $(dirname $home);
+  rm -rf $home;
 }
 debugging() {
   case $(basename "$ZIPFILE" .zip) in
     *-debugging)
-      ui_print " ";
-      ui_print "Creating debugging archive in zip directory...";
-      $bb tar -czvf "$DIR/anykernel2-$(date +%Y-%m-%d_%H%M%S)-debug.tgz" /tmp/*;
+      ui_print " " "- Creating debugging archive in $DIR...";
+      test -f /tmp/recovery.log && log=/tmp/recovery.log;
+      $bb tar -czf "$DIR/anykernel3-$(date +%Y-%m-%d_%H%M%S)-debug.tgz" $home $log;
     ;;
   esac;
 }
 is_mounted() { $bb mount | $bb grep " $1 "; }
 unmount_all() {
-  (umount /system;
+  ($bb umount /system;
   if [ -d /system_root -a ! -f /system/build.prop ]; then
-    umount /system_root;
+    $bb umount /system_root;
   fi;
-  umount /system;
+  $bb umount /system;
   umount /vendor;
-  umount /data) 2>/dev/null;
+  $bb umount /data) 2>/dev/null;
 }
 abort() {
   ui_print "$*";
@@ -59,23 +65,27 @@ abort() {
 show_progress 1.34 4;
 ui_print " ";
 cleanup;
-mkdir -p /tmp/anykernel/bin;
-cd /tmp/anykernel;
+mkdir -p $home/bin;
+cd $home;
 unzip -o "$ZIPFILE";
-if [ $? != 0 -o -z "$(ls tools)" ]; then
-  abort "Unzip failed. Aborting...";
+if [ $? != 0 -o ! "$(ls tools)" ]; then
+  abort "- Unzip failed. Aborting...";
 fi;
-bb=/tmp/anykernel/tools/busybox;
+bb=$home/tools/busybox;
 chmod 755 $bb;
 $bb chmod -R 755 tools bin;
+$bb --install -s bin;
+if [ $? != 0 -o -z "$(ls bin)" ]; then
+  abort "- Busybox setup failed. Aborting...";
+fi;
 
 if [ -f banner ]; then
   while IFS='' read -r line || $bb [[ -n "$line" ]]; do
     ui_print "$line";
   done < banner;
-  ui_print " ";
-  ui_print " ";
+  ui_print " " " ";
 fi;
+
 
 ui_print "***********************************";
 ui_print "$(file_getprop anykernel.sh kernel.string)";
@@ -88,9 +98,9 @@ if [ -f version ]; then
   done < version;
   ui_print " ";
 fi;
-ui_print "- Logging in to twrp.me        ";
-ui_print "- Logged in successfully!        ";
-ui_print "- Lolz version: 7.4";
+ui_print "- Logging in to twrp.me...";
+ui_print "- Logged in successfully! ";
+ui_print "- Lolz version: 9.0"
 
 unmount_all;
 if [ ! "$(is_mounted /system)" ]; then
@@ -99,8 +109,8 @@ fi;
 ($bb mount -o ro -t auto /vendor;
 $bb mount /data) 2>/dev/null;
 if [ -f /system/system/build.prop ]; then
-  umount /system;
-  (umount /system;
+  $bb umount /system;
+  ($bb umount /system;
   mkdir /system_root) 2>/dev/null;
   $bb mount -o ro -t auto /dev/block/bootdevice/by-name/system /system_root;
   $bb mount -o bind /system_root/system /system;
@@ -123,7 +133,7 @@ elif [ ! "$(getprop ro.product.device 2>/dev/null)" -a ! "$(getprop ro.build.pro
 fi;
 
 if [ "$(file_getprop anykernel.sh do.devicecheck)" == 1 ]; then
-  ui_print "- Checking device...";
+  ui_print "- Checking Device...";
   device="$(getprop ro.product.device)";
   product="$(getprop ro.build.product)";
   for testname in $(file_getprop anykernel.sh 'device.name.*'); do
@@ -135,13 +145,13 @@ if [ "$(file_getprop anykernel.sh do.devicecheck)" == 1 ]; then
   done;
 
   if [ ! "$match" ]; then
-    abort "Unsupported device. Aborting...";
+    abort "- Unsupported device. Aborting...";
   fi;
 fi;
 
 supported_ver="$(file_getprop anykernel.sh supported.versions | $bb tr -d '[:space:]')";
 if [ "$supported_ver" ]; then
-  ui_print "- Checking Android version...";
+  ui_print "- Checking Android Version...";
   android_ver="$(file_getprop /system/build.prop ro.build.version.release)";
   if [ "$(echo $supported_ver | $bb grep -)" ]; then
     lo_ver=$(echo $supported_ver | $bb cut -d- -f1);
@@ -158,33 +168,28 @@ if [ "$supported_ver" ]; then
     done;
   fi;
   if [ "$supported" ]; then
-    ui_print "- Android version: $android_ver";
+    ui_print "- Android Version: $android_ver";
   else
     ui_print " ";
     abort "- Unsupported Android version. Aborting...";
   fi;
 fi;
 
-ui_print "- Uploading info in twrp.me";
+ui_print "- Uploading info in twrp.me...";
 ui_print "- Uploaded Successfully!";
-ui_print "- Optimizing the System";
-for i in $($bb --list); do
-  $bb ln -s $bb bin/$i;
-done;
-if [ $? != 0 -o -z "$(ls bin)" ]; then
-  abort "- Recovery busybox setup failed. Aborting...";
-fi;
-PATH="/tmp/anykernel/bin:$PATH" $bb ash anykernel.sh $2;
+ui_print "- Optimizing the System...";
+core=$($bb grep -oE 'ak.*core.sh' anykernel.sh);
+test -f tools/$core || $bb ln -s $home/tools/ak*-core.sh $home/tools/$core;
+PATH="$home/bin:$PATH" home=$home $bb ash anykernel.sh $2;
 if [ $? != 0 ]; then
   abort;
 fi;
 
 if [ "$(file_getprop anykernel.sh do.modules)" == 1 ]; then
-  ui_print " ";
-  ui_print "Pushing modules...";
+  ui_print "- Pushing modules...";
   $bb mount -o rw,remount -t auto /system;
   $bb mount -o rw,remount -t auto /vendor 2>/dev/null;
-  cd /tmp/anykernel/modules;
+  cd $home/modules;
   for module in $(find . -name '*.ko'); do
     modtarget=$(echo $module | $bb cut -c2-);
     if [ ! -e $modtarget ]; then
@@ -207,7 +212,7 @@ if [ "$(file_getprop anykernel.sh do.modules)" == 1 ]; then
       $bb mount -o ro,remount -t auto $modtarget;
     fi;
   done;
-  cd /tmp/anykernel;
+  cd $home;
   $bb mount -o ro,remount -t auto /system;
   $bb mount -o ro,remount -t auto /vendor 2>/dev/null;
 fi;
@@ -227,5 +232,7 @@ ui_print "- Logging out...";
 unmount_all;
 
 ui_print "***********************************";
-ui_print "*    LolZ-Kernel Installed!!";
+ui_print "* LolZ-Kernel Installed!!";
 ui_print "***********************************";
+
+# End of the damn script
