@@ -4,8 +4,8 @@
 # Lolz Build Script
 #
 
-# Lets use ARM GCC 9.x
-TOOLCHAIN="$HOME/gcc9/bin/arm-eabi-"
+# Lets use ARM GCC 9.1.1
+TOOLCHAIN="$HOME/gcc9.1/bin/arm-maestro-linux-gnueabi-"
 
 ARCHITECTURE="arm"
 
