@@ -67,7 +67,6 @@ on property:sys.boot_completed=1
     write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 40000
     write /sys/devices/system/cpu/cpufreq/interactive/timer_slack 80000
 
-
     # CPUsets
     write /dev/cpuset/top-app/cpus 0-3
     write /dev/cpuset/foreground/boost/cpus 0-2
@@ -88,29 +87,6 @@ on property:sys.boot_completed=1
     # Set TCP Congestion
     chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
     write /proc/sys/net/ipv4/tcp_congestion_control "westwood"
-
-    # Set Multi-Core Power Saving
-    write /sys/devices/system/cpu/sched_mc_power_savings 0
-
-    # Set GPU Governor
-    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
-    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 100000000
-    write /sys/class/kgsl/kgsl-3d0/devfreq/max_freq 600000000
-    write /sys/class/kgsl/kgsl-3d0/max_gpuclk 450000000
-
-    # Set Adreno Idler
-    write /sys/module/adreno_idler/parameters/adreno_idler_active Y
-    write /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 30
-    write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 15
-    write /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 10000
-
-    # Setup Hotplug
-    write /sys/kernel/msm_mpdecision/conf/enabled 0
-    write /sys/kernel/thunderplug/hotplug_enabled/enabled 0    
-    write /sys/kernel/msm_hotplug/msm_enabled 0
-    write /sys/module/msm_hotplug/msm_enabled 0
-    write /sys/kernel/intelli_plug/intelli_plug_active 1
-    write /sys/kernel/intelli_plug/debug_intelli_plug 0
 
     # Set I/O Scheduler
     write /sys/block/mmcblk1/queue/read_ahead_kb 1024
