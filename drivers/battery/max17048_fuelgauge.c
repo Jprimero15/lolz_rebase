@@ -310,26 +310,6 @@ static bool max17048_set_modeldata(struct i2c_client *client)
 }
 #endif
 
-static int max17048_get_crate(struct i2c_client *client)
-{
-	u32 crate;
-	u32 temp;
-	u16 w_data;
-
-	temp = max17048_read_word(client, MAX17048_CRATE_MSB);
-
-	w_data = swab16(temp);
-
-	//0.208%/hr SOC change rate
-	temp = (w_data & 0xff) * 208;
-	crate = temp / 1000;
-
-	dev_dbg(&client->dev,
-		"%s : crate (%d)\n", __func__, crate);
-
-	return crate;
-}
-
 static int max17048_get_vcell(struct i2c_client *client)
 {
 	u32 vcell;
@@ -437,57 +417,13 @@ static int max17048_get_soc(struct i2c_client *client)
 	return soc;
 }
 
-static int sample_index = 0;
-static int current_samples[AVER_SAMPLE_CNT] = {0,};
-static void store_current_samples(int value)
-{
-	if (current_samples[0] <= 0) {
-		int i;
-
-		for (i = 1; i < AVER_SAMPLE_CNT; i++)
-			current_samples[i] = value;
-	}
-
-	if (sample_index >= AVER_SAMPLE_CNT)
-		sample_index = 0;
-
-	current_samples[sample_index] = value;
-
-	sample_index++;
-}
-
-static int get_current_average(void)
-{
-	int i, total = 0;
-
-	for (i = 0; i < AVER_SAMPLE_CNT; i++)
-		total += current_samples[i];
-
-	return total / AVER_SAMPLE_CNT;
-}
-
 static int max17048_get_current(struct i2c_client *client)
 {
 	struct sec_fuelgauge_info *fuelgauge = i2c_get_clientdata(client);
-	int crate = 0;
 	union power_supply_propval value;
-	union power_supply_propval value_bat;
 
-	psy_do_property("battery", get,
-		POWER_SUPPLY_PROP_STATUS, value_bat);
-
-	if(value_bat.intval == POWER_SUPPLY_STATUS_DISCHARGING) {
-		crate = max17048_get_crate(client);
-
-		//Convert CRATE to mAh scale
-		value.intval = (3200 * crate) / 100;
-
-		//Store the current value for average calculation
-		store_current_samples(value.intval);
-	} else {
-		psy_do_property(fuelgauge->pdata->charger_name, get,
-			POWER_SUPPLY_PROP_CURRENT_NOW, value);
-	}
+	psy_do_property(fuelgauge->pdata->charger_name, get,
+		POWER_SUPPLY_PROP_CURRENT_NOW, value);
 
 	return value.intval;
 }
@@ -531,16 +467,8 @@ static int max17048_get_current_average(struct i2c_client *client)
 	int vcell, soc, curr_avg;
 	int check_discharge;
 
-	psy_do_property("battery", get,
-		POWER_SUPPLY_PROP_STATUS, value_bat);
-
-	if(value_bat.intval == POWER_SUPPLY_STATUS_DISCHARGING) {
-		value_chg.intval = get_current_average();
-	} else {
-		psy_do_property(fuelgauge->pdata->charger_name, get,
-			POWER_SUPPLY_PROP_CURRENT_NOW, value_chg);
-	}
-
+	psy_do_property(fuelgauge->pdata->charger_name, get,
+		POWER_SUPPLY_PROP_CURRENT_NOW, value_chg);
 	psy_do_property("battery", get,
 		POWER_SUPPLY_PROP_HEALTH, value_bat);
 	vcell = max17048_get_vcell(client);
