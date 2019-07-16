@@ -13,7 +13,7 @@ KERNEL_NAME="LolZ"
 
 KERNEL_VARIANT="hlte"
 
-KERNEL_VERSION="9.0"
+KERNEL_VERSION="9.1"
 
 KERNEL_DATE="$(date +"%Y%m%d")"
 
