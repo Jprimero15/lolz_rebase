@@ -15,7 +15,7 @@ config MSM_HOTPLUG
 config AUTOSMP
 	bool "Multi-core automatic hotplug support"
 	depends on SMP && HOTPLUG_CPU
-        default y
+        default n
 	help
 	  Automatically hotplugs the multiple cpu cores on and off
 	  based on cpu load and suspend state
