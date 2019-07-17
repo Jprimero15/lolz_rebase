@@ -40,11 +40,6 @@
 /* CVS CAL Size: 49152 = 48 * 1024 */
 #define CVS_CAL_SIZE 49152
 
-//Lazyplug implementation
-#ifdef CONFIG_LAZYPLUG
-extern void lazyplug_enter_lazy(bool enter);
-#endif
-
 enum {
 	VOC_TOKEN_NONE,
 	VOIP_MEM_MAP_TOKEN,
@@ -5003,10 +4998,6 @@ int voc_end_voice_call(uint32_t session_id)
 		voc_set_ext_ec_ref(AFE_PORT_INVALID, false);
 
 	mutex_unlock(&v->lock);
-       //Lazyplug hook
-        #ifdef CONFIG_LAZYPLUG
-        lazyplug_enter_lazy(false);
-        #endif
 	return ret;
 }
 
@@ -5330,11 +5321,6 @@ int voc_start_voice_call(uint32_t session_id)
 
 		ret = -EINVAL;
 		goto fail;
-
-       //Lazyplug hook
-        #ifdef CONFIG_LAZYPLUG
-        lazyplug_enter_lazy(true);
-        #endif
 	}
 fail:
 	mutex_unlock(&v->lock);
