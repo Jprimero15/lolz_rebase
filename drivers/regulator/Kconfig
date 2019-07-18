@@ -66,6 +66,7 @@ config REGULATOR_USERSPACE_CONSUMER
 
 config REGULATOR_PROXY_CONSUMER
 	bool "Boot time regulator proxy consumer support"
+        default y
 	help
 	  This driver provides support for boot time regulator proxy requests.
 	  It can enforce a specified voltage range, set a minimum current,
