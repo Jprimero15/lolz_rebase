@@ -100,7 +100,7 @@ if [ -f version ]; then
 fi;
 ui_print "- Logging in to twrp.me...";
 ui_print "- Logged in successfully! ";
-ui_print "- Lolz version: 9.1"
+ui_print "- Lolz version: 9.2"
 
 unmount_all;
 if [ ! "$(is_mounted /system)" ]; then
