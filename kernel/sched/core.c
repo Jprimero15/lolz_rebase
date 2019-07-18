@@ -1808,7 +1808,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
 {
 	unsigned long flags;
 	int cpu, src_cpu, success = 0;
-	bool notify = false;
+	int notify = 0;
 
 	/*
 	 * If we are going to wake up a thread waiting for CONDITION we
@@ -1892,24 +1892,14 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
 stat:
 	ttwu_stat(p, cpu, wake_flags);
 
+	if (src_cpu != cpu && task_notify_on_migrate(p))
+		notify = 1;
 out:
-	notify = task_notify_on_migrate(p);
-
 	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
 
-	if (src_cpu != cpu && notify) {
-		struct migration_notify_data mnd;
-
-		mnd.src_cpu = src_cpu;
-		mnd.dest_cpu = cpu;
-		if (sysctl_sched_ravg_window)
-			mnd.load = div64_u64((u64)p->se.ravg.demand * 100,
-				(u64)(sysctl_sched_ravg_window));
-		else
-			mnd.load = 0;
+	if (notify)
 		atomic_notifier_call_chain(&migration_notifier_head,
-					   0, (void *)&mnd);
-	}
+					   cpu, (void *)src_cpu);
 	return success;
 }
 
@@ -5704,7 +5694,6 @@ static int __migrate_task(struct task_struct *p, int src_cpu, int dest_cpu)
 {
 	struct rq *rq_dest, *rq_src;
 	bool moved = false;
-	bool notify = false;
 	int ret = 0;
 
 	if (unlikely(!cpu_active(dest_cpu)))
@@ -5737,23 +5726,10 @@ done:
 	ret = 1;
 fail:
 	double_rq_unlock(rq_src, rq_dest);
-
-	notify = task_notify_on_migrate(p);
-
 	raw_spin_unlock(&p->pi_lock);
-	if (moved && notify) {
-		struct migration_notify_data mnd;
-
-		mnd.src_cpu = src_cpu;
-		mnd.dest_cpu = dest_cpu;
-		if (sysctl_sched_ravg_window)
-			mnd.load = div64_u64((u64)p->se.ravg.demand * 100,
-				(u64)(sysctl_sched_ravg_window));
-		else
-			mnd.load = 0;
+	if (moved && task_notify_on_migrate(p))
 		atomic_notifier_call_chain(&migration_notifier_head,
-					   0, (void *)&mnd);
-	}
+					   dest_cpu, (void *)src_cpu);
 	return ret;
 }
 
