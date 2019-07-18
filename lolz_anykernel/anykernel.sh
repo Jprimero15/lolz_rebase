@@ -43,16 +43,9 @@ chown -R root:root $ramdisk/*;
 ## AnyKernel install
 dump_boot;
 
-
 # begin ramdisk changes
 
-# init.qcom.rc
-backup_file init.qcom.rc;
-remove_line init.qcom.rc "start mpdecision";
-insert_line init.qcom.rc "init.lolz.rc" after "import init.target.rc" "import init.lolz.rc";
-
-# init.target.rc
-backup_file init.target.rc;
+# oof
 
 # end ramdisk changes
 
