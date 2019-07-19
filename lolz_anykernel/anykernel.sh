@@ -45,7 +45,10 @@ dump_boot;
 
 # begin ramdisk changes
 
-# oof
+# init.qcom.rc
+backup_file init.qcom.rc;
+remove_line init.qcom.rc "start mpdecision";
+insert_line init.qcom.rc "init.lolz.rc" after "import init.target.rc" "import init.lolz.rc";
 
 # end ramdisk changes
 
