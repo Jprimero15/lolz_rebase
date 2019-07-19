@@ -1177,6 +1177,7 @@ static struct attribute * g[] = {
 	&cpufreq_min_limit_attr.attr,
 	&cpufreq_max_limit_attr.attr,
 	&cpufreq_table_attr.attr,
+#endif
 #ifdef CONFIG_FREEZER
 	&pm_freeze_timeout_attr.attr,
 #endif
