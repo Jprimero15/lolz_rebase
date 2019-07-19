@@ -4,16 +4,16 @@
 # Lolz Build Script
 #
 
-# Lets use Linaro GCC 7.4.x
-TOOLCHAIN="$HOME/linaro/bin/arm-eabi-"
+# Lets use ARM GCC 9.1.1
+TOOLCHAIN="$HOME/gcc9.1/bin/arm-maestro-linux-gnueabi-"
 
 ARCHITECTURE="arm"
 
-KERNEL_NAME="LolZ-kernel"
+KERNEL_NAME="LolZ"
 
 KERNEL_VARIANT="hlte"
 
-KERNEL_VERSION="8.0"
+KERNEL_VERSION="9.1"
 
 KERNEL_DATE="$(date +"%Y%m%d")"
 

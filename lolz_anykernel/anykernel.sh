@@ -36,23 +36,16 @@ ramdisk_compression=auto;
 ## AnyKernel file attributes
 # set permissions/ownership for included ramdisk files
 chmod -R 750 $ramdisk/*;
+chmod -R 640 $ramdisk/fstab.qcom
 chown -R root:root $ramdisk/*;
 
 
 ## AnyKernel install
 dump_boot;
 
-
 # begin ramdisk changes
 
-# init.qcom.rc
-backup_file init.qcom.rc;
-remove_line init.qcom.rc "start mpdecision";
-insert_line init.qcom.rc "init.lolz.rc" after "import init.target.rc" "import init.lolz.rc";
-
-# init.target.rc
-backup_file init.target.rc;
-replace_section init.target.rc "service mpdecision" " " "#service mpdecision /vendor/bin/mpdecision --avg_comp\n#   class main\n#   user root\n#   group root readproc\n#   disabled";
+# oof
 
 # end ramdisk changes
 

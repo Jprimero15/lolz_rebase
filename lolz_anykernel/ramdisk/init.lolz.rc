@@ -14,10 +14,6 @@
 # GNU General Public License for more details.
 #
 
-on early-init
-    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
-    setprop sys.io.scheduler "bfq"
-
 on property:sys.boot_completed=1
     stop mpdecision
 
@@ -61,15 +57,22 @@ on property:sys.boot_completed=1
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 268800
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor interactive
 
-    # Interactive tweaks
-    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay "20000 1190400:60000 1728000:74000 1958400:82000 2265600:120000"
-    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 99
-    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1190400
-    write /sys/devices/system/cpu/cpufreq/interactive/io_is_busy 0
-    write /sys/devices/system/cpu/cpufreq/interactive/target_loads "98 268800:28 300000:12 422400:34 652800:41 729600:12 883200:52 960000:9 1036800:8 1190400:73 1267200:6 1497600:87 1574400:5 1728000:89 1958400:91 2265600:94"
-    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 40000
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 40000
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_slack 80000
+    # CPUsets
+    write /dev/cpuset/top-app/cpus 0-3
+    write /dev/cpuset/foreground/boost/cpus 0-2
+    write /dev/cpuset/foreground/cpus 0-2
+    write /dev/cpuset/background/cpus 0
+    write /dev/cpuset/system-background/cpus 0-2
+
+    # Add a CPUset for the mm-qcamera-daemon We 
+    # want all cores for camera
+    mkdir /dev/cpuset/mm-qcamera-daemon
+    write /dev/cpuset/mm-qcamera-daemon/cpus 0-3
+    write /dev/cpuset/mm-qcamera-daemon/mems 0
+    writepid /dev/cpuset/mm-qcamera-daemon/tasks
+    chown system system /dev/cpuset/mm-qcamera-daemon
+    chown system system /dev/cpuset/mm-qcamera-daemon/tasks
+    chmod 0664 /dev/cpuset/mm-qcamera-daemon/tasks
 
     # Set TCP Congestion
     chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
@@ -80,9 +83,8 @@ on property:sys.boot_completed=1
     write /sys/block/mmcblk0/queue/read_ahead_kb 1024
     write /sys/block/mmcblk1/queue/scheduler "bfq"
     write /sys/block/mmcblk0/queue/scheduler "cfq"
- 
-    # CPUquiet
-    chown system.system /sys/devices/system/cpu/cpuquiet/nr_min_cpus
-    chmod 0664 /sys/devices/system/cpu/cpuquiet/nr_min_cpus
-    write /sys/devices/system/cpu/cpuquiet/nr_min_cpus 2
+
+    # Set RQBALANCE
+    chmod 666 /sys/devices/system/cpu/cpuquiet/current_governor
+    write /sys/devices/system/cpu/cpuquiet/current_governor "rqbalance"
 
