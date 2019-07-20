@@ -30,11 +30,11 @@ ENTRY(__strnlen_user)
 	bne	1b
 	add	r0, r0, #1
 2:	sub	r0, r0, r2
-	mov	pc, lr
+	ret	lr
 ENDPROC(__strnlen_user)
 
 	.pushsection .fixup,"ax"
 	.align	0
 9001:	mov	r0, #0
-	mov	pc, lr
+	ret	lr
 	.popsection

@@ -30,7 +30,7 @@ ENTRY(__strncpy_from_user)
 	bne	1b
 	sub	r1, r1, #1	@ take NUL character out of count
 2:	sub	r0, r1, ip
-	mov	pc, lr
+	ret	lr
 ENDPROC(__strncpy_from_user)
 
 	.pushsection .fixup,"ax"
@@ -38,6 +38,6 @@ ENDPROC(__strncpy_from_user)
 9001:	mov	r3, #0
 	strb	r3, [r0, #0]	@ null terminate
 	mov	r0, #-EFAULT
-	mov	pc, lr
+	ret	lr
 	.popsection
 

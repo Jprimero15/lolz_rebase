@@ -5,6 +5,9 @@
 #include <asm/asm-offsets.h>
 #include <asm/errno.h>
 #include <asm/thread_info.h>
+#ifdef TIMA_EMUL_ENABLED
+#include <asm/entry-macro-tima.S>
+#endif
 
 @ Bad Abort numbers
 @ -----------------
@@ -40,7 +43,12 @@
 #ifdef CONFIG_ALIGNMENT_TRAP
 	ldr	\rtemp, .LCcralign
 	ldr	\rtemp, [\rtemp]
+#ifndef TIMA_EMUL_ENABLED
 	mcr	p15, 0, \rtemp, c1, c0
+#else
+	tima_macro_emul_crit_instn \rtemp, 0x3f808221
+
+#endif
 #endif
 	.endm
 
@@ -108,12 +116,6 @@
 	mov	\rd, \rd, lsl #13
 	.endm
 
-	@
-	@ 32-bit wide "mov pc, reg"
-	@
-	.macro	movw_pc, reg
-	mov	pc, \reg
-	.endm
 #else	/* CONFIG_THUMB2_KERNEL */
 	.macro	svc_exit, rpsr
 	ldr	lr, [sp, #S_SP]			@ top of the stack
@@ -155,13 +157,6 @@
 	mov	\rd, \rd, lsl #13
 	.endm
 
-	@
-	@ 32-bit wide "mov pc, reg"
-	@
-	.macro	movw_pc, reg
-	mov	pc, \reg
-	nop
-	.endm
 #endif	/* !CONFIG_THUMB2_KERNEL */
 
 /*
