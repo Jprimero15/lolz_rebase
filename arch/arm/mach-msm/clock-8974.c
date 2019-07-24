@@ -25,6 +25,7 @@
 #include <mach/socinfo.h>
 #include <mach/rpm-smd.h>
 #include <mach/clock-generic.h>
+#include <mach/subsystem_restart.h>
 
 #include "clock-local2.h"
 #include "clock-pll.h"
@@ -6082,25 +6083,25 @@ static void __init msm8974_clock_pre_init(void)
 {
 	virt_bases[GCC_BASE] = ioremap(GCC_CC_PHYS, GCC_CC_SIZE);
 	if (!virt_bases[GCC_BASE])
-		panic("clock-8974: Unable to ioremap GCC memory!");
+		PR_BUG("clock-8974: Unable to ioremap GCC memory!");
 
 	virt_bases[MMSS_BASE] = ioremap(MMSS_CC_PHYS, MMSS_CC_SIZE);
 	if (!virt_bases[MMSS_BASE])
-		panic("clock-8974: Unable to ioremap MMSS_CC memory!");
+		PR_BUG("clock-8974: Unable to ioremap MMSS_CC memory!");
 
 	virt_bases[LPASS_BASE] = ioremap(LPASS_CC_PHYS, LPASS_CC_SIZE);
 	if (!virt_bases[LPASS_BASE])
-		panic("clock-8974: Unable to ioremap LPASS_CC memory!");
+		PR_BUG("clock-8974: Unable to ioremap LPASS_CC memory!");
 
 	virt_bases[APCS_BASE] = ioremap(APCS_GCC_CC_PHYS, APCS_GCC_CC_SIZE);
 	if (!virt_bases[APCS_BASE])
-		panic("clock-8974: Unable to ioremap APCS_GCC_CC memory!");
+		PR_BUG("clock-8974: Unable to ioremap APCS_GCC_CC memory!");
 
 	clk_ops_local_pll.enable = sr_hpm_lp_pll_clk_enable;
 
 	vdd_dig.regulator[0] = regulator_get(NULL, "vdd_dig");
 	if (IS_ERR(vdd_dig.regulator[0]))
-		panic("clock-8974: Unable to get the vdd_dig regulator!");
+		PR_BUG("clock-8974: Unable to get the vdd_dig regulator!");
 
 	enable_rpm_scaling();
 
@@ -6145,7 +6146,7 @@ static void __init msm8974_rumi_clock_pre_init(void)
 {
 	virt_bases[GCC_BASE] = ioremap(GCC_CC_PHYS, GCC_CC_SIZE);
 	if (!virt_bases[GCC_BASE])
-		panic("clock-8974: Unable to ioremap GCC memory!");
+		PR_BUG("clock-8974: Unable to ioremap GCC memory!");
 
 	/* SDCC clocks are partially emulated in the RUMI */
 	sdcc1_apps_clk_src.freq_tbl = ftbl_gcc_sdcc_apps_rumi_clk;
@@ -6155,7 +6156,7 @@ static void __init msm8974_rumi_clock_pre_init(void)
 
 	vdd_dig.regulator[0] = regulator_get(NULL, "vdd_dig");
 	if (IS_ERR(vdd_dig.regulator[0]))
-		panic("clock-8974: Unable to get the vdd_dig regulator!");
+		PR_BUG("clock-8974: Unable to get the vdd_dig regulator!");
 }
 
 struct clock_init_data msm8974_clock_init_data __initdata = {
