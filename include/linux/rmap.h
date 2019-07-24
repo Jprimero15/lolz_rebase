@@ -7,7 +7,7 @@
 #include <linux/list.h>
 #include <linux/slab.h>
 #include <linux/mm.h>
-#include <linux/rwsem.h>
+#include <linux/mutex.h>
 #include <linux/memcontrol.h>
 
 /*
@@ -25,9 +25,8 @@
  * pointing to this anon_vma once its vma list is empty.
  */
 struct anon_vma {
-	struct anon_vma *root;		/* Root of this anon_vma tree */
-	struct rw_semaphore rwsem;	/* W: modification, R: walking the list */
-
+	struct anon_vma *root;	/* Root of this anon_vma tree */
+	struct mutex mutex;	/* Serialize access to vma list */
 	/*
 	 * The refcount is taken on an anon_vma when there is no
 	 * guarantee that the vma of page tables will exist for
@@ -75,7 +74,7 @@ struct anon_vma_chain {
 	struct vm_area_struct *vma;
 	struct anon_vma *anon_vma;
 	struct list_head same_vma;   /* locked by mmap_sem & page_table_lock */
-	struct list_head same_anon_vma;	/* locked by anon_vma->rwsem */
+	struct list_head same_anon_vma;	/* locked by anon_vma->mutex */
 };
 
 enum ttu_flags {
@@ -115,24 +114,24 @@ static inline void vma_lock_anon_vma(struct vm_area_struct *vma)
 {
 	struct anon_vma *anon_vma = vma->anon_vma;
 	if (anon_vma)
-		down_write(&anon_vma->root->rwsem);
+		mutex_lock(&anon_vma->root->mutex);
 }
 
 static inline void vma_unlock_anon_vma(struct vm_area_struct *vma)
 {
 	struct anon_vma *anon_vma = vma->anon_vma;
 	if (anon_vma)
-		up_write(&anon_vma->root->rwsem);
+		mutex_unlock(&anon_vma->root->mutex);
 }
 
 static inline void anon_vma_lock(struct anon_vma *anon_vma)
 {
-	down_write(&anon_vma->root->rwsem);
+	mutex_lock(&anon_vma->root->mutex);
 }
 
 static inline void anon_vma_unlock(struct anon_vma *anon_vma)
 {
-	up_write(&anon_vma->root->rwsem);
+	mutex_unlock(&anon_vma->root->mutex);
 }
 
 /*
