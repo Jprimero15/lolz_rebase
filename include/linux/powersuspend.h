@@ -14,6 +14,12 @@
  *
  *  v1.4 - add a hybrid-kernel mode, accepting both kernel hooks (first wins)
  *
+ *  v1.5 - fix hybrid-kernel mode cannot be set through sysfs
+ *
+ *  v1.6 - debug output switchable in defconfig
+ *
+ *  v1.7 - do only run state change if change actually requests a new state
+ *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
  * may be copied, distributed, and modified under those terms.
