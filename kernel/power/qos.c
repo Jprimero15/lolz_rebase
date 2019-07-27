@@ -173,7 +173,7 @@ static struct pm_qos_object *pm_qos_array[] = {
 	&min_online_cpus_pm_qos,
 	&max_online_cpus_pm_qos,
 	&cpu_dma_throughput_pm_qos,
-	&dvfs_lat_pm_qos,
+	&dvfs_lat_pm_qos
 };
 
 static ssize_t pm_qos_power_write(struct file *filp, const char __user *buf,
@@ -715,6 +715,16 @@ void pm_qos_remove_request(struct pm_qos_request *req)
 	}
 
 	cancel_delayed_work_sync(&req->work);
+
+#ifdef CONFIG_SMP
+	if (req->type == PM_QOS_REQ_AFFINE_IRQ) {
+		int ret = 0;
+		/* Get the current affinity */
+		ret = irq_release_affinity_notifier(&req->irq_notify);
+		if (ret)
+			WARN(1, "IRQ affinity notify set failed\n");
+	}
+#endif
 
 	pm_qos_update_target(pm_qos_array[req->pm_qos_class]->constraints,
 			     req, PM_QOS_REMOVE_REQ,
