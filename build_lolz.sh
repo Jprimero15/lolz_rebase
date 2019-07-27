@@ -19,7 +19,7 @@ KERNEL_DATE="$(date +"%Y%m%d")"
 
 BUILD_DIR="output_$KERNEL_VARIANT"
 
-KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage-dtb"
+KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"
 
 COMPILE_DT="y"
 
@@ -73,7 +73,7 @@ sed -i "s;lineageos;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
 make -j$NUM_CPUS -C $(pwd) O=$BUILD_DIR
 if [ -e $KERNEL_IMAGE ]; then
 	echo -e $COLOR_GREEN"\n copying zImage to anykernel directory\n"$COLOR_NEUTRAL
-	cp $KERNEL_IMAGE $ANYKERNEL_DIR/ && mv $ANYKERNEL_DIR/zImage-dtb $ANYKERNEL_DIR/zImage
+	cp $KERNEL_IMAGE $ANYKERNEL_DIR/
 	# compile dt if required
 	if [ "y" == "$COMPILE_DT" ]; then
 		echo -e $COLOR_GREEN"\n compiling device tree blob (dt.img)\n"$COLOR_NEUTRAL
