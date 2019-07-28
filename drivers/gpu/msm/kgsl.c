@@ -30,6 +30,9 @@
 #include <mach/socinfo.h>
 #include <linux/mman.h>
 #include <linux/sort.h>
+#ifdef CONFIG_HIGHPTE
+#include <linux/highmem.h>
+#endif
 #include <asm/cacheflush.h>
 
 #include "kgsl.h"
@@ -349,14 +352,6 @@ done:
 	return ret;
 }
 
-/**
- * kgsl_mem_entry_untrack_gpuaddr() - Untrack memory that is previously tracked
- * process - Pointer to process private to which memory belongs
- * entry - Memory entry to untrack
- *
- * Function just does the opposite of kgsl_mem_entry_track_gpuaddr. Needs to be
- * called with processes spin lock held
- */
 static void
 kgsl_mem_entry_untrack_gpuaddr(struct kgsl_process_private *process,
 				struct kgsl_mem_entry *entry)
@@ -1048,8 +1043,6 @@ int kgsl_close_device(struct kgsl_device *device)
 		/* Fail if the wait times out */
 		BUG_ON(atomic_read(&device->active_cnt) > 0);
 
-		/* Force power on to do the stop */
-		kgsl_pwrctrl_enable(device);
 		result = device->ftbl->stop(device);
 		kgsl_pwrctrl_set_state(device, KGSL_STATE_INIT);
 	}
@@ -1630,12 +1623,11 @@ static void _kgsl_cmdbatch_timer(unsigned long data)
 	struct kgsl_device *device;
 	struct kgsl_cmdbatch *cmdbatch = (struct kgsl_cmdbatch *) data;
 	struct kgsl_cmdbatch_sync_event *event;
-	unsigned long flags;
 
 	if (cmdbatch == NULL || cmdbatch->context == NULL)
 		return;
 
-	spin_lock_irqsave(&cmdbatch->lock, flags);
+	spin_lock(&cmdbatch->lock);
 	if (list_empty(&cmdbatch->synclist))
 		goto done;
 
@@ -1674,7 +1666,7 @@ static void _kgsl_cmdbatch_timer(unsigned long data)
 	}
 
 done:
-	spin_unlock_irqrestore(&cmdbatch->lock, flags);
+	spin_unlock(&cmdbatch->lock);
 }
 
 /**
@@ -1729,16 +1721,10 @@ static void kgsl_cmdbatch_sync_expire(struct kgsl_device *device,
 	struct kgsl_cmdbatch_sync_event *event)
 {
 	struct kgsl_cmdbatch_sync_event *e, *tmp;
-	unsigned long flags;
 	int sched = 0;
 	int removed = 0;
 
-	/*
-	 * cmdbatch timer or event callback might run at
-	 * this time in interrupt context and uses same lock.
-	 * So use irq-save version of spin lock.
-	 */
-	spin_lock_irqsave(&event->cmdbatch->lock, flags);
+	spin_lock(&event->cmdbatch->lock);
 
 	/*
 	 * sync events that are contained by a cmdbatch which has been
@@ -1753,9 +1739,8 @@ static void kgsl_cmdbatch_sync_expire(struct kgsl_device *device,
 		}
 	}
 
-	event->handle = NULL;
 	sched = list_empty(&event->cmdbatch->synclist) ? 1 : 0;
-	spin_unlock_irqrestore(&event->cmdbatch->lock, flags);
+	spin_unlock(&event->cmdbatch->lock);
 
 	/* If the list is empty delete the canary timer */
 	if (sched)
@@ -1816,20 +1801,15 @@ void kgsl_cmdbatch_destroy(struct kgsl_cmdbatch *cmdbatch)
 {
 	struct kgsl_cmdbatch_sync_event *event, *tmpsync;
 	LIST_HEAD(cancel_synclist);
-	unsigned long flags;
 
 	/* Zap the canary timer */
 	del_timer_sync(&cmdbatch->timer);
 
-	/*
-	 * callback might run in interrupt context
-	 * so need to use irqsave version of spinlocks.
-	 */
-	spin_lock_irqsave(&cmdbatch->lock, flags);
+	spin_lock(&cmdbatch->lock);
 
 	/* Empty the synclist before canceling events */
 	list_splice_init(&cmdbatch->synclist, &cancel_synclist);
-	spin_unlock_irqrestore(&cmdbatch->lock, flags);
+	spin_unlock(&cmdbatch->lock);
 
 	/*
 	 * Finish canceling events outside the cmdbatch spinlock and
@@ -1850,15 +1830,8 @@ void kgsl_cmdbatch_destroy(struct kgsl_cmdbatch *cmdbatch)
 				kgsl_cmdbatch_sync_func, event);
 		} else if (event->type == KGSL_CMD_SYNCPOINT_TYPE_FENCE) {
 			/* Put events that are successfully canceled */
-			spin_lock_irqsave(&cmdbatch->lock, flags);
-
-			if (kgsl_sync_fence_async_cancel(event->handle)) {
-				event->handle = NULL;
-				spin_unlock_irqrestore(&cmdbatch->lock, flags);
+			if (kgsl_sync_fence_async_cancel(event->handle))
 				kgsl_cmdbatch_sync_event_put(event);
-			} else {
-				spin_unlock_irqrestore(&cmdbatch->lock, flags);
-			}
 		}
 
 		/* Put events that have been removed from the synclist */
@@ -1904,7 +1877,6 @@ static int kgsl_cmdbatch_add_sync_fence(struct kgsl_device *device,
 {
 	struct kgsl_cmd_syncpoint_fence *sync = priv;
 	struct kgsl_cmdbatch_sync_event *event;
-	unsigned long flags;
 
 	event = kzalloc(sizeof(*event), GFP_KERNEL);
 
@@ -1931,7 +1903,10 @@ static int kgsl_cmdbatch_add_sync_fence(struct kgsl_device *device,
 	 * removing from the synclist.
 	 */
 
+	spin_lock(&cmdbatch->lock);
 	kref_get(&event->refcount);
+	list_add(&event->node, &cmdbatch->synclist);
+	spin_unlock(&cmdbatch->lock);
 
 	/*
 	 * Increment the reference count for the async callback.
@@ -1940,10 +1915,6 @@ static int kgsl_cmdbatch_add_sync_fence(struct kgsl_device *device,
 	 */
 
 	kref_get(&event->refcount);
-
-	spin_lock_irqsave(&cmdbatch->lock, flags);
-	list_add(&event->node, &cmdbatch->synclist);
-
 	event->handle = kgsl_sync_fence_async_wait(sync->fd,
 		kgsl_cmdbatch_sync_fence_func, event);
 
@@ -1951,14 +1922,17 @@ static int kgsl_cmdbatch_add_sync_fence(struct kgsl_device *device,
 		int ret = PTR_ERR(event->handle);
 
 		event->handle = NULL;
+
+		/* Failed to add the event to the async callback */
+		kgsl_cmdbatch_sync_event_put(event);
+
 		/* Remove event from the synclist */
+		spin_lock(&cmdbatch->lock);
 		list_del(&event->node);
-		spin_unlock_irqrestore(&cmdbatch->lock, flags);
-		/* Put for event removal from the synclist */
 		kgsl_cmdbatch_sync_event_put(event);
-		/* Unable to add event to the async callback so a put */
-		kgsl_cmdbatch_sync_event_put(event);
-		/* Put since event no longer needed by this function */
+		spin_unlock(&cmdbatch->lock);
+
+		/* Event no longer needed by this function */
 		kgsl_cmdbatch_sync_event_put(event);
 
 		/*
@@ -1972,7 +1946,6 @@ static int kgsl_cmdbatch_add_sync_fence(struct kgsl_device *device,
 	}
 
 	trace_syncpoint_fence(cmdbatch, event->handle->name);
-	spin_unlock_irqrestore(&cmdbatch->lock, flags);
 
 	/*
 	 * Event was successfully added to the synclist, the async
@@ -4625,7 +4598,7 @@ static void kgsl_core_exit(void)
 static int __init kgsl_core_init(void)
 {
 	int result = 0;
-	struct sched_param param = { .sched_priority = 6 };
+	struct sched_param param = { .sched_priority = 2 };
 
 	/* alloc major and minor device numbers */
 	result = alloc_chrdev_region(&kgsl_driver.major, 0, KGSL_DEVICE_MAX,
