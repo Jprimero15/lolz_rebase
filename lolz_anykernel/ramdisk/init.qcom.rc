@@ -59,10 +59,8 @@ on boot
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /proc/bluetooth/sleep/proto
     chmod 0660 /sys/class/rfkill/rfkill0/state
-    chown bluetooth bluetooth /dev/ttyHS0
-    chmod 0660 /dev/ttyHS0
 
-    #Basic permissions
+    # Basic permissions
     chown root system /dev/socket
     chmod 775 /dev/socket
 
@@ -72,8 +70,9 @@ on boot
     mkdir /dev/socket/qmux_bluetooth 2770 bluetooth bluetooth
     mkdir /dev/socket/qmux_gps 2770 gps gps
 
-    #Remove SUID bit for iproute2 ip tool
-    chmod 0755 /system/bin/ip
+    # Create PERFD deamon related dirs
+    mkdir /data/misc/perfd 2755 root system
+    mkdir /data/system/perfd 2770 root system
 
     chmod 0444 /sys/devices/platform/msm_hsusb/gadget/usb_state
 
@@ -152,10 +151,10 @@ on post-fs-data
     chown system system /sys/devices/platform/msm_sdcc.4/polling
 
     # For disabling softkeys *FIXME*
-    chown root system  /sys/class/sec/sec_touchkey/brightness
-    chmod 0664  /sys/class/sec/sec_touchkey/brightness
-    chown root system  /sys/class/sec/sec_touchkey/max_brightness
-    chmod 0664  /sys/class/sec/sec_touchkey/max_brightness
+    chown root system /sys/class/sec/sec_touchkey/brightness
+    chmod 0664 /sys/class/sec/sec_touchkey/brightness
+    chown root system /sys/class/sec/sec_touchkey/max_brightness
+    chmod 0664 /sys/class/sec/sec_touchkey/max_brightness
 
     # Torch
     chmod 0666 /sys/class/leds/torch-sec1/brightness
@@ -165,7 +164,7 @@ on post-fs-data
     chmod 0660 /sys/class/sec/sec_touchkey/keypad_enable
     restorecon /sys/class/sec/sec_touchkey/keypad_enable
 
-# permission for Input Device(Touchkey).
+    # permission for Input Device(Touchkey).
     chmod 0660 /sys/class/input/input2/enabled
     chown system system /sys/class/input/input2/enabled
     chown radio system /sys/class/sec/sec_touchkey/touch_sensitivity
@@ -174,12 +173,12 @@ on post-fs-data
     chown system radio /sys/class/sec/sec_touchkey/flip_mode
     chown system radio /sys/class/sec/sec_touchkey/boost_level
 
-# permission for Input Device(Wacom).
+    # permission for Input Device(Wacom).
     chmod 0660 /sys/class/input/input4/enabled
     chown system system /sys/class/input/input4/enabled
     chown system system /sys/class/input/input18/enabled
 
-# permissions for S-Pen
+    # permissions for S-Pen
     chmod 0660 /sys/class/input/input3/enabled
     chown system system /sys/class/input/input3/enabled
     chown system radio /sys/class/sec/sec_epen/epen_firm_update
@@ -193,19 +192,17 @@ on post-fs-data
     chown system radio /sys/class/sec/sec_epen/boost_level
     chown system radio /sys/class/sec/sec_epen/epen_gestures
 
-# permissions for bluetooth.
+    # permissions for bluetooth.
     setprop ro.bt.bdaddr_path "/efs/bluetooth/bt_addr"
     chown bluetooth bluetooth ro.bt.bdaddr_path
     chown radio bluetooth /efs/bluetooth/bt_addr
     chmod 0640 /efs/bluetooth/bt_addr
     restorecon_recursive /efs/bluetooth
-    chown bluetooth bluetooth /dev/ttyHS0
-    chmod 0660 /dev/ttyHS0
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
 
-# bluetooth LPM
+    # bluetooth LPM
     chmod 0660 /proc/bluetooth/sleep/lpm
     chmod 0220 /proc/bluetooth/sleep/btwrite
     chown bluetooth bluetooth /proc/bluetooth/sleep/lpm
@@ -222,24 +219,23 @@ on post-fs-data
     chmod 0660 /sys/class/input/input18/enabled
 
     # Vibrator
-    chmod 0660 /sys/class/timed_output/vibrator/pwm_value
-    chown system system /sys/class/timed_output/vibrator/pwm_value
-    chmod 0440 /sys/class/timed_output/vibrator/pwm_max
-    chown system system /sys/class/timed_output/vibrator/pwm_max
-    chmod 0440 /sys/class/timed_output/vibrator/pwm_min
-    chown system system /sys/class/timed_output/vibrator/pwm_min
-    chmod 0440 /sys/class/timed_output/vibrator/pwm_default
+    chown system system /sys/class/timed_output/vibrator/enable
     chown system system /sys/class/timed_output/vibrator/pwm_default
-    chmod 0440 /sys/class/timed_output/vibrator/pwm_threshold
+    chown system system /sys/class/timed_output/vibrator/pwm_max
+    chown system system /sys/class/timed_output/vibrator/pwm_min
     chown system system /sys/class/timed_output/vibrator/pwm_threshold
+    chown system system /sys/class/timed_output/vibrator/pwm_value
+    chmod 0660 /sys/class/timed_output/vibrator/pwm_default
+    chmod 0660 /sys/class/timed_output/vibrator/pwm_max
+    chmod 0660 /sys/class/timed_output/vibrator/pwm_min
+    chmod 0660 /sys/class/timed_output/vibrator/pwm_threshold
+    chmod 0660 /sys/class/timed_output/vibrator/pwm_value
 
-    #Create the symlink to qcn wpa_supplicant folder for ar6000 wpa_supplicant
+    # Create the symlink to qcn wpa_supplicant folder for ar6000 wpa_supplicant
     mkdir /data/system 0775 system system
-    #symlink /data/misc/wifi/wpa_supplicant /data/system/wpa_supplicant
 
     #Create directories for wiper services
     mkdir /data/wpstiles/ 0755 shell
-#    mkdir /data/wiper 0755 gps qcom_oncrpc
 
     #Create directories for gpsone_daemon services
     mkdir /data/misc/gpsone_d 0770 system gps
@@ -263,23 +259,9 @@ on post-fs-data
     chown system system /sys/devices/virtual/mdnie/mdnie/outdoor
     chown system system /sys/devices/virtual/mdnie/mdnie/scenario
 
-# Broadcom NFC
-    chmod 0600 /dev/bcm2079x
-    chown nfc nfc /dev/bcm2079x
-    mkdir /data/bcmnfc
-    mkdir /data/bcmnfc/param
-    chmod 0700 /data/bcmnfc
-    chmod 0700 /data/bcmnfc/param
-    chown nfc nfc /data/bcmnfc
-    chown nfc nfc /data/bcmnfc/param
-
-# NFC NXP
-    chmod 0660 /dev/pn547
-    chown nfc nfc /dev/pn547
-
-# GPIO DVS
+    # GPIO DVS
     chown radio system /sys/class/secgpio_check/secgpio_check_all/secgpio_ctrl
-# sensor
+    # sensor
     chown system system /efs/FactoryApp/baro_delta
     chmod 0640 /efs/FactoryApp/baro_delta
     restorecon /efs/FactoryApp/baro_delta
@@ -405,24 +387,12 @@ on property:sys.boot_completed=1
 on property:sys.boot_completed=0
     setprop sys.perf.profile 2
 
-service ds_fmc_appd /system/bin/ds_fmc_appd -p "rmnet0" -D
-    class late_start
-    group radio wifi inet
-    disabled
-    oneshot
-
 on property:persist.data.ds_fmc_app.mode=1
     start ds_fmc_appd
 
 on property:ro.data.large_tcp_window_size=true
     # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
-    write /proc/sys/net/ipv4/tcp_adv_win_scale  2
-
-service hcidump /system/bin/sh /system/etc/hcidump.sh
-    user bluetooth
-    group bluetooth system net_bt_admin net_admin
-    disabled
-    oneshot
+    write /proc/sys/net/ipv4/tcp_adv_win_scale 2
 
 service charger /charger
     class charger

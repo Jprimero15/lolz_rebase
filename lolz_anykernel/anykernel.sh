@@ -36,7 +36,8 @@ ramdisk_compression=auto;
 ## AnyKernel file attributes
 # set permissions/ownership for included ramdisk files
 chmod -R 750 $ramdisk/*;
-chmod -R 640 $ramdisk/fstab.qcom
+chmod -R 640 $ramdisk/fstab.qcom;
+chmod -R 644 $ramdisk/ueventd.qcom.rc;
 chown -R root:root $ramdisk/*;
 
 
