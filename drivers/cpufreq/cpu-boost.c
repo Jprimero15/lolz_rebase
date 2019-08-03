@@ -63,10 +63,10 @@ static struct notifier_block notif;
 static unsigned int input_boost_enabled = 0;
 module_param(input_boost_enabled, uint, 0644);
 
-static unsigned int input_boost_freq = 960000;
+static unsigned int input_boost_freq = 1190400;
 module_param(input_boost_freq, uint, 0644);
 
-static unsigned int input_boost_ms = 40;
+static unsigned int input_boost_ms = 500;
 module_param(input_boost_ms, uint, 0644);
 
 static unsigned int nr_boost_cpus = 2;
