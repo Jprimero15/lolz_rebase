@@ -208,11 +208,6 @@ static int sec_therm_get_adc_data(struct sec_therm_info *info)
 		}
 		adc_data = results.adc_code;
 
-		if (i == 0) {
-			pr_err("reading MSM_THERM_CH [rc = %d] [adc_code = %d]\n",
-									rc,results.adc_code);
-		}
-
 		if (i != 0) {
 			if (adc_data > adc_max)
 				adc_max = adc_data;
