@@ -17,6 +17,21 @@
 if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "LolZ-Kernel: Execute Boot Script Now !!" | tee /dev/kmsg
 
+    # Set Lolznappy CPU Governor
+    echo "lolznappy" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    echo "lolznappy" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor 
+    echo "lolznappy" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+    echo "lolznappy" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+    echo "20000 1190400:60000 1728000:74000 1958400:82000 2265600:120000" > /sys/devices/system/cpu/cpufreq/lolznappy/above_hispeed_delay
+    echo "1190400" >  /sys/devices/system/cpu/cpufreq/lolznappy/hispeed_freq
+    echo "110" > /sys/devices/system/cpu/cpufreq/lolznappy/go_hispeed_load
+    echo "0" > /sys/devices/system/cpu/cpufreq/lolznappy/io_is_busy
+    echo "98 268800:28 300000:12 422400:34 652800:41 729600:12 883200:52 960000:9 1036800:8 1190400:73 1267200:6 1497600:87 1574400:5 1728000:89 1958400:91 2265600:94" > /sys/devices/system/cpu/cpufreq/lolznappy/target_loads
+    echo "40000" > /sys/devices/system/cpu/cpufreq/lolznappy/min_sample_time
+    echo "40000" > /sys/devices/system/cpu/cpufreq/lolznappy/timer_rate
+    echo "80000" > /sys/devices/system/cpu/cpufreq/lolznappy/timer_slack
+    echo "0" > /sys/devices/system/cpu/cpufreq/lolznappy/max_freq_hysteresis
+
     # Set GPU Min/Max Frequency
     echo "100000000" > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
     echo "600000000" > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
