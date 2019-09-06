@@ -17,7 +17,7 @@ BUILD_DIR="output_$KERNEL_VARIANT"
 KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"
 COMPILE_DT="y"
 # CLANG or NO??
-USE_CLANG="n"
+USE_CLANG="y"
 if [ "y" == "$USE_CLANG" ]; then
     # Lets use CLANG 10.0 from DragonTC
     CLANG_TC="/home/jprim/dtc10/bin/clang"
