@@ -16,6 +16,7 @@ struct workqueue_struct;
 
 struct work_struct;
 typedef void (*work_func_t)(struct work_struct *work);
+void delayed_work_timer_fn(unsigned long __data);
 
 /*
  * The first word is the work queue pointer and the flags rolled into
@@ -67,9 +68,18 @@ enum {
 	WORK_STRUCT_FLAG_BITS	= WORK_STRUCT_COLOR_SHIFT +
 				  WORK_STRUCT_COLOR_BITS,
 
+	/* data contains off-queue information when !WORK_STRUCT_CWQ */
+	WORK_OFFQ_FLAG_BASE	= WORK_STRUCT_FLAG_BITS,
+
+	WORK_OFFQ_CANCELING	= (1 << WORK_OFFQ_FLAG_BASE),
+
+	WORK_OFFQ_FLAG_BITS	= 1,
+	WORK_OFFQ_CPU_SHIFT	= WORK_OFFQ_FLAG_BASE + WORK_OFFQ_FLAG_BITS,
+
+	/* convenience constants */
 	WORK_STRUCT_FLAG_MASK	= (1UL << WORK_STRUCT_FLAG_BITS) - 1,
 	WORK_STRUCT_WQ_DATA_MASK = ~WORK_STRUCT_FLAG_MASK,
-	WORK_STRUCT_NO_CPU	= WORK_CPU_NONE << WORK_STRUCT_FLAG_BITS,
+	WORK_STRUCT_NO_CPU	= (unsigned long)WORK_CPU_NONE << WORK_OFFQ_CPU_SHIFT,
 
 	/* bit mask for work_busy() return values */
 	WORK_BUSY_PENDING	= 1 << 0,
@@ -92,6 +102,7 @@ struct work_struct {
 struct delayed_work {
 	struct work_struct work;
 	struct timer_list timer;
+	int cpu;
 };
 
 static inline struct delayed_work *to_delayed_work(struct work_struct *work)
@@ -124,12 +135,14 @@ struct execute_work {
 
 #define __DELAYED_WORK_INITIALIZER(n, f) {			\
 	.work = __WORK_INITIALIZER((n).work, (f)),		\
-	.timer = TIMER_INITIALIZER(NULL, 0, 0),			\
+	.timer = TIMER_INITIALIZER(delayed_work_timer_fn,	\
+				0, (unsigned long)&(n)),	\
 	}
 
 #define __DEFERRED_WORK_INITIALIZER(n, f) {			\
 	.work = __WORK_INITIALIZER((n).work, (f)),		\
-	.timer = TIMER_DEFERRED_INITIALIZER(NULL, 0, 0),	\
+	.timer = TIMER_DEFERRED_INITIALIZER(delayed_work_timer_fn, \
+				0, (unsigned long)&(n)),	\
 	}
 
 #define DECLARE_WORK(n, f)					\
@@ -207,18 +220,24 @@ static inline unsigned int work_static(struct work_struct *work) { return 0; }
 	do {							\
 		INIT_WORK(&(_work)->work, (_func));		\
 		init_timer(&(_work)->timer);			\
+		(_work)->timer.function = delayed_work_timer_fn;\
+		(_work)->timer.data = (unsigned long)(_work);	\
 	} while (0)
 
 #define INIT_DELAYED_WORK_ONSTACK(_work, _func)			\
 	do {							\
 		INIT_WORK_ONSTACK(&(_work)->work, (_func));	\
 		init_timer_on_stack(&(_work)->timer);		\
+		(_work)->timer.function = delayed_work_timer_fn;\
+		(_work)->timer.data = (unsigned long)(_work);	\
 	} while (0)
 
 #define INIT_DELAYED_WORK_DEFERRABLE(_work, _func)		\
 	do {							\
 		INIT_WORK(&(_work)->work, (_func));		\
 		init_timer_deferrable(&(_work)->timer);		\
+		(_work)->timer.function = delayed_work_timer_fn;\
+		(_work)->timer.data = (unsigned long)(_work);	\
 	} while (0)
 
 /**
@@ -255,8 +274,35 @@ enum {
 	WQ_HIGHPRI		= 1 << 4, /* high priority */
 	WQ_CPU_INTENSIVE	= 1 << 5, /* cpu instensive workqueue */
 
-	WQ_DRAINING		= 1 << 6, /* internal: workqueue is draining */
-	WQ_RESCUER		= 1 << 7, /* internal: workqueue has rescuer */
+	/*
+	 * Per-cpu workqueues are generally preferred because they tend to
+	 * show better performance thanks to cache locality.  Per-cpu
+	 * workqueues exclude the scheduler from choosing the CPU to
+	 * execute the worker threads, which has an unfortunate side effect
+	 * of increasing power consumption.
+	 *
+	 * The scheduler considers a CPU idle if it doesn't have any task
+	 * to execute and tries to keep idle cores idle to conserve power;
+	 * however, for example, a per-cpu work item scheduled from an
+	 * interrupt handler on an idle CPU will force the scheduler to
+	 * excute the work item on that CPU breaking the idleness, which in
+	 * turn may lead to more scheduling choices which are sub-optimal
+	 * in terms of power consumption.
+	 *
+	 * Workqueues marked with WQ_POWER_EFFICIENT are per-cpu by default
+	 * but become unbound if workqueue.power_efficient kernel param is
+	 * specified.  Per-cpu workqueues which are identified to
+	 * contribute significantly to power-consumption are identified and
+	 * marked with this flag and enabling the power_efficient mode
+	 * leads to noticeable power saving at the cost of small
+	 * performance disadvantage.
+	 *
+	 * http://thread.gmane.org/gmane.linux.kernel/1480396
+	 */
+	WQ_POWER_EFFICIENT	= 1 << 7,
+
+	WQ_DRAINING		= 1 << 16, /* internal: workqueue is draining */
+	WQ_RESCUER		= 1 << 17, /* internal: workqueue has rescuer */
 
 	WQ_MAX_ACTIVE		= 512,	  /* I like 512, better ideas? */
 	WQ_MAX_UNBOUND_PER_CPU	= 4,	  /* 4 * #cpus for unbound wq */
@@ -278,10 +324,6 @@ enum {
  * system_long_wq is similar to system_wq but may host long running
  * works.  Queue flushing might take relatively long.
  *
- * system_nrt_wq is non-reentrant and guarantees that any given work
- * item is never executed in parallel by multiple CPUs.  Queue
- * flushing might take relatively long.
- *
  * system_unbound_wq is unbound workqueue.  Workers are not bound to
  * any specific CPU, not concurrency managed, and all queued works are
  * executed immediately as long as max_active limit is not reached and
@@ -290,15 +332,32 @@ enum {
  * system_freezable_wq is equivalent to system_wq except that it's
  * freezable.
  *
- * system_nrt_freezable_wq is equivalent to system_nrt_wq except that
- * it's freezable.
+ * *_power_efficient_wq are inclined towards saving power and converted
+ * into WQ_UNBOUND variants if 'wq_power_efficient' is enabled; otherwise,
+ * they are same as their non-power-efficient counterparts - e.g.
+ * system_power_efficient_wq is identical to system_wq if
+ * 'wq_power_efficient' is disabled.  See WQ_POWER_EFFICIENT for more info.
  */
 extern struct workqueue_struct *system_wq;
 extern struct workqueue_struct *system_long_wq;
-extern struct workqueue_struct *system_nrt_wq;
 extern struct workqueue_struct *system_unbound_wq;
 extern struct workqueue_struct *system_freezable_wq;
-extern struct workqueue_struct *system_nrt_freezable_wq;
+extern struct workqueue_struct *system_power_efficient_wq;
+extern struct workqueue_struct *system_freezable_power_efficient_wq;
+
+static inline struct workqueue_struct *__system_nrt_wq(void)
+{
+	return system_wq;
+}
+
+static inline struct workqueue_struct *__system_nrt_freezable_wq(void)
+{
+	return system_freezable_wq;
+}
+
+/* equivlalent to system_wq and system_freezable_wq, deprecated */
+#define system_nrt_wq			__system_nrt_wq()
+#define system_nrt_freezable_wq		__system_nrt_freezable_wq()
 
 extern struct workqueue_struct *
 __alloc_workqueue_key(const char *fmt, unsigned int flags, int max_active,
@@ -365,34 +424,37 @@ __alloc_workqueue_key(const char *fmt, unsigned int flags, int max_active,
 
 extern void destroy_workqueue(struct workqueue_struct *wq);
 
-extern int queue_work(struct workqueue_struct *wq, struct work_struct *work);
-extern int queue_work_on(int cpu, struct workqueue_struct *wq,
+extern bool queue_work_on(int cpu, struct workqueue_struct *wq,
 			struct work_struct *work);
-extern int queue_delayed_work(struct workqueue_struct *wq,
+extern bool queue_work(struct workqueue_struct *wq, struct work_struct *work);
+extern bool queue_delayed_work_on(int cpu, struct workqueue_struct *wq,
 			struct delayed_work *work, unsigned long delay);
-extern int queue_delayed_work_on(int cpu, struct workqueue_struct *wq,
+extern bool queue_delayed_work(struct workqueue_struct *wq,
 			struct delayed_work *work, unsigned long delay);
+extern bool mod_delayed_work_on(int cpu, struct workqueue_struct *wq,
+			struct delayed_work *dwork, unsigned long delay);
+extern bool mod_delayed_work(struct workqueue_struct *wq,
+			struct delayed_work *dwork, unsigned long delay);
 
 extern void flush_workqueue(struct workqueue_struct *wq);
 extern void drain_workqueue(struct workqueue_struct *wq);
 extern void flush_scheduled_work(void);
 
-extern int schedule_work(struct work_struct *work);
-extern int schedule_work_on(int cpu, struct work_struct *work);
-extern int schedule_delayed_work(struct delayed_work *work, unsigned long delay);
-extern int schedule_delayed_work_on(int cpu, struct delayed_work *work,
-					unsigned long delay);
+extern bool schedule_work_on(int cpu, struct work_struct *work);
+extern bool schedule_work(struct work_struct *work);
+extern bool schedule_delayed_work_on(int cpu, struct delayed_work *work,
+				     unsigned long delay);
+extern bool schedule_delayed_work(struct delayed_work *work,
+				  unsigned long delay);
 extern int schedule_on_each_cpu(work_func_t func);
 extern int keventd_up(void);
 
 int execute_in_process_context(work_func_t fn, struct execute_work *);
 
 extern bool flush_work(struct work_struct *work);
-extern bool flush_work_sync(struct work_struct *work);
 extern bool cancel_work_sync(struct work_struct *work);
 
 extern bool flush_delayed_work(struct delayed_work *dwork);
-extern bool flush_delayed_work_sync(struct delayed_work *work);
 extern bool cancel_delayed_work_sync(struct delayed_work *dwork);
 
 extern void workqueue_set_max_active(struct workqueue_struct *wq,
@@ -430,6 +492,18 @@ static inline bool __cancel_delayed_work(struct delayed_work *work)
 	if (ret)
 		work_clear_pending(&work->work);
 	return ret;
+}
+
+/* used to be different but now identical to flush_work(), deprecated */
+static inline bool flush_work_sync(struct work_struct *work)
+{
+	return flush_work(work);
+}
+
+/* used to be different but now identical to flush_delayed_work(), deprecated */
+static inline bool flush_delayed_work_sync(struct delayed_work *dwork)
+{
+	return flush_delayed_work(dwork);
 }
 
 #ifndef CONFIG_SMP
