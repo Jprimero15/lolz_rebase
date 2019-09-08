@@ -89,7 +89,7 @@ fi;
 
 ui_print "***********************************";
 ui_print "$(file_getprop anykernel.sh kernel.string)";
-ui_print "*          by jprimero15 ";
+ui_print "*          by JPrimero15 ";
 ui_print "***********************************";
 if [ -f version ]; then
   ui_print " ";
@@ -98,9 +98,9 @@ if [ -f version ]; then
   done < version;
   ui_print " ";
 fi;
-ui_print "- Logging in to twrp.me...";
+ui_print "- Logging in to https://twrp.me";
 ui_print "- Logged in successfully! ";
-ui_print "- Lolz version: 10"
+ui_print "- Lolz Version: 10"
 
 unmount_all;
 if [ ! "$(is_mounted /system)" ]; then
@@ -134,11 +134,14 @@ fi;
 
 if [ "$(file_getprop anykernel.sh do.devicecheck)" == 1 ]; then
   ui_print "- Checking Device...";
+  # Get Real Device Codename from /system/vendor
+  device_cn="$(file_getprop /system/vendor/build.prop ro.product.vendor.device)";
+  # Device Check
   device="$(getprop ro.product.device)";
   product="$(getprop ro.build.product)";
   for testname in $(file_getprop anykernel.sh 'device.name.*'); do
     if [ "$device" == "$testname" -o "$product" == "$testname" ]; then
-      ui_print "- Device Codename: $testname";
+      ui_print "- Device Codename: $device_cn";
       match=1;
       break;
     fi;
@@ -151,7 +154,7 @@ fi;
 
 supported_ver="$(file_getprop anykernel.sh supported.versions | $bb tr -d '[:space:]')";
 if [ "$supported_ver" ]; then
-  ui_print "- Checking Android Version...";
+  ui_print "- Checking OS Version...";
   android_ver="$(file_getprop /system/build.prop ro.build.version.release)";
   if [ "$(echo $supported_ver | $bb grep -)" ]; then
     lo_ver=$(echo $supported_ver | $bb cut -d- -f1);
@@ -168,16 +171,16 @@ if [ "$supported_ver" ]; then
     done;
   fi;
   if [ "$supported" ]; then
-    ui_print "- Android Version: $android_ver";
+    ui_print "- OS Version Check: Passed !! ";
   else
     ui_print " ";
-    abort "- Unsupported Android version. Aborting...";
+    abort "- Unsupported OS Version. Aborting...";
   fi;
 fi;
 
-ui_print "- Uploading info in twrp.me...";
+ui_print "- Uploading info to https://twrp.me";
 ui_print "- Uploaded Successfully!";
-ui_print "- Optimizing the System...";
+ui_print "- Optimizing the Kernel...";
 core=$($bb grep -oE 'ak.*core.sh' anykernel.sh);
 test -f tools/$core || $bb ln -s $home/tools/ak*-core.sh $home/tools/$core;
 PATH="$home/bin:$PATH" home=$home $bb ash anykernel.sh $2;
@@ -226,7 +229,7 @@ fi;
 test "$savedpath" && export LD_LIBRARY_PATH="$savedpath";
 test "$savedpre" && export LD_PRELOAD="$savedpre";
 
-ui_print "- System Optimized!";
+ui_print "- Kernel Optimized!";
 ui_print "- Logging out...";
 
 unmount_all;

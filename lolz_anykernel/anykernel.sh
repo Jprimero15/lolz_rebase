@@ -5,7 +5,7 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=*  LolZ-Kernel For Oreo and PIE
+kernel.string=*    LolZ-Kernel For Android 9
 do.devicecheck=1
 do.modules=0
 do.cleanup=1
@@ -13,13 +13,12 @@ do.cleanuponabort=0
 device.name1=hlte
 device.name2=hltecan
 device.name3=hltechn
-device.name4=hltedcm
 device.name5=hltekor
 device.name6=hlteskt
 device.name7=hltespr
 device.name8=hltetmo
 device.name9=hltexx
-supported.versions=8.1.0, 9
+supported.versions=9.0.0, 9
 '; } # end properties
 
 # shell variables
