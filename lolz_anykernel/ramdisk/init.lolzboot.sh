@@ -45,6 +45,9 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "noop" > /sys/block/mmcblk1/queue/scheduler
     echo "noop" > /sys/block/mmcblk0/queue/scheduler
 
+    # Enable IntelliPlug
+    echo "1" > /sys/kernel/intelli_plug/intelli_plug_active
+
     # We are done here
     echo "LolZ-Kernel: Boot Script Executed Sucesfully !! " | tee /dev/kmsg
 fi;
