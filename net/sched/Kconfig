@@ -252,6 +252,7 @@ config NET_SCH_QFQ
 
 config NET_SCH_CODEL
 	tristate "Controlled Delay AQM (CODEL)"
+	default y
 	help
 	  Say Y here if you want to use the Controlled Delay (CODEL)
 	  packet scheduling algorithm.
@@ -263,6 +264,7 @@ config NET_SCH_CODEL
 
 config NET_SCH_FQ_CODEL
 	tristate "Fair Queue Controlled Delay AQM (FQ_CODEL)"
+	default y
 	help
 	  Say Y here if you want to use the FQ Controlled Delay (FQ_CODEL)
 	  packet scheduling algorithm.
