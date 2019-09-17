@@ -2192,10 +2192,10 @@ rmnet_smd_notify_complete:
 .L339:
 	add	r5, r6, #172
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r3, [r5]
 	sub	r3, r3, #1
@@ -2203,7 +2203,7 @@ rmnet_smd_notify_complete:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -2219,7 +2219,7 @@ rmnet_smd_notify_complete:
 	subs	r2, r0, #0
 	beq	.L319
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r5]
 	sub	r3, r3, #1
@@ -2284,10 +2284,10 @@ rmnet_sdio_notify_complete:
 	beq	.L340
 	add	r6, r4, #196
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -2295,7 +2295,7 @@ rmnet_sdio_notify_complete:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -2322,7 +2322,7 @@ rmnet_sdio_notify_complete:
 	b	.L340
 .L360:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -2381,10 +2381,10 @@ rmnet_mux_notify_complete:
 .L363:
 	add	r6, r4, #372
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -2392,7 +2392,7 @@ rmnet_mux_notify_complete:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -2415,7 +2415,7 @@ rmnet_mux_notify_complete:
 	subs	r2, r0, #0
 	beq	.L361
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -2581,10 +2581,10 @@ audio_pcm_hw_params:
 	movne	ip, r3
 	bne	.L392
 	.syntax divided
-@ 175 "/home/jprim/hlte/rebase/arch/arm/include/asm/dma-mapping.h" 1
+@ 175 "/home/jprim/hlte/lolz/arch/arm/include/asm/dma-mapping.h" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/arch/arm/include/asm/dma-mapping.h"
+2:	.asciz "/home/jprim/hlte/lolz/arch/arm/include/asm/dma-mapping.h"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -2633,7 +2633,7 @@ ffs_ep0_open:
 	add	r2, r3, #84
 	str	r3, [r1, #124]
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r1, [r2]
 	add	r1, r1, #1
@@ -2645,7 +2645,7 @@ ffs_ep0_open:
 	.syntax unified
 	add	r2, r3, #88
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r1, [r2]
 	add	r1, r1, #1
@@ -3170,10 +3170,10 @@ rndis_response_complete:
 .L523:
 	add	r6, r5, #176
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -3181,7 +3181,7 @@ rndis_response_complete:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -3197,7 +3197,7 @@ rndis_response_complete:
 	cmp	r0, #0
 	beq	.L493
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -3265,10 +3265,10 @@ rndis_response_available:
 	ldr	r6, [r3, #24]
 	ldr	r0, [r1]
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r5]
 	add	r3, r3, #1
@@ -3276,7 +3276,7 @@ rndis_response_available:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -3297,7 +3297,7 @@ rndis_response_available:
 	cmp	r0, #0
 	beq	.L524
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r5]
 	sub	r3, r3, #1
@@ -4592,7 +4592,7 @@ rmnet_mux_smd_start_rx:
 	.section	.rodata.str1.4
 	.align	2
 .LC31:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c\000"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c\000"
 	.text
 	.align	2
 	.syntax unified
@@ -4612,7 +4612,7 @@ ffs_epfile_open:
 	ldr	r3, [r2, #36]
 	add	r1, r3, #84
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r0, [r1]
 	add	r0, r0, #1
@@ -4624,7 +4624,7 @@ ffs_epfile_open:
 	.syntax unified
 	add	r1, r3, #88
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r0, [r1]
 	add	r0, r0, #1
@@ -5028,10 +5028,10 @@ rndis_qc_response_complete:
 	bne	.L779
 	add	r6, r5, #164
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -5039,7 +5039,7 @@ rndis_qc_response_complete:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -5055,7 +5055,7 @@ rndis_qc_response_complete:
 	cmp	r0, #0
 	beq	.L779
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -5125,10 +5125,10 @@ rndis_qc_response_available:
 	ldr	r1, [r0, #160]
 	ldr	r0, [r1]
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r5]
 	add	r3, r3, #1
@@ -5136,7 +5136,7 @@ rndis_qc_response_available:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -5159,7 +5159,7 @@ rndis_qc_response_available:
 	ldr	pc, [sp], #4
 .L817:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r5]
 	sub	r3, r3, #1
@@ -5319,7 +5319,7 @@ conn_gadget_release:
 	add	r2, r3, #116
 	str	r0, [r3, #216]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -6005,7 +6005,7 @@ acc_complete_set_string:
 	.ascii	"<6>acc_release\012\000"
 	.align	2
 .LC56:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_access"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_access"
 	.ascii	"ory.c\000"
 	.section	.text.unlikely
 	.align	2
@@ -6028,21 +6028,21 @@ acc_release:
 	add	r2, r2, #1648
 	add	r2, r2, #4
 	.syntax divided
-@ 37 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 37 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
 	.syntax unified
 	mov	r1, #0
 	.syntax divided
-@ 52 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 52 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@	__xchg4
 1:	ldrex	r0, [r2]
 	strex	ip, r1, [r2]
 	teq	ip, #0
 	bne	1b
 @ 0 "" 2
-@ 98 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 98 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -6089,21 +6089,21 @@ acc_open:
 	add	r3, r3, #1648
 	add	r3, r3, #4
 	.syntax divided
-@ 37 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 37 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
 	.syntax unified
 	mov	r0, #1
 	.syntax divided
-@ 52 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 52 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@	__xchg4
 1:	ldrex	r1, [r3]
 	strex	ip, r0, [r3]
 	teq	ip, #0
 	bne	1b
 @ 0 "" 2
-@ 98 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 98 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -6218,7 +6218,7 @@ rndis_qc_release_dev:
 .L928:
 	add	r2, r3, #152
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -6287,10 +6287,10 @@ rndis_qc_open_dev:
 .L934:
 	add	r2, r3, #152
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r1, [r2]
 	add	r1, r1, #1
@@ -6298,7 +6298,7 @@ rndis_qc_open_dev:
 	teq	r0, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -6309,7 +6309,7 @@ rndis_qc_open_dev:
 	streq	r3, [r6, #124]
 	beq	.L935
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -6368,7 +6368,7 @@ mtp_release:
 	ldr	r3, [r3, #2500]
 	add	r2, r3, #108
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -6407,10 +6407,10 @@ mtp_open:
 	ldr	r3, [r0, #2500]
 	add	r2, r3, #108
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r1, [r2]
 	add	r1, r1, #1
@@ -6418,7 +6418,7 @@ mtp_open:
 	teq	ip, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -6432,7 +6432,7 @@ mtp_open:
 	b	.L946
 .L944:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -6504,7 +6504,7 @@ mbim_release:
 	ldr	r3, [r3, #2504]
 	add	r2, r3, #92
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -6570,10 +6570,10 @@ mbim_open:
 	mov	r4, r2
 	add	r2, r3, #92
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r1, [r2]
 	add	r1, r1, #1
@@ -6581,7 +6581,7 @@ mbim_open:
 	teq	r0, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -6603,7 +6603,7 @@ mbim_open:
 	b	.L967
 .L965:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -7429,7 +7429,7 @@ mbim_transports_show:
 	.ascii	"common->fsg is NULL in %s at %u\012\000"
 	.align	2
 .LC87:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_s"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_s"
 	.ascii	"torage.c\000"
 	.align	2
 .LC88:
@@ -8303,7 +8303,7 @@ count_configs:
 	.section	.rodata.str1.4
 	.align	2
 .LC101:
-	.ascii	"/home/jprim/hlte/rebase/include/linux/netdevice.h\000"
+	.ascii	"/home/jprim/hlte/lolz/include/linux/netdevice.h\000"
 	.align	2
 .LC102:
 	.ascii	"<6>netif_stop_queue() cannot be called before regis"
@@ -9107,7 +9107,7 @@ rmnet_ctrl_release:
 	bl	_raw_spin_unlock_irqrestore
 	add	r3, r4, #16
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -9169,10 +9169,10 @@ rmnet_ctrl_open:
 	ldr	r3, [r4, #3228]
 	add	r2, r3, #16
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r7, [r2]
 	add	r7, r7, #1
@@ -9180,7 +9180,7 @@ rmnet_ctrl_open:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -9211,7 +9211,7 @@ rmnet_ctrl_open:
 	b	.L1338
 .L1339:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -16356,10 +16356,10 @@ rmnet_control_tx_tlet:
 	ldr	r3, [r4, #100]
 	ldr	r3, [r3]
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r2, [r6]
 	add	r2, r2, #1
@@ -16367,7 +16367,7 @@ rmnet_control_tx_tlet:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -16392,7 +16392,7 @@ rmnet_control_tx_tlet:
 	subs	r2, r0, #0
 	bge	.L2377
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -22060,7 +22060,7 @@ usb_rmnet_mux_ctrl_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r0, #4; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -22142,7 +22142,7 @@ acc_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r6, r4; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -22243,7 +22243,7 @@ ffs_epfile_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r6, #9; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -22363,10 +22363,10 @@ rmnet_ctrl_ioctl:
 .L3353:
 	add	r5, r4, #28
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r5]
 	add	r3, r3, #1
@@ -22374,7 +22374,7 @@ rmnet_ctrl_ioctl:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -22392,7 +22392,7 @@ rmnet_ctrl_ioctl:
 	ldr	r3, [r3, #8]
 	str	r2, [sp, #4]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r6, #4; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -22411,7 +22411,7 @@ rmnet_ctrl_ioctl:
 	bne	.L3372
 .L3361:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r5]
 	sub	r3, r3, #1
@@ -22456,7 +22456,7 @@ rmnet_ctrl_ioctl:
 	b	.L3361
 .L3354:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r5]
 	sub	r3, r3, #1
@@ -22533,10 +22533,10 @@ rndis_qc_ioctl:
 	strb	r0, [sp, #3]
 	str	r1, [sp, #4]
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r8, [r2]
 	add	r8, r8, #1
@@ -22544,7 +22544,7 @@ rndis_qc_ioctl:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -22572,7 +22572,7 @@ rndis_qc_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r5, #4; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -22601,7 +22601,7 @@ rndis_qc_ioctl:
 	beq	.L3395
 	add	r2, r3, #148
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -22641,7 +22641,7 @@ rndis_qc_ioctl:
 	b	.L3385
 .L3378:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -22659,7 +22659,7 @@ rndis_qc_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r5, #1; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -22746,10 +22746,10 @@ mbim_ioctl:
 .L3402:
 	add	r7, r4, #96
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r7]
 	add	r3, r3, #1
@@ -22757,7 +22757,7 @@ mbim_ioctl:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -22773,7 +22773,7 @@ mbim_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r6, #2; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -22809,7 +22809,7 @@ mbim_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r6, #4; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -22836,7 +22836,7 @@ mbim_ioctl:
 	bl	printk
 .L3411:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r7]
 	sub	r3, r3, #1
@@ -22857,7 +22857,7 @@ mbim_ioctl:
 	b	.L3402
 .L3403:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r7]
 	sub	r3, r3, #1
@@ -23033,7 +23033,7 @@ usb_rmnet_mux_ctrl_read:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r9, r6; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -23147,14 +23147,14 @@ rmnet_ctrl_read:
 	add	r3, r4, #20
 	str	r3, [sp, #16]
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
 	.syntax unified
 	mov	r1, r3
 	.syntax divided
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r1]
 	add	r3, r3, #1
@@ -23162,7 +23162,7 @@ rmnet_ctrl_read:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -23241,7 +23241,7 @@ rmnet_ctrl_read:
 .L3479:
 	ldr	r1, [sp, #16]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -23274,7 +23274,7 @@ rmnet_ctrl_read:
 .L3473:
 	ldr	r1, [sp, #16]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -23291,7 +23291,7 @@ rmnet_ctrl_read:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r1, r0, r2; sbcccs r1, r1, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -23359,7 +23359,7 @@ rmnet_ctrl_read:
 .L3462:
 	ldr	r1, [sp, #16]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -23402,7 +23402,7 @@ rmnet_ctrl_read:
 	bl	printk
 	ldr	r1, [sp, #16]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -23633,7 +23633,7 @@ acc_read:
 	bic	r2, r2, #63
 	ldr	r3, [r2, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r9, r6; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -24011,7 +24011,7 @@ mtp_read:
 	movcs	r5, r0
 	ldr	r3, [sp, #20]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r1, r3, r5; sbcccs r1, r1, r2; movcc r2, #0
 @ 0 "" 2
 	.arm
@@ -24166,7 +24166,7 @@ ccid_ctrl_read:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r7, r4; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -24304,7 +24304,7 @@ modem_read:
 .L3662:
 	ldr	r3, [r2, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r6, #4; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -24390,10 +24390,10 @@ adb_read:
 	bhi	.L3702
 	add	r9, r4, #108
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r9]
 	add	r3, r3, #1
@@ -24401,7 +24401,7 @@ adb_read:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -24468,7 +24468,7 @@ adb_read:
 	mov	r0, r7
 	bl	finish_wait
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r9]
 	sub	r3, r3, #1
@@ -24588,7 +24588,7 @@ adb_read:
 	bne	.L3736
 .L3700:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r9]
 	sub	r3, r3, #1
@@ -24649,7 +24649,7 @@ adb_read:
 	movcs	r2, r10
 	ldr	r3, [r1, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r1, r0, r2; sbcccs r1, r1, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -24680,7 +24680,7 @@ adb_read:
 	b	.L3699
 .L3679:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r9]
 	sub	r3, r3, #1
@@ -24780,7 +24780,7 @@ ccid_ctrl_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r1, r2, #4; sbcccs r1, r1, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -24799,7 +24799,7 @@ ccid_ctrl_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r1, r2, #4; sbcccs r1, r1, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -24819,7 +24819,7 @@ ccid_ctrl_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r1, r2, #4; sbcccs r1, r1, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -24907,7 +24907,7 @@ usb_rmnet_mux_ctrl_write:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r6, r5; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -24962,10 +24962,10 @@ usb_rmnet_mux_ctrl_write:
 	ldr	r3, [r4, #100]
 	ldr	r3, [r3]
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r2, [r9]
 	add	r2, r2, #1
@@ -24973,7 +24973,7 @@ usb_rmnet_mux_ctrl_write:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -25001,7 +25001,7 @@ usb_rmnet_mux_ctrl_write:
 	subs	r2, r0, #0
 	bge	.L3770
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r9]
 	sub	r3, r3, #1
@@ -25127,10 +25127,10 @@ rmnet_ctrl_write:
 	bhi	.L3821
 	add	r6, r4, #24
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r6]
 	add	r3, r3, #1
@@ -25138,7 +25138,7 @@ rmnet_ctrl_write:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -25158,7 +25158,7 @@ rmnet_ctrl_write:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r7, r5; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -25175,7 +25175,7 @@ rmnet_ctrl_write:
 	mov	r0, r8
 	bl	kfree
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -25215,7 +25215,7 @@ rmnet_ctrl_write:
 	mov	r0, r8
 	bl	kfree
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -25259,7 +25259,7 @@ rmnet_ctrl_write:
 	b	.L3798
 .L3788:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -25302,7 +25302,7 @@ rmnet_ctrl_write:
 	bne	.L3828
 .L3791:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -25332,7 +25332,7 @@ rmnet_ctrl_write:
 	movt	r0, #:upper16:.LC340
 	bl	printk
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -25354,7 +25354,7 @@ rmnet_ctrl_write:
 	mov	r0, r8
 	bl	kfree
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -25377,7 +25377,7 @@ rmnet_ctrl_write:
 	mov	r0, r8
 	bl	kfree
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -25934,11 +25934,11 @@ audio_send:
 	sbc	r7, r0, r9
 	ldr	r9, [r5, #144]
 	.syntax divided
-@ 350 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_audio_source.c" 1
+@ 350 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_audio_source.c" 1
 	umull	r2, r3, r10, r6
 	mov	r2, #0
 @ 0 "" 2
-@ 350 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_audio_source.c" 1
+@ 350 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_audio_source.c" 1
 	umlal	r3, r2, fp, r6
 	umlal	r3, r1, r10, r7
 	mov	r3, #0
@@ -25958,13 +25958,13 @@ audio_send:
 	umull	r0, r1, r0, r4
 	mla	r1, r4, r2, r1
 	.syntax divided
-@ 352 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_audio_source.c" 1
+@ 352 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_audio_source.c" 1
 	umull	r2, r3, r6, r0
 	cmn	r2, r6
 	adcs	r3, r3, r7
 	adc	r2, ip, #0
 @ 0 "" 2
-@ 352 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_audio_source.c" 1
+@ 352 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_audio_source.c" 1
 	umlal	r3, r2, r7, r0
 	umlal	r3, lr, r6, r1
 	mov	r3, #0
@@ -31710,14 +31710,14 @@ fsg_lun_open:
 	tst	r1, #1
 	bne	.L4967
 	.syntax divided
-@ 165 "/home/jprim/hlte/rebase/include/linux/seqlock.h" 1
+@ 165 "/home/jprim/hlte/lolz/include/linux/seqlock.h" 1
 	dmb
 @ 0 "" 2
 	.arm
 	.syntax unified
 	ldrd	r8, [r3, #96]
 	.syntax divided
-@ 221 "/home/jprim/hlte/rebase/include/linux/seqlock.h" 1
+@ 221 "/home/jprim/hlte/lolz/include/linux/seqlock.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -31830,7 +31830,7 @@ fsg_lun_open:
 .L4977:
 	add	r1, r4, #24
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r0, [r1]
 	add	r0, r0, #1
@@ -31917,7 +31917,7 @@ fsg_lun_open:
 	b	.L4976
 .L4967:
 	.syntax divided
-@ 147 "/home/jprim/hlte/rebase/include/linux/seqlock.h" 1
+@ 147 "/home/jprim/hlte/lolz/include/linux/seqlock.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -33185,10 +33185,10 @@ ncm_unwrap_ntb:
 	beq	.L5141
 .L5180:
 	.syntax divided
-@ 463 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_ncm.c" 1
+@ 463 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_ncm.c" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/drivers/usb/gadget/f_ncm.c"
+2:	.asciz "/home/jprim/hlte/lolz/drivers/usb/gadget/f_ncm.c"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -33605,10 +33605,10 @@ ncm_wrap_ntb:
 	b	.L5196
 .L5235:
 	.syntax divided
-@ 445 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_ncm.c" 1
+@ 445 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_ncm.c" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/drivers/usb/gadget/f_ncm.c"
+2:	.asciz "/home/jprim/hlte/lolz/drivers/usb/gadget/f_ncm.c"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -36187,7 +36187,7 @@ bulk_out_complete:
 	bne	.L5647
 .L5643:
 	.syntax divided
-@ 689 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_storage.c" 1
+@ 689 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_storage.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -36200,7 +36200,7 @@ bulk_out_complete:
 	str	r3, [r7, #4]
 	str	r2, [r7, #28]
 	.syntax divided
-@ 607 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_storage.c" 1
+@ 607 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_storage.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -36289,7 +36289,7 @@ bulk_in_complete:
 	bne	.L5668
 .L5664:
 	.syntax divided
-@ 668 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_storage.c" 1
+@ 668 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_storage.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -36301,7 +36301,7 @@ bulk_in_complete:
 	str	r3, [r7, #4]
 	str	r3, [r7, #20]
 	.syntax divided
-@ 607 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_storage.c" 1
+@ 607 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_storage.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -36387,7 +36387,7 @@ sleep_thread:
 	mov	r3, #1
 	str	r3, [r0]
 	.syntax divided
-@ 819 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_storage.c" 1
+@ 819 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_storage.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -36431,7 +36431,7 @@ sleep_thread:
 	str	r6, [r7, #148]
 	bl	_raw_spin_unlock_irq
 	.syntax divided
-@ 836 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_storage.c" 1
+@ 836 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_storage.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -36939,7 +36939,7 @@ receive_file_work:
 	sub	sp, sp, #68
 	str	r3, [sp, #20]
 	.syntax divided
-@ 858 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mtp.c" 1
+@ 858 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mtp.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -37082,7 +37082,7 @@ receive_file_work:
 .L5811:
 	str	r6, [r5, #52]
 	.syntax divided
-@ 946 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mtp.c" 1
+@ 946 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mtp.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -37492,10 +37492,10 @@ audio_pcm_hw_free:
 	cmp	ip, #0
 	bne	.L5873
 	.syntax divided
-@ 206 "/home/jprim/hlte/rebase/arch/arm/include/asm/dma-mapping.h" 1
+@ 206 "/home/jprim/hlte/lolz/arch/arm/include/asm/dma-mapping.h" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/arch/arm/include/asm/dma-mapping.h"
+2:	.asciz "/home/jprim/hlte/lolz/arch/arm/include/asm/dma-mapping.h"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -37743,10 +37743,10 @@ mbim_write:
 	bhi	.L5964
 	add	r6, r4, #104
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r6]
 	add	r3, r3, #1
@@ -37754,7 +37754,7 @@ mbim_write:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -37775,7 +37775,7 @@ mbim_write:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r7, r5; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -37793,7 +37793,7 @@ mbim_write:
 	mov	r0, r8
 	bl	mbim_free_ctrl_pkt.part.0
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -37852,10 +37852,10 @@ mbim_write:
 	beq	.L5974
 	add	r8, r4, #168
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r2, [r8]
 	add	r2, r2, #1
@@ -37863,7 +37863,7 @@ mbim_write:
 	teq	r3, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -37880,7 +37880,7 @@ mbim_write:
 	bl	_raw_spin_unlock_irqrestore
 .L5927:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -37987,7 +37987,7 @@ mbim_write:
 	b	.L5934
 .L5918:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -38005,7 +38005,7 @@ mbim_write:
 	b	.L5912
 .L5977:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r8]
 	sub	r3, r3, #1
@@ -38042,7 +38042,7 @@ mbim_write:
 	movt	r0, #:upper16:.LC565
 	bl	printk
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -38115,7 +38115,7 @@ mbim_write:
 	movt	r0, #:upper16:.LC72
 	bl	printk
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -38763,7 +38763,7 @@ unbind_config:
 	.section	.rodata.str1.4
 	.align	2
 .LC583:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/composit"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/composit"
 	.ascii	"e.c\000"
 	.text
 	.align	2
@@ -39166,10 +39166,10 @@ audio_pcm_mmap:
 	cmp	ip, #0
 	bne	.L6193
 	.syntax divided
-@ 236 "/home/jprim/hlte/rebase/arch/arm/include/asm/dma-mapping.h" 1
+@ 236 "/home/jprim/hlte/lolz/arch/arm/include/asm/dma-mapping.h" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/arch/arm/include/asm/dma-mapping.h"
+2:	.asciz "/home/jprim/hlte/lolz/arch/arm/include/asm/dma-mapping.h"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -42108,10 +42108,10 @@ __ffs_event_add.part.0:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
 	.syntax divided
-@ 2155 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c" 1
+@ 2155 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c"
+2:	.asciz "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -42355,7 +42355,7 @@ ffs_epfile_io:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r1, r9; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -47016,7 +47016,7 @@ audio_source_function_cleanup:
 	.section	.rodata.str1.4
 	.align	2
 .LC709:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_serial"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_serial"
 	.ascii	".c\000"
 	.align	2
 .LC710:
@@ -47396,7 +47396,7 @@ rndis_proc_write:
 	mov	r0, r4
 	sub	r1, r1, #1
 	.syntax divided
-@ 1185 "/home/jprim/hlte/rebase/drivers/usb/gadget/rndis.c" 1
+@ 1185 "/home/jprim/hlte/lolz/drivers/usb/gadget/rndis.c" 1
 	.ifnc r0,r0 ; .err ; .endif
 	.ifnc r2,r2 ; .err ; .endif
 	.ifnc r1,r1 ; .err ; .endif
@@ -48477,10 +48477,10 @@ conn_gadget_poll:
 	beq	.L8054
 	add	r3, r4, #108
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r2, [r3]
 	add	r2, r2, #1
@@ -48488,7 +48488,7 @@ conn_gadget_poll:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -48501,7 +48501,7 @@ conn_gadget_poll:
 	movne	r5, #65
 	moveq	r5, #0
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -48551,7 +48551,7 @@ conn_gadget_poll:
 	b	.L8033
 .L8040:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -48694,7 +48694,7 @@ ffs_ep0_read:
 	str	r1, [fp, #-64]
 	add	r9, r4, #96
 	.syntax divided
-@ 193 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 193 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -48702,7 +48702,7 @@ ffs_ep0_read:
 	mov	r2, #0
 .L8069:
 	.syntax divided
-@ 170 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 170 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@ __cmpxchg4
 	ldrex	r0, [r9]
 	mov	r1, #0
@@ -48715,7 +48715,7 @@ ffs_ep0_read:
 	cmp	r1, #0
 	bne	.L8069
 	.syntax divided
-@ 195 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 195 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -48768,7 +48768,7 @@ ffs_ep0_read:
 	mov	r0, r8
 	bl	_raw_spin_lock_irq
 	.syntax divided
-@ 193 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 193 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -48776,7 +48776,7 @@ ffs_ep0_read:
 	mov	r0, #0
 .L8075:
 	.syntax divided
-@ 170 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 170 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@ __cmpxchg4
 	ldrex	r10, [r9]
 	mov	r2, #0
@@ -48789,7 +48789,7 @@ ffs_ep0_read:
 	cmp	r2, #0
 	bne	.L8075
 	.syntax divided
-@ 195 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 195 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -48865,7 +48865,7 @@ ffs_ep0_read:
 	mov	r1, #1
 	str	r1, [r2]
 	.syntax divided
-@ 635 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c" 1
+@ 635 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -48908,7 +48908,7 @@ ffs_ep0_read:
 	mov	r0, r8
 	bl	_raw_spin_lock_irq
 	.syntax divided
-@ 193 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 193 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -48916,7 +48916,7 @@ ffs_ep0_read:
 	mov	r2, #0
 .L8096:
 	.syntax divided
-@ 170 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 170 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@ __cmpxchg4
 	ldrex	r0, [r9]
 	mov	r1, #0
@@ -48929,7 +48929,7 @@ ffs_ep0_read:
 	cmp	r1, #0
 	bne	.L8096
 	.syntax divided
-@ 195 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 195 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -49448,7 +49448,7 @@ acc_write:
 	strb	r2, [r4, #26]
 	ldr	r3, [fp, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r10, r6; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -50488,7 +50488,7 @@ do_write:
 	cmp	r3, #0
 	beq	.L8404
 	.syntax divided
-@ 1354 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_storage.c" 1
+@ 1354 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_storage.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -51602,14 +51602,14 @@ mbim_read:
 	add	r3, r4, #100
 	str	r3, [sp, #12]
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
 	.syntax unified
 	mov	r1, r3
 	.syntax divided
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r1]
 	add	r3, r3, #1
@@ -51617,7 +51617,7 @@ mbim_read:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -51711,7 +51711,7 @@ mbim_read:
 	bl	printk
 	ldr	r1, [sp, #12]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -51742,7 +51742,7 @@ mbim_read:
 	bl	_raw_spin_unlock_irqrestore
 	ldr	r1, [sp, #12]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -51759,7 +51759,7 @@ mbim_read:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r1, r0, r2; sbcccs r1, r1, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -51842,7 +51842,7 @@ mbim_read:
 .L8615:
 	ldr	r1, [sp, #12]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -51861,7 +51861,7 @@ mbim_read:
 .L8664:
 	ldr	r1, [sp, #12]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -51879,7 +51879,7 @@ mbim_read:
 	bl	_raw_spin_unlock_irqrestore
 	ldr	r1, [sp, #12]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -51976,7 +51976,7 @@ mbim_read:
 	bl	finish_wait
 	ldr	r1, [sp, #12]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -53496,14 +53496,14 @@ adb_write:
 	add	r3, r4, #112
 	str	r3, [sp, #12]
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
 	.syntax unified
 	mov	r1, r3
 	.syntax divided
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r1]
 	add	r3, r3, #1
@@ -53511,7 +53511,7 @@ adb_write:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -53553,7 +53553,7 @@ adb_write:
 	movcs	r10, #4096
 	ldr	r3, [r9, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r1, r10; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -53582,7 +53582,7 @@ adb_write:
 .L8960:
 	ldr	r1, [sp, #12]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -53727,7 +53727,7 @@ adb_write:
 .L8986:
 	ldr	r1, [sp, #12]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -54162,7 +54162,7 @@ gaudio_open_streams:
 	rsb	r2, r3, #0
 	and	r3, r3, r2
 	.syntax divided
-@ 268 "/home/jprim/hlte/rebase/arch/arm/include/asm/bitops.h" 1
+@ 268 "/home/jprim/hlte/lolz/arch/arm/include/asm/bitops.h" 1
 	clz	r3, r3
 @ 0 "" 2
 	.arm
@@ -54176,7 +54176,7 @@ gaudio_open_streams:
 	rsb	r2, r3, #0
 	and	r3, r3, r2
 	.syntax divided
-@ 268 "/home/jprim/hlte/rebase/arch/arm/include/asm/bitops.h" 1
+@ 268 "/home/jprim/hlte/lolz/arch/arm/include/asm/bitops.h" 1
 	clz	r3, r3
 @ 0 "" 2
 	.arm
@@ -54190,7 +54190,7 @@ gaudio_open_streams:
 	rsb	r2, r3, #0
 	and	r3, r3, r2
 	.syntax divided
-@ 268 "/home/jprim/hlte/rebase/arch/arm/include/asm/bitops.h" 1
+@ 268 "/home/jprim/hlte/lolz/arch/arm/include/asm/bitops.h" 1
 	clz	r3, r3
 @ 0 "" 2
 	.arm
@@ -54204,7 +54204,7 @@ gaudio_open_streams:
 	rsb	r2, r3, #0
 	and	r3, r3, r2
 	.syntax divided
-@ 268 "/home/jprim/hlte/rebase/arch/arm/include/asm/bitops.h" 1
+@ 268 "/home/jprim/hlte/lolz/arch/arm/include/asm/bitops.h" 1
 	clz	r3, r3
 @ 0 "" 2
 	.arm
@@ -54821,7 +54821,7 @@ rndis_qc_function_unbind_config:
 	subs	r4, r0, #0
 	beq	.L9130
 	.syntax divided
-@ 17 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 17 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		mrs	ip, cpsr	@ arch_local_irq_save
 	cpsid	i
 @ 0 "" 2
@@ -54839,7 +54839,7 @@ rndis_qc_function_unbind_config:
 	sub	r2, r2, #1
 	str	r2, [r3, r1]
 	.syntax divided
-@ 142 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 142 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		msr	cpsr_c, ip	@ local_irq_restore
 @ 0 "" 2
 	.arm
@@ -55064,7 +55064,7 @@ conn_gadget_ioctl:
 	ldr	r3, [r3, #8]
 	str	r2, [sp, #20]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r4, #4; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -55090,7 +55090,7 @@ conn_gadget_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r4, #16; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -55123,7 +55123,7 @@ conn_gadget_ioctl:
 	movne	r2, #1
 	moveq	r2, #2
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r1, r4, #4; sbcccs r1, r1, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -57839,14 +57839,14 @@ conn_gadget_write:
 	mov	r8, r2
 	str	r3, [sp, #20]
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
 	.syntax unified
 	mov	r1, r3
 	.syntax divided
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r1]
 	add	r3, r3, #1
@@ -57854,7 +57854,7 @@ conn_gadget_write:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -57896,7 +57896,7 @@ conn_gadget_write:
 	cmp	r10, r8
 	bcc	.L9769
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r1, r8; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -57928,7 +57928,7 @@ conn_gadget_write:
 .L9758:
 	ldr	r1, [sp, #20]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -58010,7 +58010,7 @@ conn_gadget_write:
 	b	.L9782
 .L9769:
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r1, r10; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -58053,7 +58053,7 @@ conn_gadget_write:
 .L9794:
 	ldr	r1, [sp, #20]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r1]
 	sub	r3, r3, #1
@@ -58587,7 +58587,7 @@ ecm_qc_function_unbind_config:
 	subs	r4, r0, #0
 	beq	.L9881
 	.syntax divided
-@ 17 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 17 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		mrs	ip, cpsr	@ arch_local_irq_save
 	cpsid	i
 @ 0 "" 2
@@ -58605,7 +58605,7 @@ ecm_qc_function_unbind_config:
 	sub	r2, r2, #1
 	str	r2, [r3, r1]
 	.syntax divided
-@ 142 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 142 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		msr	cpsr_c, ip	@ local_irq_restore
 @ 0 "" 2
 	.arm
@@ -58861,7 +58861,7 @@ send_file_work:
 	sub	sp, sp, #92
 	str	r3, [sp, #52]
 	.syntax divided
-@ 751 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mtp.c" 1
+@ 751 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mtp.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -59066,7 +59066,7 @@ send_file_work:
 .L9967:
 	str	r3, [r6, #68]
 	.syntax divided
-@ 841 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mtp.c" 1
+@ 841 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mtp.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -59291,7 +59291,7 @@ mtp_write:
 	beq	.L10024
 	ldr	r3, [fp, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r9, r6; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -62470,7 +62470,7 @@ mbim_notify_complete:
 	bne	.L10620
 	add	r3, r4, #168
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -62507,7 +62507,7 @@ mbim_notify_complete:
 	ldrb	r3, [r4, #196]	@ zero_extendqisi2
 	strh	r3, [r2, #4]	@ unaligned
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r3, [r8]
 	add	r3, r3, #1
@@ -62585,7 +62585,7 @@ mbim_notify_complete:
 	beq	.L10584
 	add	r3, r4, #168
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -62656,7 +62656,7 @@ mbim_notify_complete:
 	b	__dynamic_pr_debug
 .L10624:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r8]
 	sub	r3, r3, #1
@@ -63604,10 +63604,10 @@ fsg_unbind:
 .L10784:
 	add	r0, r5, #336
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r3, [r0]
 	sub	r3, r3, #1
@@ -63615,7 +63615,7 @@ fsg_unbind:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -64490,7 +64490,7 @@ ccid_bulk_write:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r8, r4; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -65689,7 +65689,7 @@ ccid_bulk_read:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 448 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 448 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r9, r7; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -66416,7 +66416,7 @@ accessory_function_ctrlrequest:
 	.ascii	"Mass Storage Function\000"
 	.align	2
 .LC948:
-	.ascii	"/home/jprim/hlte/rebase/include/linux/kref.h\000"
+	.ascii	"/home/jprim/hlte/lolz/include/linux/kref.h\000"
 	.text
 	.align	2
 	.syntax unified
@@ -66593,10 +66593,10 @@ mass_storage_function_bind_config:
 	ldr	r3, [r4, #88]
 	add	r2, r3, #336
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r1, [r2]
 	add	r1, r1, #1
@@ -66604,7 +66604,7 @@ mass_storage_function_bind_config:
 	teq	r0, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -66668,10 +66668,10 @@ mtp_ioctl:
 	sub	sp, sp, #60
 	add	r5, r4, #112
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r5]
 	add	r3, r3, #1
@@ -66679,7 +66679,7 @@ mtp_ioctl:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -66704,7 +66704,7 @@ mtp_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r7, #8; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -66743,7 +66743,7 @@ mtp_ioctl:
 	bl	_raw_spin_unlock_irq
 .L11308:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r5]
 	sub	r3, r3, #1
@@ -66785,7 +66785,7 @@ mtp_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r7, #32; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -66848,7 +66848,7 @@ mtp_ioctl:
 	bic	r3, r3, #63
 	ldr	r3, [r3, #8]
 	.syntax divided
-@ 439 "/home/jprim/hlte/rebase/arch/arm/include/asm/uaccess.h" 1
+@ 439 "/home/jprim/hlte/lolz/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r1, r8; sbcccs r2, r2, r3; movcc r3, #0
 @ 0 "" 2
 	.arm
@@ -66915,7 +66915,7 @@ mtp_ioctl:
 	ldrd	r2, [sp, #40]
 	strd	r2, [r4, #232]
 	.syntax divided
-@ 1028 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mtp.c" 1
+@ 1028 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mtp.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -66938,7 +66938,7 @@ mtp_ioctl:
 	mov	r0, r8
 	bl	fput
 	.syntax divided
-@ 1052 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mtp.c" 1
+@ 1052 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mtp.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -66947,7 +66947,7 @@ mtp_ioctl:
 	b	.L11307
 .L11292:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r5]
 	sub	r3, r3, #1
@@ -81262,7 +81262,7 @@ adb_release:
 .L14231:
 	add	r2, r3, #116
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -81410,10 +81410,10 @@ ffs_data_clear:
 	b	kfree
 .L14267:
 	.syntax divided
-@ 1521 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c" 1
+@ 1521 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c"
+2:	.asciz "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -81452,10 +81452,10 @@ ffs_data_clear:
 	str	r6, [r4, #28]
 	str	r6, [r3], #84
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -81463,7 +81463,7 @@ ffs_data_clear:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -81484,10 +81484,10 @@ ffs_data_clear:
 	beq	.L14264
 .L14288:
 	.syntax divided
-@ 1394 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c" 1
+@ 1394 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c"
+2:	.asciz "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -81558,10 +81558,10 @@ ffs_data_put.part.0:
 	beq	.L14296
 .L14295:
 	.syntax divided
-@ 1345 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c" 1
+@ 1345 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c"
+2:	.asciz "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -81600,10 +81600,10 @@ ffs_fs_kill_sb:
 	beq	.L14300
 	add	r3, r0, #84
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -81611,7 +81611,7 @@ ffs_fs_kill_sb:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -81676,10 +81676,10 @@ ffs_func_free:
 	ldr	r0, [r7, #8]
 	add	r3, r0, #84
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -81687,7 +81687,7 @@ ffs_func_free:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -81788,7 +81788,7 @@ ffs_function_bind_config:
 	ldr	r2, [r7]
 	stmib	r4, {r2, r6}
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r2, [r3]
 	add	r2, r2, #1
@@ -82048,10 +82048,10 @@ ffs_epfile_release:
 	str	r2, [r3, #32]
 	add	r3, r4, #88
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r5, [r3]
 	sub	r5, r5, #1
@@ -82059,7 +82059,7 @@ ffs_epfile_release:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -82069,10 +82069,10 @@ ffs_epfile_release:
 .L14380:
 	add	r3, r4, #84
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -82080,7 +82080,7 @@ ffs_epfile_release:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -82139,10 +82139,10 @@ ffs_ep0_release:
 	ldr	r4, [r1, #124]
 	add	r3, r4, #88
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r5, [r3]
 	sub	r5, r5, #1
@@ -82150,7 +82150,7 @@ ffs_ep0_release:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -82160,10 +82160,10 @@ ffs_ep0_release:
 .L14386:
 	add	r3, r4, #84
 	.syntax divided
-@ 99 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 99 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 101 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 101 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub_return
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -82171,7 +82171,7 @@ ffs_ep0_release:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 111 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 111 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -83807,7 +83807,7 @@ fsg_main_thread:
 	bne	.L14640
 	bl	_raw_spin_unlock_irq
 	.syntax divided
-@ 2858 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_storage.c" 1
+@ 2858 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_storage.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -84295,7 +84295,7 @@ fsg_main_thread:
 	cmp	r2, #1
 	bne	.L14819
 	.syntax divided
-@ 2060 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_mass_storage.c" 1
+@ 2060 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_mass_storage.c" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -107013,7 +107013,7 @@ gether_qc_cleanup_name:
 	subs	r4, r0, #0
 	beq	.L18482
 	.syntax divided
-@ 17 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 17 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		mrs	ip, cpsr	@ arch_local_irq_save
 	cpsid	i
 @ 0 "" 2
@@ -107031,7 +107031,7 @@ gether_qc_cleanup_name:
 	sub	r2, r2, #1
 	str	r2, [r3, r1]
 	.syntax divided
-@ 142 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 142 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		msr	cpsr_c, ip	@ local_irq_restore
 @ 0 "" 2
 	.arm
@@ -107071,7 +107071,7 @@ gether_qc_connect_name:
 	subs	r4, r0, #0
 	beq	.L18488
 	.syntax divided
-@ 17 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 17 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		mrs	r0, cpsr	@ arch_local_irq_save
 	cpsid	i
 @ 0 "" 2
@@ -107089,7 +107089,7 @@ gether_qc_connect_name:
 	sub	r2, r2, #1
 	str	r2, [r3, r1]
 	.syntax divided
-@ 142 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 142 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		msr	cpsr_c, r0	@ local_irq_restore
 @ 0 "" 2
 	.arm
@@ -107176,7 +107176,7 @@ gether_qc_disconnect_name:
 	subs	r4, r0, #0
 	beq	.L18509
 	.syntax divided
-@ 17 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 17 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		mrs	r0, cpsr	@ arch_local_irq_save
 	cpsid	i
 @ 0 "" 2
@@ -107194,7 +107194,7 @@ gether_qc_disconnect_name:
 	sub	r2, r2, #1
 	str	r2, [r3, r1]
 	.syntax divided
-@ 142 "/home/jprim/hlte/rebase/arch/arm/include/asm/irqflags.h" 1
+@ 142 "/home/jprim/hlte/lolz/arch/arm/include/asm/irqflags.h" 1
 		msr	cpsr_c, r0	@ local_irq_restore
 @ 0 "" 2
 	.arm
@@ -108562,7 +108562,7 @@ gaudio_setup:
 	rsb	r2, r3, #0
 	and	r3, r3, r2
 	.syntax divided
-@ 268 "/home/jprim/hlte/rebase/arch/arm/include/asm/bitops.h" 1
+@ 268 "/home/jprim/hlte/lolz/arch/arm/include/asm/bitops.h" 1
 	clz	r3, r3
 @ 0 "" 2
 	.arm
@@ -108576,7 +108576,7 @@ gaudio_setup:
 	rsb	r2, r3, #0
 	and	r3, r3, r2
 	.syntax divided
-@ 268 "/home/jprim/hlte/rebase/arch/arm/include/asm/bitops.h" 1
+@ 268 "/home/jprim/hlte/lolz/arch/arm/include/asm/bitops.h" 1
 	clz	r3, r3
 @ 0 "" 2
 	.arm
@@ -108590,7 +108590,7 @@ gaudio_setup:
 	rsb	r2, r3, #0
 	and	r3, r3, r2
 	.syntax divided
-@ 268 "/home/jprim/hlte/rebase/arch/arm/include/asm/bitops.h" 1
+@ 268 "/home/jprim/hlte/lolz/arch/arm/include/asm/bitops.h" 1
 	clz	r3, r3
 @ 0 "" 2
 	.arm
@@ -108604,7 +108604,7 @@ gaudio_setup:
 	rsb	r2, r3, #0
 	and	r3, r3, r2
 	.syntax divided
-@ 268 "/home/jprim/hlte/rebase/arch/arm/include/asm/bitops.h" 1
+@ 268 "/home/jprim/hlte/lolz/arch/arm/include/asm/bitops.h" 1
 	clz	r3, r3
 @ 0 "" 2
 	.arm
@@ -109390,10 +109390,10 @@ conn_gadget_open:
 	mov	r4, r2
 	add	r2, r3, #116
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r1, [r2]
 	add	r1, r1, #1
@@ -109401,7 +109401,7 @@ conn_gadget_open:
 	teq	r0, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -109423,7 +109423,7 @@ conn_gadget_open:
 	b	.L18889
 .L18887:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -109504,10 +109504,10 @@ conn_gadget_read:
 	bls	.L18919
 	add	r6, r4, #108
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r3, [r6]
 	add	r3, r3, #1
@@ -109515,7 +109515,7 @@ conn_gadget_read:
 	teq	r2, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -109542,7 +109542,7 @@ conn_gadget_read:
 	bl	printk
 .L18905:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -109627,7 +109627,7 @@ conn_gadget_read:
 	b	.L18905
 .L18897:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -109701,7 +109701,7 @@ conn_gadget_read:
 	movt	r0, #:upper16:.LC1453
 	bl	printk
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -111475,7 +111475,7 @@ usb30en_store:
 	.section	.rodata.str1.4
 	.align	2
 .LC1481:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/android."
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/android."
 	.ascii	"c\000"
 	.align	2
 .LC1482:
@@ -112462,10 +112462,10 @@ adb_open:
 	beq	.L19446
 	add	r2, r3, #116
 	.syntax divided
-@ 61 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 61 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
-@ 63 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 63 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add_return
 1:	ldrex	r5, [r2]
 	add	r5, r5, #1
@@ -112473,7 +112473,7 @@ adb_open:
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 73 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 73 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -112524,7 +112524,7 @@ adb_open:
 	b	.L19443
 .L19441:
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -112615,7 +112615,7 @@ ffs_ep0_write:
 	sub	sp, sp, #44
 	add	r8, r4, #96
 	.syntax divided
-@ 193 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 193 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -112623,7 +112623,7 @@ ffs_ep0_write:
 	mov	r3, #0
 .L19462:
 	.syntax divided
-@ 170 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 170 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@ __cmpxchg4
 	ldrex	r1, [r8]
 	mov	r2, #0
@@ -112636,7 +112636,7 @@ ffs_ep0_write:
 	cmp	r2, #0
 	bne	.L19462
 	.syntax divided
-@ 195 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 195 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -112691,7 +112691,7 @@ ffs_ep0_write:
 	mov	r0, fp
 	bl	_raw_spin_lock_irq
 	.syntax divided
-@ 193 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 193 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -112699,7 +112699,7 @@ ffs_ep0_write:
 	mov	r3, #0
 .L19513:
 	.syntax divided
-@ 170 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 170 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@ __cmpxchg4
 	ldrex	r1, [r8]
 	mov	r10, #0
@@ -112712,7 +112712,7 @@ ffs_ep0_write:
 	cmp	r10, #0
 	bne	.L19513
 	.syntax divided
-@ 195 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 195 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -112781,14 +112781,14 @@ ffs_ep0_write:
 	mov	r0, fp
 	bl	_raw_spin_lock_irq
 	.syntax divided
-@ 193 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 193 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
 	.syntax unified
 .L19518:
 	.syntax divided
-@ 170 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 170 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@ __cmpxchg4
 	ldrex	r2, [r8]
 	mov	r3, #0
@@ -112801,7 +112801,7 @@ ffs_ep0_write:
 	cmp	r3, #0
 	bne	.L19518
 	.syntax divided
-@ 195 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 195 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -113101,10 +113101,10 @@ ffs_ep0_write:
 	beq	.L19596
 .L19495:
 	.syntax divided
-@ 1521 "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c" 1
+@ 1521 "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c" 1
 	1:	.word 0xe7f001f2
 .pushsection .rodata.str, "aMS", %progbits, 1
-2:	.asciz "/home/jprim/hlte/rebase/drivers/usb/gadget/f_fs.c"
+2:	.asciz "/home/jprim/hlte/lolz/drivers/usb/gadget/f_fs.c"
 .popsection
 .pushsection __bug_table,"a"
 3:	.word 1b, 2b
@@ -113301,7 +113301,7 @@ ffs_ep0_write:
 	mov	r3, r4
 	str	r2, [r3], #84
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r2, [r3]
 	add	r2, r2, #1
@@ -113594,7 +113594,7 @@ ffs_ep0_write:
 	.global	terminal_mode_version
 	.align	2
 .LC1575:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_ncm.c\000"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_ncm.c\000"
 	.align	2
 .LC1576:
 	.ascii	"CDC Network Control Model (NCM)\000"
@@ -113617,7 +113617,7 @@ ffs_ep0_write:
 	.ascii	"usb_buffer_size\000"
 	.align	2
 .LC1582:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_conn_g"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_conn_g"
 	.ascii	"adget.c\000"
 	.align	2
 .LC1583:
@@ -113641,7 +113641,7 @@ ffs_ep0_write:
 	.ascii	"1.0\000"
 	.align	2
 .LC1589:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_uac1.c"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_uac1.c"
 	.ascii	"\000"
 	.align	2
 .LC1590:
@@ -113727,7 +113727,7 @@ ffs_ep0_write:
 	.global	uac1_ac_interface_desc
 	.align	2
 .LC1615:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_uac1.c"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_uac1.c"
 	.ascii	"\000"
 	.align	2
 .LC1616:
@@ -113776,7 +113776,7 @@ ffs_ep0_write:
 	.ascii	"/dev/snd/pcmC0D5p\000"
 	.align	2
 .LC1630:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_qc_eth"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_qc_eth"
 	.ascii	"er.c\000"
 	.align	2
 .LC1631:
@@ -113789,7 +113789,7 @@ ffs_ep0_write:
 	.ascii	"gadget\000"
 	.align	2
 .LC1634:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_ether."
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_ether."
 	.ascii	"c\000"
 	.align	2
 .LC1635:
@@ -113803,7 +113803,7 @@ ffs_ep0_write:
 	.ascii	"android_rndis_qc\000"
 	.align	2
 .LC1638:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_qc_rnd"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_qc_rnd"
 	.ascii	"is.c\000"
 	.align	2
 .LC1639:
@@ -113835,7 +113835,7 @@ ffs_ep0_write:
 	.ascii	"RNDIS\000"
 	.align	2
 .LC1648:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_ecm.c\000"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_ecm.c\000"
 	.align	2
 .LC1649:
 	.ascii	"CDC Ethernet Control Model (ECM)\000"
@@ -113847,7 +113847,7 @@ ffs_ep0_write:
 	.ascii	"CDC ECM\000"
 	.align	2
 .LC1652:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_bam_da"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_bam_da"
 	.ascii	"ta.c\000"
 	.align	2
 .LC1653:
@@ -113879,7 +113879,7 @@ ffs_ep0_write:
 	.ascii	"android_mbim\000"
 	.align	2
 .LC1662:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_mbim.c"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_mbim.c"
 	.ascii	"\000"
 	.align	2
 .LC1663:
@@ -114009,7 +114009,7 @@ ffs_ep0_write:
 	.ascii	"MBIM Data\000"
 	.align	2
 .LC1705:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_qc_ecm"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_qc_ecm"
 	.ascii	".c\000"
 	.align	2
 .LC1706:
@@ -114038,7 +114038,7 @@ ffs_ep0_write:
 	.ascii	"ecm bam connected\012\000"
 	.align	2
 .LC1714:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/rndis.c\000"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/rndis.c\000"
 	.align	2
 .LC1715:
 	.ascii	"%s: REMOTE_NDIS_KEEPALIVE_MSG\012\000"
@@ -114073,7 +114073,7 @@ ffs_ep0_write:
 	.global	rndis_ul_max_pkt_per_xfer_rcvd
 	.align	2
 .LC1725:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_rndis."
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_rndis."
 	.ascii	"c\000"
 	.align	2
 .LC1726:
@@ -114086,7 +114086,7 @@ ffs_ep0_write:
 	.ascii	"Android Accessory Interface\000"
 	.align	2
 .LC1729:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_mtp.c\000"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_mtp.c\000"
 	.global	mtp_ext_config_desc
 	.align	2
 .LC1730:
@@ -114096,14 +114096,14 @@ ffs_ep0_write:
 	.global	mtp_rx_req_len
 	.align	2
 .LC1731:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_midi.c"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_midi.c"
 	.ascii	"\000"
 	.align	2
 .LC1732:
 	.ascii	"MIDI function\000"
 	.align	2
 .LC1733:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_ccid.c"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_ccid.c"
 	.ascii	"\000"
 	.align	2
 .LC1734:
@@ -114113,10 +114113,10 @@ ffs_ep0_write:
 	.ascii	"ccid_bulk\000"
 	.align	2
 .LC1736:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_adb.c\000"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_adb.c\000"
 	.align	2
 .LC1737:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_acm.c\000"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_acm.c\000"
 	.align	2
 .LC1738:
 	.ascii	"CDC Abstract Control Model (ACM)\000"
@@ -114131,7 +114131,7 @@ ffs_ep0_write:
 	.ascii	"dun\000"
 	.align	2
 .LC1742:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_data_h"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_data_h"
 	.ascii	"suart.c\000"
 	.global	ghsuart_data_stats_ops
 	.align	2
@@ -114149,11 +114149,11 @@ ffs_ep0_write:
 	.ascii	"SMUX_RMNET_DATA_HSUART\000"
 	.align	2
 .LC1747:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_ctrl_h"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_ctrl_h"
 	.ascii	"suart.c\000"
 	.align	2
 .LC1748:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_data_h"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_data_h"
 	.ascii	"sic.c\000"
 	.global	ghsic_stats_ops
 	.global	gdata_timestamp_ops
@@ -114163,21 +114163,21 @@ ffs_ep0_write:
 	.global	gctrl_stats_ops
 	.align	2
 .LC1749:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_ctrl_h"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_ctrl_h"
 	.ascii	"sic.c\000"
 	.align	2
 .LC1750:
 	.ascii	"rmnet_ctrl\000"
 	.align	2
 .LC1751:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_rmnet_"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_rmnet_"
 	.ascii	"ctrl_qti.c\000"
 	.global	smd_ctrl_dfile
 	.global	smd_ctrl_dent
 	.global	gsmd_ctrl_stats_ops
 	.align	2
 .LC1752:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_rmnet_"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_rmnet_"
 	.ascii	"ctrl_smd.c\000"
 	.global	online_clients
 	.align	2
@@ -114191,13 +114191,13 @@ ffs_ep0_write:
 	.ascii	"DATA38_CNTL\000"
 	.align	2
 .LC1756:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_bam.c\000"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_bam.c\000"
 	.global	gbam_dent
 	.global	gbam_stats_ops
 	.global	bam2bam_ports
 	.align	2
 .LC1757:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_smd.c\000"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_smd.c\000"
 	.global	smd_pi
 	.align	2
 .LC1758:
@@ -114207,7 +114207,7 @@ ffs_ep0_write:
 	.ascii	"UNUSED\000"
 	.align	2
 .LC1760:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_sdio.c"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_sdio.c"
 	.ascii	"\000"
 	.align	2
 .LC1761:
@@ -114242,25 +114242,25 @@ ffs_ep0_write:
 	.ascii	"ro\000"
 	.align	2
 .LC1770:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/storage_"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/storage_"
 	.ascii	"common.c\000"
 	.align	2
 .LC1771:
 	.ascii	"functionfs\000"
 	.align	2
 .LC1772:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_audio_"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_audio_"
 	.ascii	"source.c\000"
 	.align	2
 .LC1773:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_rmnet."
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_rmnet."
 	.ascii	"c\000"
 	.align	2
 .LC1774:
 	.ascii	"RmNet\000"
 	.align	2
 .LC1775:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_rmnet_"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_rmnet_"
 	.ascii	"smd_sdio.c\000"
 	.align	2
 .LC1776:
@@ -114273,7 +114273,7 @@ ffs_ep0_write:
 	.global	debug_rmnet_sdio_stats_ops
 	.align	2
 .LC1778:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_rmnet_"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_rmnet_"
 	.ascii	"sdio.c\000"
 	.align	2
 .LC1779:
@@ -114294,11 +114294,11 @@ ffs_ep0_write:
 	.global	rmnet_smd_debug_stats_ops
 	.align	2
 .LC1783:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_rmnet_"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_rmnet_"
 	.ascii	"smd.c\000"
 	.align	2
 .LC1784:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_qdss.c"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_qdss.c"
 	.ascii	"\000"
 	.align	2
 .LC1785:
@@ -114308,12 +114308,12 @@ ffs_ep0_write:
 	.ascii	"QDSS CTRL\000"
 	.align	2
 .LC1787:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/u_qdss.c"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/u_qdss.c"
 	.ascii	"\000"
 	.global	dent_diag
 	.align	2
 .LC1788:
-	.ascii	"/home/jprim/hlte/rebase/drivers/usb/gadget/f_diag.c"
+	.ascii	"/home/jprim/hlte/lolz/drivers/usb/gadget/f_diag.c"
 	.ascii	"\000"
 	.align	2
 .LC1789:

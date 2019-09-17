@@ -158,7 +158,7 @@ reset_curseg:
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2
 .LC0:
-	.ascii	"/home/jprim/hlte/rebase/fs/f2fs/segment.c\000"
+	.ascii	"/home/jprim/hlte/lolz/fs/f2fs/segment.c\000"
 	.text
 	.align	2
 	.syntax unified
@@ -818,7 +818,7 @@ __remove_dirty_segment:
 	.section	.rodata.str1.4
 	.align	2
 .LC1:
-	.ascii	"/home/jprim/hlte/rebase/fs/f2fs/f2fs.h\000"
+	.ascii	"/home/jprim/hlte/lolz/fs/f2fs/f2fs.h\000"
 	.text
 	.align	2
 	.syntax unified
@@ -1569,7 +1569,7 @@ issue_flush_thread:
 	beq	.L221
 .L199:
 	.syntax divided
-@ 37 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 37 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -1577,14 +1577,14 @@ issue_flush_thread:
 	mov	r1, #0
 	add	r2, r4, #20
 	.syntax divided
-@ 52 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 52 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@	__xchg4
 1:	ldrex	r3, [r2]
 	strex	r0, r1, [r2]
 	teq	r0, #0
 	bne	1b
 @ 0 "" 2
-@ 98 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 98 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -1905,7 +1905,7 @@ register_inmem_page:
 	mov	r3, r4
 	ldr	r2, [r3, #16]!
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r2, [r3]
 	add	r2, r2, #1
@@ -1924,7 +1924,7 @@ register_inmem_page:
 	ldr	r3, [r3, #488]
 	add	r2, r3, #716
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r1, [r2]
 	add	r1, r1, #1
@@ -2287,7 +2287,7 @@ f2fs_issue_flush:
 	beq	.L348
 .L328:
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r3, [r6]
 	add	r3, r3, #1
@@ -2318,7 +2318,7 @@ f2fs_issue_flush:
 	bl	wait_for_completion
 	ldr	r4, [sp, #16]
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -2348,7 +2348,7 @@ f2fs_issue_flush:
 	str	r7, [sp]
 	bl	__init_waitqueue_head
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r3, [r6]
 	add	r3, r3, #1
@@ -2364,14 +2364,14 @@ f2fs_issue_flush:
 .L330:
 	str	r3, [sp, #16]
 	.syntax divided
-@ 193 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 193 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
 	.syntax unified
 .L329:
 	.syntax divided
-@ 170 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 170 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@ __cmpxchg4
 	ldrex	r0, [r4]
 	mov	r1, #0
@@ -2384,7 +2384,7 @@ f2fs_issue_flush:
 	cmp	r1, #0
 	bne	.L329
 	.syntax divided
-@ 195 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 195 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -2404,7 +2404,7 @@ f2fs_issue_flush:
 	mov	r0, sp
 	bl	wait_for_completion
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r3, [r6]
 	sub	r3, r3, #1
@@ -2419,17 +2419,17 @@ f2fs_issue_flush:
 	b	.L318
 .L332:
 	.syntax divided
-@ 37 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 37 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
-@ 52 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 52 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	@	__xchg4
 1:	ldrex	r2, [r4]
 	strex	r1, r3, [r4]
 	teq	r1, #0
 	bne	1b
 @ 0 "" 2
-@ 98 "/home/jprim/hlte/rebase/arch/arm/include/asm/cmpxchg.h" 1
+@ 98 "/home/jprim/hlte/lolz/arch/arm/include/asm/cmpxchg.h" 1
 	dmb
 @ 0 "" 2
 	.arm
@@ -5471,7 +5471,7 @@ rewrite_data_page:
 	add	r1, r3, #856
 	str	ip, [r0, #12]
 	.syntax divided
-@ 45 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 45 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_add
 1:	ldrex	r2, [r1]
 	add	r2, r2, #1
@@ -5849,7 +5849,7 @@ __revoke_inmem_pages:
 	ldr	r3, [r3, #488]
 	add	r2, r3, #716
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -6199,7 +6199,7 @@ commit_inmem_pages:
 	bne	.L870
 	add	r2, r8, #376
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r1, [r2]
 	sub	r1, r1, #1
@@ -6216,7 +6216,7 @@ commit_inmem_pages:
 	ldr	r3, [r1, #488]
 	add	r3, r3, r2
 	.syntax divided
-@ 83 "/home/jprim/hlte/rebase/arch/arm/include/asm/atomic.h" 1
+@ 83 "/home/jprim/hlte/lolz/arch/arm/include/asm/atomic.h" 1
 	@ atomic_sub
 1:	ldrex	r2, [r3]
 	sub	r2, r2, #1
@@ -6864,7 +6864,7 @@ lookup_journal_in_cursum:
 	.section	.rodata.str1.4
 	.align	2
 .LC10:
-	.ascii	"/home/jprim/hlte/rebase/fs/f2fs/segment.h\000"
+	.ascii	"/home/jprim/hlte/lolz/fs/f2fs/segment.h\000"
 	.text
 	.align	2
 	.global	flush_sit_entries
@@ -9422,7 +9422,7 @@ build_segment_manager:
 	bne	.L1280
 .L1285:
 	.syntax divided
-@ 55 "/home/jprim/hlte/rebase/include/linux/math64.h" 1
+@ 55 "/home/jprim/hlte/lolz/include/linux/math64.h" 1
 	.ifnc r1,r1 ; .err ; .endif
 	.ifnc r2,r2 ; .err ; .endif
 	.ifnc r0,r0 ; .err ; .endif
