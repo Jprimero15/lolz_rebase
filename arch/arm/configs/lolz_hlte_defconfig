@@ -4389,8 +4389,8 @@ CONFIG_DEBUG_USER=y
 #
 # PowerManagement Feature
 #
-# CONFIG_SEC_PM is not set
-# CONFIG_SEC_PM_DEBUG is not set
+CONFIG_SEC_PM=y
+CONFIG_SEC_PM_DEBUG=y
 CONFIG_PID_IN_CONTEXTIDR=y
 
 #
