@@ -52,8 +52,6 @@ static DEFINE_PER_CPU(struct cpufreq_cpu_save_data, cpufreq_policy_save);
 #endif
 static DEFINE_SPINLOCK(cpufreq_driver_lock);
 
-static struct kset *cpufreq_kset;
-
 /*
  * cpu_policy_rwsem is a per CPU reader-writer semaphore designed to cure
  * all cpufreq/hotplug/workqueue/etc related lock issues.
@@ -358,6 +356,10 @@ void cpufreq_notify_utilization(struct cpufreq_policy *policy,
 {
 	if (policy)
 		policy->util = util;
+
+	if (policy->util >= MIN_CPU_UTIL_NOTIFY)
+		sysfs_notify(&policy->kobj, NULL, "cpu_utilization");
+
 }
 
 /*********************************************************************
@@ -475,9 +477,6 @@ static ssize_t store_##file_name					\
 	unsigned int ret = -EINVAL;					\
 	struct cpufreq_policy new_policy;				\
 									\
-	if (&policy->object == &policy->min)				\
-		return count;						\
-									\
 	ret = cpufreq_get_policy(&new_policy, policy->cpu);		\
 	if (ret)							\
 		return -EINVAL;						\
@@ -498,7 +497,13 @@ static ssize_t store_##file_name					\
 	return ret ? ret : count;					\
 }
 
-store_one(scaling_min_freq, min);
+#ifdef CONFIG_SEC_PM
+#ifndef CONFIG_ARCH_MSM8226
+/* Disable scaling_min_freq store */
+	store_one(scaling_min_freq, min);
+#endif
+#endif
+
 store_one(scaling_max_freq, max);
 
 /**
@@ -560,8 +565,6 @@ static ssize_t store_scaling_governor(struct cpufreq_policy *policy,
 	policy->user_policy.governor = policy->governor;
 
 	sysfs_notify(&policy->kobj, NULL, "scaling_governor");
-
-	kobject_uevent(cpufreq_global_kobject, KOBJ_ADD);
 
 	if (ret)
 		return ret;
@@ -776,6 +779,7 @@ static ssize_t store(struct kobject *kobj, struct attribute *attr,
 	struct cpufreq_policy *policy = to_policy(kobj);
 	struct freq_attr *fattr = to_attr(attr);
 	ssize_t ret = -EINVAL;
+	get_online_cpus();
 	policy = cpufreq_cpu_get_sysfs(policy->cpu);
 	if (!policy)
 		goto no_policy;
@@ -792,6 +796,7 @@ static ssize_t store(struct kobject *kobj, struct attribute *attr,
 fail:
 	cpufreq_cpu_put_sysfs(policy);
 no_policy:
+	put_online_cpus();
 	return ret;
 }
 
@@ -1096,13 +1101,14 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 		goto err_unlock_policy;
 	}
 
-	/* related cpus should atleast have policy->cpus */
-	cpumask_or(policy->related_cpus, policy->related_cpus, policy->cpus);
+	/*
+	 * affected cpus must always be the one, which are online. We aren't
+	 * managing offline cpus here.
+	 */
+	cpumask_and(policy->cpus, policy->cpus, cpu_online_mask);
 
 	policy->user_policy.min = policy->min;
 	policy->user_policy.max = policy->max;
-
-	policy->util = 0;
 
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 				     CPUFREQ_START, policy);
@@ -1123,8 +1129,6 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 	unlock_policy_rwsem_write(cpu);
 
 	kobject_uevent(&policy->kobj, KOBJ_ADD);
-	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
-			CPUFREQ_CREATE_POLICY, policy);
 	module_put(cpufreq_driver->owner);
 	pr_debug("initialization complete\n");
 
@@ -1261,8 +1265,6 @@ static int __cpufreq_remove_dev(struct device *dev, struct subsys_interface *sif
 	kobj = &data->kobj;
 	cmp = &data->kobj_unregister;
 	unlock_policy_rwsem_write(cpu);
-	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
-			CPUFREQ_REMOVE_POLICY, data);
 	kobject_put(kobj);
 
 	/* we need to make sure that the underlying kobj is actually
@@ -1351,26 +1353,6 @@ static void cpufreq_out_of_sync(unsigned int cpu, unsigned int old_freq,
 	cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
 }
 
-/**
- * cpufreq_quick_get_util - get the CPU utilization from policy->util
- * @cpu: CPU number
- *
- * This is the last known util, without actually getting it from the driver.
- * Return value will be same as what is shown in util in sysfs.
- */
-unsigned int cpufreq_quick_get_util(unsigned int cpu)
-{
-	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-	unsigned int ret_util = 0;
-
-	if (policy) {
-		ret_util = policy->util;
-		cpufreq_cpu_put(policy);
-	}
-
-	return ret_util;
-}
-EXPORT_SYMBOL(cpufreq_quick_get_util);
 
 /**
  * cpufreq_quick_get - get the CPU frequency (in kHz) from policy->cur
@@ -2155,12 +2137,6 @@ static int __init cpufreq_core_init(void)
 
 	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
 	BUG_ON(!cpufreq_global_kobject);
-
-	/* create cpufreq kset */
-	cpufreq_kset = kset_create_and_add("kset", NULL, cpufreq_global_kobject);
-	BUG_ON(!cpufreq_kset);
-	cpufreq_global_kobject->kset = cpufreq_kset;
-
 	register_syscore_ops(&cpufreq_syscore_ops);
 
 	return 0;
