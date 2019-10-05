@@ -42,9 +42,6 @@
 #include <asm/div64.h>
 #endif
 
-#define LOLZ_MIN_FREQ	268800
-#define LOLZ_MAX_FREQ	2265600
-
 #ifdef CONFIG_CPU_VOLTAGE_TABLE
 static struct cpufreq_frequency_table *dts_freq_table;
 #endif
@@ -291,11 +288,15 @@ static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 		return 0;
 
 	if (cpufreq_frequency_table_cpuinfo(policy, table)) {
-		policy->cpuinfo.min_freq = LOLZ_MIN_FREQ;
-		policy->cpuinfo.max_freq = LOLZ_MAX_FREQ;
+#ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
+		policy->cpuinfo.min_freq = CONFIG_MSM_CPU_FREQ_MIN;
+		policy->cpuinfo.max_freq = CONFIG_MSM_CPU_FREQ_MAX;
+#endif
 	}
-	policy->min = LOLZ_MIN_FREQ;
-	policy->max = LOLZ_MAX_FREQ;
+#ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
+	policy->min = CONFIG_MSM_CPU_FREQ_MIN;
+	policy->max = CONFIG_MSM_CPU_FREQ_MAX;
+#endif
 
 	if (is_clk)
 		cur_freq = clk_get_rate(cpu_clk[policy->cpu])/1000;
