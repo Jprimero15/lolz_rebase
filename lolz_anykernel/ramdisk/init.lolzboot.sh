@@ -61,6 +61,8 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
 
     # Enable RQbalance and Tweaks if boot completed
     echo "rqbalance" > /sys/devices/system/cpu/cpuquiet/current_governor
+    chmod 777 /sys/devices/system/cpu/cpuquiet/nr_max_cpus
+    chmod 777 /sys/devices/system/cpu/cpuquiet/nr_min_cpus
 #    echo "268000 0" > /sys/devices/system/cpu/cpuquiet/rqbalance/idle_bottom_freq
 #    echo "960000 0" > /sys/devices/system/cpu/cpuquiet/rqbalance/idle_top_freq
 
