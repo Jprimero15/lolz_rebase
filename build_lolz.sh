@@ -11,7 +11,7 @@ if [ $USER == jprim ]; then
 # Definitions Here
 KERNEL_NAME="LolZ"
 KERNEL_VARIANT="hlte"
-KERNEL_VERSION="10"
+KERNEL_VERSION="10-Q-Edition"
 KERNEL_DATE="$(date +"%Y%m%d")"
 BUILD_DIR="output_$KERNEL_VARIANT"
 KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"

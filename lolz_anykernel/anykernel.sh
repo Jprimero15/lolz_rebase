@@ -5,7 +5,7 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=*    LolZ-Kernel For Android 9/10
+kernel.string=*    LolZ-Kernel For Android 10
 do.devicecheck=1
 do.modules=0
 do.cleanup=1
@@ -19,14 +19,13 @@ device.name6=hlteskt
 device.name7=hltespr
 device.name8=hltetmo
 device.name9=hltexx
-supported.versions=9 - 10
+supported.versions=10
 '; } # end properties
 
 # shell variables
 block=/dev/block/platform/msm_sdcc.1/by-name/boot;
 is_slot_device=auto;
 ramdisk_compression=auto;
-
 
 ## AnyKernel methods (DO NOT CHANGE)
 # import patching functions/variables - see for reference
@@ -36,9 +35,6 @@ ramdisk_compression=auto;
 ## AnyKernel file attributes
 # set permissions/ownership for included ramdisk files
 set_perm_recursive 0 0 755 750 $ramdisk/*;
-chmod -R 640 $ramdisk/fstab.qcom;
-chmod -R 644 $ramdisk/ueventd.qcom.rc;
-chown -R root:root $ramdisk/*;
 
 ## AnyKernel install
 dump_boot;
