@@ -1,0 +1,67 @@
+#
+# Copyright (C) 2018-2019 The Lolz Kernel Project. All rights reserved.
+#
+# LolZ-Kernel Configuration
+# Custom Kernel for HLTE Android 9 and 10 based ROMs
+# Author: Joshua Primero <jprimero155@gmail.com>
+#
+# This script is licensed under the terms of the GNU General Public 
+# License version 2, as published by the Free Software Foundation, 
+# and may be copied, distributed, and modified under those terms.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+
+on property:sys.boot_completed=1
+    stop mpdecision
+
+    # lolznappy Governor
+    write /sys/devices/system/cpu/cpu0/online 1
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu2/online 1
+    write /sys/devices/system/cpu/cpu3/online 1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "lolznappy"
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "lolznappy"
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "lolznappy"
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "lolznappy"
+    write /sys/devices/system/cpu/cpufreq/lolznappy/above_hispeed_delay "20000 1190400:60000 1728000:74000 1958400:82000 2265600:120000"
+    write /sys/devices/system/cpu/cpufreq/lolznappy/go_hispeed_load 99
+    write /sys/devices/system/cpu/cpufreq/lolznappy/target_loads "98 268800:28 300000:12 422400:34 652800:41 729600:12 883200:52 960000:9 1036800:8 1190400:73 1267200:6 1497600:87 1574400:5 1728000:89 1958400:91 2265600:94"
+    write /sys/devices/system/cpu/cpufreq/lolznappy/min_sample_time 40000
+    write /sys/devices/system/cpu/cpufreq/lolznappy/timer_rate 40000
+    write /sys/devices/system/cpu/cpufreq/lolznappy/timer_slack 80000
+    write /sys/devices/system/cpu/cpufreq/lolznappy/hispeed_freq 1190400
+    write /sys/devices/system/cpu/cpufreq/lolznappy/io_is_busy 0
+    write /sys/devices/system/cpu/cpufreq/lolznappy/max_freq_hysteresis 0
+
+    # CPUFREQ Settings   
+    # CPU0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2265600
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 268800
+    # CPU1
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 2265600
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 268800
+    # CPU2
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 2265600
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 268800
+    # CPU3
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 2265600
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 268800
+    
+    # Set GPU Min/Max Frequency
+    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 100000000
+    write /sys/class/kgsl/kgsl-3d0/devfreq/max_freq 600000000
+    write /sys/class/kgsl/kgsl-3d0/max_gpuclk  450000000
+
+    # Set TCP Congestion
+    chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
+    write /proc/sys/net/ipv4/tcp_congestion_control "westwood"
+
+    # Set I/O Scheduler
+    write /sys/block/mmcblk1/queue/scheduler "noop"
+    write /sys/block/mmcblk0/queue/scheduler "noop"
+    
+    # Enable RQbalance and Tweaks if boot completed
+    write /sys/devices/system/cpu/cpuquiet/current_governor "rqbalance"
