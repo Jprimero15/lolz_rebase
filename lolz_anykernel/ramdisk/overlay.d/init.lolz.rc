@@ -20,5 +20,5 @@ on property:sys.boot_completed=1
     rm /system/vendor/bin/mpdecision
     
     # Execute LOLZ boot script
-    exec u:r:magisk:s0 root root -- /sbin/init.lolz.sh
+    exec u:r:magisk:s0 root root -- /sbin/init.lolzboot.sh
 
