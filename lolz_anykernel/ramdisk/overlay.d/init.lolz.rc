@@ -18,28 +18,7 @@ on property:sys.boot_completed=1
     stop mpdecision
 
     rm /system/vendor/bin/mpdecision
-
-    # lolznappy Governor
-    write /sys/devices/system/cpu/cpu0/online 1
-    write /sys/devices/system/cpu/cpu1/online 1
-    write /sys/devices/system/cpu/cpu2/online 1
-    write /sys/devices/system/cpu/cpu3/online 1
-
-    # CPUFREQ Settings   
-    # CPU0
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2265600
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 268800
-    # CPU1
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 2265600
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 268800
-    # CPU2
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 2265600
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 268800
-    # CPU3
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 2265600
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 268800
     
     # Execute LOLZ boot script
-    exec u:r:init:s0 root root -- /sbin/init.lolzboot.sh
-    exec u:r:su:s0 root root -- /sbin/init.lolzboot.sh
-    exec u:r:magisk:s0 root root -- /sbin/init.lolzboot.sh
+    exec u:r:magisk:s0 root root -- /sbin/init.lolz.sh
+
