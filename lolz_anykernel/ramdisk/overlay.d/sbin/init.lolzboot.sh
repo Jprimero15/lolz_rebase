@@ -15,16 +15,19 @@
 #
 
 # Mount System as R/W
-mount -o rw,remount /system
+mount -o rw,remount /system;
 
 # Nuke MPD
 rm -rf /system/vendor/bin/mpdecision;
 
 # Mount System back to Read Only
-mount -o ro,remount /system
+mount -o ro,remount /system;
 
 # Wait for 40 seconds before executing our remaining shell scripts
 sleep 40;
+
+# Be Sure to Stop MPD lmao
+stop mpdecision;
 
 # Set Lolznappy CPU Governor
 echo "lolznappy" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor;
