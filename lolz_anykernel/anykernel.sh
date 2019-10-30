@@ -34,9 +34,7 @@ ramdisk_compression=auto;
 
 ## AnyKernel file attributes
 # set permissions/ownership for included ramdisk files
-set_perm_recursive 0 0 755 750 $ramdisk/*;
-chmod -R 750 $ramdisk/overlay.d/sbin/init.lolzboot.sh;
-chown -R root:root $ramdisk/overlay.d/sbin/init.lolzboot.sh;
+set_perm_recursive 0 0 750 750 $ramdisk/*;
 
 ## AnyKernel install
 dump_boot;
