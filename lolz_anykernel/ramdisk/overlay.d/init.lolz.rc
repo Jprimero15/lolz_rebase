@@ -15,7 +15,6 @@
 #
 
 on early-init
-
     # Online All CPU Cores very early
     write /sys/devices/system/cpu/cpu0/online 1
     write /sys/devices/system/cpu/cpu1/online 1
@@ -24,7 +23,6 @@ on early-init
 
 
 on property:sys.boot_completed=1
-    
     # Execute LOLZ boot script
     exec u:r:magisk:s0 root root -- /sbin/init.lolzboot.sh
 

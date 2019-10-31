@@ -46,6 +46,16 @@ if [ -d $ramdisk/overlay ]; then
   rm -rf $ramdisk/overlay;
 fi;
 
+# Nuke MPdecision
+$bb mount -o rw,remount -t auto /system
+if [ -q /system ] && [ -f /system/vendor/bin/mpdecision ]; then
+  ui_print "- MPDecision Found! Disabling.."
+  mv /system/vendor/bin/mpdecision /system/vendor/bin/mpdecision.bak
+  else
+  ui_print "- MPDecision Disabled!! Good"
+  fi
+$bb mount -o ro,remount -t auto /system;
+
 # end ramdisk changes
 
 write_boot;
