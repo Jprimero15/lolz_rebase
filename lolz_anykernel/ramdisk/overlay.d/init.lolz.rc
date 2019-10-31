@@ -2,7 +2,7 @@
 # Copyright (C) 2018-2019 The Lolz Kernel Project. All rights reserved.
 #
 # LolZ-Kernel Configuration
-# Custom Kernel for HLTE Android 9 and 10 based ROMs
+# Custom Kernel for HLTE Oreo and Pie based ROMs
 # Author: Joshua Primero <jprimero155@gmail.com>
 #
 # This script is licensed under the terms of the GNU General Public 
@@ -13,12 +13,11 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
-
 on property:sys.boot_completed=1
-    stop mpdecision
-
-    rm /system/vendor/bin/mpdecision
-    
-    # Execute LOLZ boot script
-    exec u:r:magisk:s0 root root -- /sbin/init.lolzboot.sh
-
+    start mpdecision
+  
+    # Execute Lolz boot script
+    exec u:r:init:s0 root root -- /init.lolzboot.sh
+    exec u:r:su:s0 root root -- /init.lolzboot.sh
+    exec u:r:supersu:s0 root root -- /init.lolzboot.sh
+    exec u:r:magisk:s0 root root -- /init.lolzboot.sh

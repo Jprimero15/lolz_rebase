@@ -14,14 +14,10 @@
 # GNU General Public License for more details.
 #
 
+
 # Mount System as R/W
 mount -o rw,remount /system
-
-# Nuke MPD
-rm -rf /system/vendor/bin/mpdecision;
-
-# Mount System back to Read Only
-mount -o ro,remount /system
+restorecon /system/vendor/bin/mpdecision
 
 # Wait for 40 seconds before executing our remaining shell scripts
 sleep 40;
@@ -41,6 +37,17 @@ echo "40000" > /sys/devices/system/cpu/cpufreq/lolznappy/timer_rate;
 echo "80000" > /sys/devices/system/cpu/cpufreq/lolznappy/timer_slack;
 echo "0" > /sys/devices/system/cpu/cpufreq/lolznappy/max_freq_hysteresis;
 
+# Stop modifying scaling_governor now since we're done here
+chown root.root /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor;
+chown root.root /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor;
+chown root.root /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor;
+chown root.root /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor;
+chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor;
+chmod 0444 /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor;
+chmod 0444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor;
+chmod 0444  /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor;
+
+sleep 20;
 # Set GPU Min/Max Frequency
 echo "100000000" > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq;
 echo "600000000" > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq;
@@ -60,17 +67,17 @@ echo "268800" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq;
 echo "2265600" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq;
 echo "268800" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq;
 
+sleep 20;
 # Set TCP Congestion
 chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control;
 echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control;
+chown root.root /proc/sys/net/ipv4/tcp_congestion_control;
+chmod 0444 /proc/sys/net/ipv4/tcp_congestion_control;
 
 # Set I/O Scheduler
 echo "noop" > /sys/block/mmcblk1/queue/scheduler;
 echo "noop" > /sys/block/mmcblk0/queue/scheduler;
-
-# Enable RQbalance and Tweaks if boot completed
-echo "rqbalance" > /sys/devices/system/cpu/cpuquiet/current_governor;
-
-# CPUQUIET: Allow Min/Max Online Cores to be fully modified by Userspace
-chmod 777 /sys/devices/system/cpu/cpuquiet/nr_max_cpus;
-chmod 777 /sys/devices/system/cpu/cpuquiet/nr_min_cpus;
+chown root.root /sys/block/mmcblk1/queue/scheduler;
+chown root.root /sys/block/mmcblk0/queue/scheduler;
+chmod 0444 /sys/block/mmcblk1/queue/scheduler;
+chmod 0444 /sys/block/mmcblk0/queue/scheduler;
