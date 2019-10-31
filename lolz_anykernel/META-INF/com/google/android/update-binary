@@ -133,7 +133,7 @@ if [ -f version ]; then
 fi;
 ui_print "- Logging in to https://twrp.me";
 ui_print "- Logged in successfully! ";
-ui_print "- Lolz Version: 10"
+ui_print "- Lolz Version: 11"
 
 $BOOTMODE || $bb mount -o bind /dev/urandom /dev/random;
 umount_all;
