@@ -13,7 +13,7 @@ do.cleanuponabort=0
 device.name1=hlte
 device.name2=hltecan
 device.name3=hltechn
-device.name5=hltedcm
+device.name4=hltedcm
 device.name5=hltekor
 device.name6=hlteskt
 device.name7=hltespr
@@ -46,15 +46,15 @@ if [ -d $ramdisk/overlay ]; then
   rm -rf $ramdisk/overlay;
 fi;
 
-# Nuke MPdecision
-$bb mount -o rw,remount -t auto /system
-if [ -q /system ] && [ -f /system/vendor/bin/mpdecision ]; then
-  ui_print "- MPDecision Found! Disabling.."
+# Disable MPdecision
+mount -o rw,remount -t auto /system
+if [ -f /system/vendor/bin/mpdecision ]; then
+  ui_print "- MPDecision Found! Disabling..."
   mv /system/vendor/bin/mpdecision /system/vendor/bin/mpdecision.bak
   else
-  ui_print "- MPDecision Disabled!! Good"
+  ui_print "- MPDecision Disabled... Yeah!!"
   fi
-$bb mount -o ro,remount -t auto /system;
+mount -o ro,remount -t auto /system;
 
 # end ramdisk changes
 

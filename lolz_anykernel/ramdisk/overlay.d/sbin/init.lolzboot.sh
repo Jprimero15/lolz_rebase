@@ -15,11 +15,6 @@
 #
 
 sleep 20;
-
-# Be Sure to Stop MPD
-stop mpdecision;
-
-sleep 20;
 # Set Lolznappy CPU Governor
 echo "lolznappy" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor;
 echo "lolznappy" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor;
