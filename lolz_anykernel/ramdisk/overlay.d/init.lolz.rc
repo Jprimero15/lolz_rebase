@@ -21,6 +21,12 @@ on early-init
     write /sys/devices/system/cpu/cpu2/online 1
     write /sys/devices/system/cpu/cpu3/online 1
 
+on boot
+    # SafetyNet Bypass HACK
+    # selinux nodes, hide permissive state
+    chmod 0640 /sys/fs/selinux/enforce
+    chmod 0440 /sys/fs/selinux/policy
+
 
 on property:sys.boot_completed=1
     # Execute LOLZ boot script
