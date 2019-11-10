@@ -20,9 +20,9 @@ COMPILE_DT="y"
 USE_CLANG="y"
 if [ "y" == "$USE_CLANG" ]; then
     # Lets use CLANG 10.0 from DragonTC
-    CLANG_TC="/home/jprim/dtc10/bin/clang"
+    CLANG_TC="$HOME/dtc10/bin/clang"
     # Lets use ARM GNU GCC 9.2.1
-    TOOLCHAIN="/home/jprim/gcc9/bin/arm-linux-gnueabi-"
+    TOOLCHAIN="$HOME/gcc9/bin/arm-linux-gnueabi-"
     TC="arm-linux-gnu"
 else
     # Lets use ARM GCC 10.0.0(Experimental)
