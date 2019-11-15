@@ -45,7 +45,20 @@ dump_boot;
 
 # begin ramdisk changes
 
-# oof
+# Find MPD
+mount -o rw,remount -t auto /system;
+if [ -f /system/vendor/bin/mpdecision ]; then
+  ui_print "- Mpdecision Found!!"
+  chmod 755 /system/vendor/bin/mpdecision;
+ else
+  ui_print "- Mpdecision Not Found!!"
+  ui_print "- Adding Mpdecision Back.."
+  rm -rf /system/vendor/bin/mpdecision;
+  rm -rf /system/vendor/bin/mpdecision.bak;
+  cp $home/sbin/mpdecision /system/vendor/bin/mpdecision;
+  chmod 755 /system/vendor/bin/mpdecision;
+fi;
+mount -o ro,remount -t auto /system;
 
 # end ramdisk changes
 
