@@ -17,6 +17,10 @@
 if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "LolZ-Kernel: Execute Boot Script Now !!" | tee /dev/kmsg
 
+    # Relabel mpdecision
+    mount -o remount,rw /system
+    restorecon /system/vendor/bin/mpdecision
+
     # Set Lolznappy CPU Governor
     echo "lolznappy" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     echo "lolznappy" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
@@ -58,9 +62,6 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     # Set I/O Scheduler
     echo "noop" > /sys/block/mmcblk1/queue/scheduler
     echo "noop" > /sys/block/mmcblk0/queue/scheduler
-
-    # Start Mpdecision if all tweaks are executed
-    start mpdecision
 
     # We are done here
     echo "LolZ-Kernel: Boot Script Executed Sucesfully !! " | tee /dev/kmsg
