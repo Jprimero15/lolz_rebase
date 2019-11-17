@@ -489,10 +489,10 @@ service qseecomd /vendor/bin/qseecomd
     group root
 
 service mpdecision /vendor/bin/mpdecision --avg_comp
-   class main
-   user root
-   group root system readproc
-   disabled
+    class main
+    user root
+    group root readproc
+    disabled
 
 service thermal-engine /vendor/bin/thermal-engine
     class main
