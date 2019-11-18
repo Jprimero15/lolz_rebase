@@ -63,6 +63,13 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "noop" > /sys/block/mmcblk1/queue/scheduler
     echo "noop" > /sys/block/mmcblk0/queue/scheduler
 
+    # Only Start MPdecision when all tweaks are executed
+    start mpdecision
+    chmod 755 /sys/devices/system/cpu/cpu0/online
+    chmod 755 /sys/devices/system/cpu/cpu1/online
+    chmod 755 /sys/devices/system/cpu/cpu2/online
+    chmod 755 /sys/devices/system/cpu/cpu3/online
+
     # We are done here
     echo "LolZ-Kernel: Boot Script Executed Sucesfully !! " | tee /dev/kmsg
 fi;
