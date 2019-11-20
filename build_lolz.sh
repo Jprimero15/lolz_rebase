@@ -6,7 +6,7 @@
 #
 
 # DO NOT DELETE/MODIFY THIS
-if [ $USER == jprim ]; then
+if [ $USER == Jprimero15 ]; then
 
 # Definitions Here
 KERNEL_NAME="LolZ"
@@ -19,10 +19,10 @@ COMPILE_DT="y"
 # CLANG or NO??
 USE_CLANG="y"
 if [ "y" == "$USE_CLANG" ]; then
-    # Lets use CLANG 10.0 from DragonTC
-    CLANG_TC="$HOME/dtc10/bin/clang"
-    # Lets use ARM GNU GCC 9.2.1
-    TOOLCHAIN="$HOME/gcc9/bin/arm-linux-gnueabi-"
+    # Lets use AOSP CLANG 10.0.1
+    CLANG_TC="$HOME/aosp/clang-r370808/bin/clang"
+    # Lets use ARM GNU GCC 7.x
+    TOOLCHAIN="$HOME/gcc7/bin/arm-linux-gnueabi-"
     TC="arm-linux-gnu"
 else
     # Lets use ARM GCC 10.0.0(Experimental)
