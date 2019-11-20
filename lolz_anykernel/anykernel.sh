@@ -45,23 +45,7 @@ dump_boot;
 
 # begin ramdisk changes
 
-# Check MPDecision
-mount -o rw,remount -t auto /system;
-if [ -f /system/vendor/bin/mpdecision ]; then
-  ui_print "- Mpdecision Found!!";
-  chmod 755 /system/vendor/bin/mpdecision;
-  chown root.shell /system/vendor/bin/mpdecision;
-  rm $ramdisk/mpdecision;
- else
-  ui_print "- Mpdecision Not Found!!";
-  ui_print "- Adding Mpdecision Back..";
-  rm -rf /system/vendor/bin/mpdecision.bak;
-  cp /tmp/anykernel/ramdisk/mpdecision /system/vendor/bin/mpdecision;
-  chmod 755 /system/vendor/bin/mpdecision;
-  chown root.shell /system/vendor/bin/mpdecision;
-  rm $ramdisk/mpdecision;
-fi;
-mount -o ro,remount -t auto /system;
+# oof
 
 # end ramdisk changes
 
