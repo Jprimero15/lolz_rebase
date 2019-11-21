@@ -2,7 +2,7 @@ menu "CPUQuiet Framework"
 
 config CPU_QUIET
 	bool "CPUQuiet Framework"
-        default n
+        default y
 	help
 	 Cpuquiet implements pluggable policies for forcing cpu cores into a
 	 quiescent state. Appropriate policies will save power without hurting
