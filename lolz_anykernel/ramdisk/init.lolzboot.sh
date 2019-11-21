@@ -59,6 +59,13 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "noop" > /sys/block/mmcblk1/queue/scheduler
     echo "noop" > /sys/block/mmcblk0/queue/scheduler
 
+    # CPUQUIET: Enable RQbalance and Tweaks if boot completed
+    echo "rqbalance" > /sys/devices/system/cpu/cpuquiet/current_governor
+
+    # CPUQUIET: Make Min/Max Online Cores Writable
+    chmod 644 /sys/devices/system/cpu/cpuquiet/nr_max_cpus
+    chmod 644 /sys/devices/system/cpu/cpuquiet/nr_min_cpus
+
     # We are done here
     echo "LolZ-Kernel: Boot Script Executed Sucesfully !! " | tee /dev/kmsg
 fi;
