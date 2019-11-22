@@ -95,7 +95,7 @@ static struct f2fs_dir_entry *find_in_block(struct page *dentry_page,
 
 	dentry_blk = (struct f2fs_dentry_block *)kmap(dentry_page);
 
-	make_dentry_ptr(NULL, &d, (void *)dentry_blk, 1);
+	make_dentry_ptr_block(NULL, &d, dentry_blk);
 	de = find_target_dentry(fname, namehash, max_slots, &d);
 	if (de)
 		*res_page = dentry_page;
@@ -131,19 +131,29 @@ struct f2fs_dir_entry *find_target_dentry(struct fscrypt_name *fname,
 			continue;
 		}
 
-		/* encrypted case */
+		if (de->hash_code != namehash)
+			goto not_match;
+
 		de_name.name = d->filename[bit_pos];
 		de_name.len = le16_to_cpu(de->name_len);
 
-		/* show encrypted name */
-		if (fname->hash) {
-			if (de->hash_code == cpu_to_le32(fname->hash))
-				goto found;
-		} else if (de_name.len == name->len &&
-			de->hash_code == namehash &&
-			!memcmp(de_name.name, name->name, name->len))
+#ifdef CONFIG_F2FS_FS_ENCRYPTION
+		if (unlikely(!name->name)) {
+			if (fname->usr_fname->name[0] == '_') {
+				if (de_name.len >= 16 &&
+					!memcmp(de_name.name + de_name.len - 16,
+						fname->crypto_buf.name + 8, 16))
+					goto found;
+				goto not_match;
+			}
+			name->name = fname->crypto_buf.name;
+			name->len = fname->crypto_buf.len;
+		}
+#endif
+		if (de_name.len == name->len &&
+				!memcmp(de_name.name, name->name, name->len))
 			goto found;
-
+not_match:
 		if (max_slots && max_len > *max_slots)
 			*max_slots = max_len;
 		max_len = 0;
@@ -171,12 +181,7 @@ static struct f2fs_dir_entry *find_in_level(struct inode *dir,
 	struct f2fs_dir_entry *de = NULL;
 	bool room = false;
 	int max_slots;
-	f2fs_hash_t namehash;
-
-	if(fname->hash)
-		namehash = cpu_to_le32(fname->hash);
-	else
-		namehash = f2fs_dentry_hash(&name);
+	f2fs_hash_t namehash = f2fs_dentry_hash(&name, fname);
 
 	nbucket = dir_buckets(level, F2FS_I(dir)->i_dir_level);
 	nblock = bucket_blocks(level);
@@ -208,13 +213,9 @@ static struct f2fs_dir_entry *find_in_level(struct inode *dir,
 		f2fs_put_page(dentry_page, 0);
 	}
 
-	/* This is to increase the speed of f2fs_create */
-	if (!de && room) {
-		F2FS_I(dir)->task = current;
-		if (F2FS_I(dir)->chash != namehash) {
-			F2FS_I(dir)->chash = namehash;
-			F2FS_I(dir)->clevel = level;
-		}
+	if (!de && room && F2FS_I(dir)->chash != namehash) {
+		F2FS_I(dir)->chash = namehash;
+		F2FS_I(dir)->clevel = level;
 	}
 
 	return de;
@@ -255,6 +256,9 @@ struct f2fs_dir_entry *__f2fs_find_entry(struct inode *dir,
 			break;
 	}
 out:
+	/* This is to increase the speed of f2fs_create */
+	if (!de)
+		F2FS_I(dir)->task = current;
 	return de;
 }
 
@@ -273,7 +277,10 @@ struct f2fs_dir_entry *f2fs_find_entry(struct inode *dir,
 
 	err = fscrypt_setup_filename(dir, child, 1, &fname);
 	if (err) {
-		*res_page = ERR_PTR(err);
+		if (err == -ENOENT)
+			*res_page = NULL;
+		else
+			*res_page = ERR_PTR(err);
 		return NULL;
 	}
 
@@ -335,24 +342,6 @@ static void init_dent_inode(const struct qstr *name, struct page *ipage)
 	set_page_dirty(ipage);
 }
 
-int update_dent_inode(struct inode *inode, struct inode *to,
-					const struct qstr *name)
-{
-	struct page *page;
-
-	if (file_enc_name(to))
-		return 0;
-
-	page = get_node_page(F2FS_I_SB(inode), inode->i_ino);
-	if (IS_ERR(page))
-		return PTR_ERR(page);
-
-	init_dent_inode(name, page);
-	f2fs_put_page(page, 1);
-
-	return 0;
-}
-
 void do_make_empty_dir(struct inode *inode, struct inode *parent,
 					struct f2fs_dentry_ptr *d)
 {
@@ -382,7 +371,7 @@ static int make_empty_dir(struct inode *inode,
 
 	dentry_blk = kmap_atomic(dentry_page);
 
-	make_dentry_ptr(NULL, &d, (void *)dentry_blk, 1);
+	make_dentry_ptr_block(NULL, &d, dentry_blk);
 	do_make_empty_dir(inode, parent, &d);
 
 	kunmap_atomic(dentry_blk);
@@ -436,8 +425,11 @@ struct page *init_inode_metadata(struct inode *inode, struct inode *dir,
 		set_cold_node(inode, page);
 	}
 
-	if (new_name)
+	if (new_name) {
 		init_dent_inode(new_name, page);
+		if (f2fs_encrypted_inode(dir))
+			file_set_enc_name(inode);
+	}
 
 	/*
 	 * This file should be checkpointed during fsync.
@@ -540,7 +532,7 @@ int f2fs_add_regular_entry(struct inode *dir, const struct qstr *new_name,
 
 	level = 0;
 	slots = GET_DENTRY_SLOTS(new_name->len);
-	dentry_hash = f2fs_dentry_hash(new_name);
+	dentry_hash = f2fs_dentry_hash(new_name, NULL);
 
 	current_depth = F2FS_I(dir)->i_current_depth;
 	if (F2FS_I(dir)->chash == dentry_hash) {
@@ -597,11 +589,9 @@ add_dentry:
 			err = PTR_ERR(page);
 			goto fail;
 		}
-		if (f2fs_encrypted_inode(dir))
-			file_set_enc_name(inode);
 	}
 
-	make_dentry_ptr(NULL, &d, (void *)dentry_blk, 1);
+	make_dentry_ptr_block(NULL, &d, dentry_blk);
 	f2fs_update_dentry(ino, mode, &d, new_name, dentry_hash, bit_pos);
 
 	set_page_dirty(dentry_page);
@@ -918,7 +908,7 @@ static int f2fs_readdir(struct file *file, void *dirent, filldir_t filldir)
 
 		dentry_blk = kmap(dentry_page);
 
-		make_dentry_ptr(inode, &d, (void *)dentry_blk, 1);
+		make_dentry_ptr_block(inode, &d, dentry_blk);
 
 		err = f2fs_fill_dentries(file, dirent, filldir, &d, n,
 							bit_pos, &fstr);
