@@ -56,8 +56,8 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control
 
     # Set I/O Scheduler
-    echo "noop" > /sys/block/mmcblk1/queue/scheduler
-    echo "noop" > /sys/block/mmcblk0/queue/scheduler
+    echo "bfq" > /sys/block/mmcblk1/queue/scheduler
+    echo "bfq" > /sys/block/mmcblk0/queue/scheduler
 
     # CPUQUIET: Enable RQbalance and Tweaks if boot completed
     echo "rqbalance" > /sys/devices/system/cpu/cpuquiet/current_governor
