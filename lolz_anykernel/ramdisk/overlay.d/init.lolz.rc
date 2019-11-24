@@ -1,0 +1,35 @@
+#
+# Copyright (c) 2019, The Lolz Kernel Project. All rights reserved.
+#
+# LolZ-Kernel Configuration
+# Custom Kernel for HLTE Android 10 based ROMs
+# Author: Joshua Primero <jprimero155@gmail.com>
+#
+# This script is licensed under the terms of the GNU General Public 
+# License version 2, as published by the Free Software Foundation, 
+# and may be copied, distributed, and modified under those terms.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+
+on early-init
+    # Online All CPU Cores very early
+    write /sys/devices/system/cpu/cpu0/online 1
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu2/online 1
+    write /sys/devices/system/cpu/cpu3/online 1
+
+on boot
+    # SafetyNet Bypass HACK
+    # selinux nodes, hide permissive state
+    chmod 0640 /sys/fs/selinux/enforce
+    chmod 0440 /sys/fs/selinux/policy
+
+
+on property:sys.boot_completed=1
+    # Execute LOLZ boot script
+    exec u:r:magisk:s0 root root -- /sbin/init.lolzboot.sh
+    exec u:r:su:s0 root root -- /sbin/init.lolzboot.sh
+
