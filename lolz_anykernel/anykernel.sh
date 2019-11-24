@@ -5,7 +5,7 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=* LolZ-Kernel For Android 9 and 10
+kernel.string=*   LolZ-Kernel For Android 9 and 10
 do.devicecheck=1
 do.modules=0
 do.cleanup=1
@@ -52,26 +52,28 @@ mount -o rw,remount -t auto /system;
 OSV="$(file_getprop /system/vendor/build.prop ro.vendor.build.version.release)";
 #  Check Android Version
 if [ "$OSV" == "10" ] || [ "$OSV" == "10.0" ] || [ "$OSV" == "10.0.0" ]; then
-  ui_print "- Android 10 Detected!";
-  ui_print "- Configuring...";
+  ui_print "- Android 10 Detected!!";
+  ui_print "- Configuring Ramdisk...";
   rm $ramdisk/fstab.qcom;
   rm $ramdisk/init.lolz.rc;
   rm $ramdisk/init.lolzboot.sh;
   rm $ramdisk/init.qcom.rc;
   rm $ramdisk/init.target.rc;
  else
-  ui_print "- Android 9(PIE) Detected!";
-  ui_print "- Configuring...";
+  ui_print "- Android 9(PIE) Detected!!";
+  ui_print "- Configuring Ramdisk...";
   rm -rf $ramdisk/overlay.d;
 fi;
+  ui_print "- Ramdisk has been Configured!!";
+
+# Check Mpdecision
   ui_print "- MPDecision Found! Disabling..."
 if [ -f /system/vendor/bin/mpdecision ]; then
   mv /system/vendor/bin/mpdecision /system/vendor/bin/mpdecision.bak;
-  ui_print "- MPDecision Disabled... Yeah!!";
+  ui_print "- MPDecision has been Disabled!";
  else
-  ui_print "- MPDecision Disabled... Yeah!!";
+  ui_print "- MPDecision has been Disabled!";
 fi;
-  ui_print "- Configuration has been Set!!";
 
 # UnMount System
 mount -o ro,remount -t auto /system;

@@ -122,10 +122,11 @@ if [ -f banner ]; then
 fi;
 
 
-ui_print "***********************************";
+ui_print "****************************************";
 ui_print "$(file_getprop anykernel.sh kernel.string)";
-ui_print "*          by JPrimero15 ";
-ui_print "***********************************";
+ui_print "*    by JPrimero15 @ XDA-Developers     ";
+ui_print "* SUPPORT: https://paypal.me/lolzkernel ";
+ui_print "****************************************";
 if [ -f version ]; then
   ui_print " ";
   ui_printfile version;
@@ -133,7 +134,7 @@ if [ -f version ]; then
 fi;
 ui_print "- Logging in to https://twrp.me";
 ui_print "- Logged in successfully! ";
-ui_print "- Lolz Version: 11"
+ui_print "- Lolz Version: 12"
 
 $BOOTMODE || $bb mount -o bind /dev/urandom /dev/random;
 umount_all;
@@ -279,8 +280,8 @@ fi;
 ui_print "- Kernel Optimized!";
 ui_print "- Logging out...";
 
-ui_print "***********************************";
-ui_print "* LolZ-Kernel Installed!!";
-ui_print "***********************************";
+ui_print "****************************************";
+ui_print "*       LolZ-Kernel Installed!!         ";
+ui_print "****************************************";
 
 # End of the damn script
