@@ -1,5 +1,5 @@
 /*
- *Copyright (C) 2012 Samsung Electronics
+ * Copyright (C) 2012 Samsung Electronics
  *
  * Author: kmini.park <kmini.park@samsung.com>
  *            Sangmi Park <sm0327.park@samsung.com>
@@ -444,7 +444,7 @@ static int tmds_control(struct sii8240_data *sii8240, bool tmds_on)
 		return ret;
 	}
 
-	switch ((int)tmds_on) {
+	switch (tmds_on) {
 	case true:
 #ifdef SFEATURE_HDCP_SUPPORT
 		ret = mhl_read_byte_reg(tpi, 0x1A, &value);
