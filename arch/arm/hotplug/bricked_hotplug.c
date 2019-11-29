@@ -32,12 +32,12 @@
 
 #define MPDEC_TAG			"bricked_hotplug"
 #define HOTPLUG_ENABLED			0
-#define MSM_MPDEC_DELAY			100
-#define MSM_MPDEC_IDLE_FREQ		1036800
-#define MSM_MPDEC_STARTDELAY		1000
+#define MSM_MPDEC_DELAY			130
+#define MSM_MPDEC_IDLE_FREQ		729600
+#define MSM_MPDEC_STARTDELAY		20000
 #define DEFAULT_MIN_CPUS_ONLINE		1
 #define DEFAULT_MAX_CPUS_ONLINE		NR_CPUS
-#define DEFAULT_MAX_CPUS_ONLINE_SUSP	NR_CPUS - 1
+#define DEFAULT_MAX_CPUS_ONLINE_SUSP	1
 #define DEFAULT_DOWN_LOCK_DUR		500
 
 enum {
@@ -79,7 +79,7 @@ static struct cpu_hotplug {
 	.bricked_enabled = HOTPLUG_ENABLED,
 };
 
-static unsigned int NwNs_Threshold[8] = {12, 0, 20, 7, 25, 10, 0, 18};
+static unsigned int NwNs_Threshold[8] = {20, 0, 26, 16, 36, 18, 0, 20};
 static unsigned int TwTs_Threshold[8] = {140, 0, 140, 190, 140, 190, 0, 190};
 
 struct down_lock {
