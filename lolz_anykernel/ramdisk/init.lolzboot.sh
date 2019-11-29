@@ -59,10 +59,6 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "bfq" > /sys/block/mmcblk1/queue/scheduler
     echo "bfq" > /sys/block/mmcblk0/queue/scheduler
 
-    # BRICKED_HOTPLUG: Enable when all tweaks are executed
-    echo "1" > /sys/kernel/msm_mpdecision/conf/enabled
-    echo "1" > /sys/kernel/bricked_hotplug/conf/enabled
-
     # We are done here
     echo "LolZ-Kernel: Boot Script Executed Sucesfully !! " | tee /dev/kmsg
 fi;

@@ -75,7 +75,3 @@ chown root.root /sys/block/mmcblk0/queue/scheduler;
 chmod 0444 /sys/block/mmcblk1/queue/scheduler;
 chmod 0444 /sys/block/mmcblk0/queue/scheduler;
 
-# BRICKED_HOTPLUG: Enable when all tweaks are executed
-echo "1" > /sys/kernel/msm_mpdecision/conf/enabled
-echo "1" > /sys/kernel/bricked_hotplug/conf/enabled
-
