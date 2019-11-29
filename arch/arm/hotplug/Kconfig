@@ -15,7 +15,7 @@ config MSM_HOTPLUG
 config AUTOSMP
 	bool "Multi-core automatic hotplug support"
 	depends on SMP && HOTPLUG_CPU
-        default n
+        default y
 	help
 	  Automatically hotplugs the multiple cpu cores on and off
 	  based on cpu load and suspend state
@@ -23,7 +23,7 @@ config AUTOSMP
 config BRICKED_HOTPLUG
 	bool "Enable kernel based mpdecision"
 	depends on MSM_RUN_QUEUE_STATS
-	default n
+	default y
 	help
 	 This enables kernel based multi core control.
 	 (up/down hotplug based on load)
@@ -31,7 +31,7 @@ config BRICKED_HOTPLUG
 config BLU_PLUG
 	bool "Dynamic hotplug driver"
 	depends on HOTPLUG_CPU
-	default y
+	default n
 	help
 	  The Dynamic hotplug driver automatically online/offline CPUs proportional to system load.
 
