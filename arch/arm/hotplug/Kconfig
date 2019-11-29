@@ -31,7 +31,7 @@ config BRICKED_HOTPLUG
 config BLU_PLUG
 	bool "Dynamic hotplug driver"
 	depends on HOTPLUG_CPU
-	default n
+	default y
 	help
 	  The Dynamic hotplug driver automatically online/offline CPUs proportional to system load.
 
