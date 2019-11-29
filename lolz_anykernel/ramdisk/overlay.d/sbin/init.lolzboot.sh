@@ -75,9 +75,7 @@ chown root.root /sys/block/mmcblk0/queue/scheduler;
 chmod 0444 /sys/block/mmcblk1/queue/scheduler;
 chmod 0444 /sys/block/mmcblk0/queue/scheduler;
 
-# Enable RQbalance and Tweaks if boot completed
-echo "rqbalance" > /sys/devices/system/cpu/cpuquiet/current_governor;
+# BRICKED_HOTPLUG: Enable when all tweaks are executed
+echo "1" > /sys/kernel/msm_mpdecision/conf/enabled
+echo "1" > /sys/kernel/bricked_hotplug/conf/enabled
 
-# CPUQUIET: Allow Min/Max Online Cores to be fully modified by Userspace
-chmod 777 /sys/devices/system/cpu/cpuquiet/nr_max_cpus;
-chmod 777 /sys/devices/system/cpu/cpuquiet/nr_min_cpus;
