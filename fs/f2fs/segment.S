@@ -13152,34 +13152,34 @@ sit_entry_set_slab:
 	.size	discard_cmd_slab, 4
 discard_cmd_slab:
 	.space	4
-	.type	__key.7523, %object
-	.size	__key.7523, 0
-__key.7523:
+	.type	__key.7540, %object
+	.size	__key.7540, 0
+__key.7540:
 	.type	inmem_entry_slab, %object
 	.size	inmem_entry_slab, 4
 inmem_entry_slab:
 	.space	4
-	.type	__key.33400, %object
-	.size	__key.33400, 0
-__key.33400:
-	.type	__key.33824, %object
-	.size	__key.33824, 0
-__key.33824:
-	.type	__key.33826, %object
-	.size	__key.33826, 0
-__key.33826:
-	.type	__key.34409, %object
-	.size	__key.34409, 0
-__key.34409:
-	.type	__key.34428, %object
-	.size	__key.34428, 0
-__key.34428:
-	.type	__key.34429, %object
-	.size	__key.34429, 0
-__key.34429:
-	.type	__key.34501, %object
-	.size	__key.34501, 0
-__key.34501:
+	.type	__key.33464, %object
+	.size	__key.33464, 0
+__key.33464:
+	.type	__key.33888, %object
+	.size	__key.33888, 0
+__key.33888:
+	.type	__key.33890, %object
+	.size	__key.33890, 0
+__key.33890:
+	.type	__key.34473, %object
+	.size	__key.34473, 0
+__key.34473:
+	.type	__key.34492, %object
+	.size	__key.34492, 0
+__key.34492:
+	.type	__key.34493, %object
+	.size	__key.34493, 0
+__key.34493:
+	.type	__key.34565, %object
+	.size	__key.34565, 0
+__key.34565:
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2
 .LC0:
