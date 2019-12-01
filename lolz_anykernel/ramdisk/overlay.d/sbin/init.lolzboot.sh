@@ -46,21 +46,6 @@ echo "100000000" > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq;
 echo "600000000" > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq;
 echo "450000000" > /sys/class/kgsl/kgsl-3d0/max_gpuclk;
 
-# CPUFREQ sysfs permissions
-# Set CPU0 Frequency
-echo "2265600" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq;
-echo "268800" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq;
-# Set CPU1 Frequency
-echo "2265600" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq;
-echo "268800" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq;
-# Set CPU2 Frequency
-echo "2265600" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq;
-echo "268800" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq;
-# Set CPU3 Frequency
-echo "2265600" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq;
-echo "268800" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq;
-
-sleep 20;
 # Set TCP Congestion
 chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control;
 echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control;

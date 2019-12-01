@@ -5,8 +5,8 @@
 # LolZ-Kernel Boot Script
 # Author: Joshua Primero <jprimero155@gmail.com>
 #
-# This script is licensed under the terms of the GNU General Public
-# License version 2, as published by the Free Software Foundation,
+# This script is licensed under the terms of the GNU General Public 
+# License version 2, as published by the Free Software Foundation, 
 # and may be copied, distributed, and modified under those terms.
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,7 +19,7 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
 
     # Set Lolznappy CPU Governor
     echo "lolznappy" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    echo "lolznappy" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+    echo "lolznappy" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor 
     echo "lolznappy" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
     echo "lolznappy" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
     echo "20000 1190400:60000 1728000:74000 1958400:82000 2265600:120000" > /sys/devices/system/cpu/cpufreq/lolznappy/above_hispeed_delay
@@ -36,20 +36,6 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "100000000" > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
     echo "600000000" > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
     echo "450000000" > /sys/class/kgsl/kgsl-3d0/max_gpuclk
-
-    # CPUFREQ sysfs permissions
-    # Set CPU0 Frequency
-    echo "2265600" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    echo "268800" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    # Set CPU1 Frequency
-    echo "2265600" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-    echo "268800" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-    # Set CPU2 Frequency
-    echo "2265600" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-    echo "268800" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-    # Set CPU3 Frequency
-    echo "2265600" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-    echo "268800" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
 
     # Set TCP Congestion
     chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
