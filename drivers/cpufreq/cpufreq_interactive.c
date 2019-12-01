@@ -200,8 +200,6 @@ static unsigned int up_threshold_any_cpu_freq;
 static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 		unsigned int event);
 
-#define DYN_DEFER (1)
-		
 #ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 static
 #endif
@@ -211,22 +209,6 @@ struct cpufreq_governor cpufreq_gov_interactive = {
 	.max_transition_latency = 10000000,
 	.owner = THIS_MODULE,
 };
-
-#ifdef DYN_DEFER
-static inline void timer_set_nondeferrable(struct timer_list *timer)
-{
-       timer->base =
-               ((struct tvec_base *)((unsigned long)timer->base &
-                       ~TBASE_DEFERRABLE_FLAG));
-}
-
-static inline void timer_set_deferrable(struct timer_list *timer)
-{
-       timer->base =
-               ((struct tvec_base *)((unsigned long)timer->base |
-                       TBASE_DEFERRABLE_FLAG));
-}
-#endif
 
 static void cpufreq_interactive_timer_resched(
 	struct cpufreq_interactive_cpuinfo *pcpu)
@@ -241,13 +223,6 @@ static void cpufreq_interactive_timer_resched(
 	pcpu->cputime_speedadj = 0;
 	pcpu->cputime_speedadj_timestamp = pcpu->time_in_idle_timestamp;
 	expires = jiffies + usecs_to_jiffies(timer_rate);
-	
-#ifdef DYN_DEFER
-       if (pcpu->target_freq > pcpu->policy->min)
-               timer_set_nondeferrable(&pcpu->cpu_timer);
-       else
-               timer_set_deferrable(&pcpu->cpu_timer);
-#endif
 
 	mod_timer_pinned(&pcpu->cpu_timer, expires);
 
