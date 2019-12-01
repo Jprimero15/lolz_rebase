@@ -1887,11 +1887,11 @@ static int __devinit smb358_charger_probe(
 		goto err_free;
 	}
 
-	INIT_DELAYED_WORK_DEFERRABLE(&charger->slow_work,
+	INIT_DEFERRABLE_WORK(&charger->slow_work,
 		smb358_check_slow_charging);
 
 	if (charger->pdata->chg_irq) {
-		INIT_DELAYED_WORK_DEFERRABLE(
+		INIT_DEFERRABLE_WORK(
 			&charger->isr_work, smb358_chg_isr_work);
 
 		ret = request_threaded_irq(charger->pdata->chg_irq,

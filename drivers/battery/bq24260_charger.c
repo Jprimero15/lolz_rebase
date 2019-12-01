@@ -1044,7 +1044,7 @@ static int __devinit bq24260_charger_probe(
 	}
 
 	if (charger->pdata->chg_irq) {
-		INIT_DELAYED_WORK_DEFERRABLE(
+		INIT_DEFERRABLE_WORK(
 			&charger->isr_work, bq24260_chg_isr_work);
 
 		ret = request_threaded_irq(charger->pdata->chg_irq,

@@ -1080,7 +1080,7 @@ static int __devinit SM5414_charger_probe(
 	}
 
 	if (charger->pdata->chg_irq) {
-		INIT_DELAYED_WORK_DEFERRABLE(
+		INIT_DEFERRABLE_WORK(
 			&charger->isr_work, SM5414_chg_isr_work);
 
 		ret = request_threaded_irq(charger->pdata->chg_irq,
