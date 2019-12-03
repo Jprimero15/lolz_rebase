@@ -54,39 +54,6 @@ struct cpu_load_data {
 
 static DEFINE_PER_CPU(struct cpu_load_data, cpuload);
 
-static inline u64 get_cpu_idle_time_jiffy(unsigned int cpu, u64 *wall)
-{
-	u64 idle_time;
-	u64 cur_wall_time;
-	u64 busy_time;
-
-	cur_wall_time = jiffies64_to_cputime64(get_jiffies_64());
-
-	busy_time  = kcpustat_cpu(cpu).cpustat[CPUTIME_USER];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SYSTEM];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_IRQ];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SOFTIRQ];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_STEAL];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
-
-	idle_time = cur_wall_time - busy_time;
-	if (wall)
-		*wall = jiffies_to_usecs(cur_wall_time);
-
-	return jiffies_to_usecs(idle_time);
-}
-
-static inline cputime64_t get_cpu_idle_time(unsigned int cpu, cputime64_t *wall)
-{
-	u64 idle_time = get_cpu_idle_time_us(cpu, NULL);
-
-	if (idle_time == -1ULL)
-		return get_cpu_idle_time_jiffy(cpu, wall);
-	else
-		idle_time += get_cpu_iowait_time_us(cpu, wall);
-
-	return idle_time;
-}
 
 static int update_average_load(unsigned int freq, unsigned int cpu)
 {
@@ -101,7 +68,7 @@ static int update_average_load(unsigned int freq, unsigned int cpu)
 	if (ret)
 		return -EINVAL;
 
-	cur_idle_time = get_cpu_idle_time(cpu, &cur_wall_time);
+	cur_idle_time = get_cpu_idle_time(cpu, &cur_wall_time, 0);
 
 	wall_time = (unsigned int) (cur_wall_time - pcpu->prev_cpu_wall);
 	pcpu->prev_cpu_wall = cur_wall_time;
@@ -368,24 +335,6 @@ static struct kobj_attribute bricked_hotplug_enabled_attr =
 		__ATTR(bricked_hotplug_enable, S_IWUSR | S_IRUSR,
 		show_bricked_hotplug_enable,
 		store_bricked_hotplug_enable);
-
-#ifdef CONFIG_BRICKED_HOTPLUG
-unsigned int get_rq_info(void)
-{
-	unsigned long flags = 0;
-        unsigned int rq = 0;
-
-        spin_lock_irqsave(&rq_lock, flags);
-
-        rq = rq_info.rq_avg;
-        rq_info.rq_avg = 0;
-
-        spin_unlock_irqrestore(&rq_lock, flags);
-
-        return rq;
-}
-EXPORT_SYMBOL(get_rq_info);
-#endif
 
 #ifdef CONFIG_BRICKED_HOTPLUG
 unsigned int get_rq_info(void)
