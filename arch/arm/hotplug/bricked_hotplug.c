@@ -335,7 +335,10 @@ static int bricked_hotplug_start(void)
 	int cpu, ret = 0;
 	struct down_lock *dl;
 
-	hotplug_wq = alloc_workqueue("bricked_hotplug", WQ_HIGHPRI | WQ_FREEZABLE, 0);
+	hotplug_wq = alloc_workqueue("bricked_hotplug_wq", WQ_HIGHPRI |
+			WQ_MEM_RECLAIM |
+			WQ_UNBOUND |
+			__WQ_ORDERED, 0);
 	if (!hotplug_wq) {
 		ret = -ENOMEM;
 		goto err_out;
