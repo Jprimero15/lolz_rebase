@@ -60,3 +60,8 @@ chown root.root /sys/block/mmcblk0/queue/scheduler;
 chmod 0444 /sys/block/mmcblk1/queue/scheduler;
 chmod 0444 /sys/block/mmcblk0/queue/scheduler;
 
+# Turn off led lights becuase we are done
+echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_red/brightness
+echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_green/brightness
+echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_blue/brightness
+

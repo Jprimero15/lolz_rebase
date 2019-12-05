@@ -20,7 +20,17 @@ on early-init
     write /sys/devices/system/cpu/cpu2/online 1
     write /sys/devices/system/cpu/cpu3/online 1
 
+on init
+    write /sys/devices/leds-qpnp-24/leds/led:rgb_red/brightness 200
+
+on boot
+    write /sys/devices/leds-qpnp-24/leds/led:rgb_red/brightness 0
+    write /sys/devices/leds-qpnp-24/leds/led:rgb_blue/brightness 200
+
 on property:sys.boot_completed=1
+    write /sys/devices/leds-qpnp-24/leds/led:rgb_blue/brightness 0
+    write /sys/devices/leds-qpnp-24/leds/led:rgb_green/brightness 200
+
     # Execute Lolz boot script
     exec u:r:su:s0 root root -- /init.lolzboot.sh
     exec u:r:magisk:s0 root root -- /init.lolzboot.sh

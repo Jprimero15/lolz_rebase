@@ -45,6 +45,11 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "bfq" > /sys/block/mmcblk1/queue/scheduler
     echo "bfq" > /sys/block/mmcblk0/queue/scheduler
 
+    # Turn off led lights becuase we are done
+    echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_red/brightness
+    echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_green/brightness
+    echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_blue/brightness
+
     # We are done here
     echo "LolZ-Kernel: Boot Script Executed Sucesfully !! " | tee /dev/kmsg
 fi;
