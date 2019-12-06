@@ -13159,27 +13159,27 @@ __key.7540:
 	.size	inmem_entry_slab, 4
 inmem_entry_slab:
 	.space	4
-	.type	__key.33464, %object
-	.size	__key.33464, 0
-__key.33464:
-	.type	__key.33888, %object
-	.size	__key.33888, 0
-__key.33888:
-	.type	__key.33890, %object
-	.size	__key.33890, 0
-__key.33890:
-	.type	__key.34473, %object
-	.size	__key.34473, 0
-__key.34473:
-	.type	__key.34492, %object
-	.size	__key.34492, 0
-__key.34492:
-	.type	__key.34493, %object
-	.size	__key.34493, 0
-__key.34493:
-	.type	__key.34565, %object
-	.size	__key.34565, 0
-__key.34565:
+	.type	__key.33495, %object
+	.size	__key.33495, 0
+__key.33495:
+	.type	__key.33919, %object
+	.size	__key.33919, 0
+__key.33919:
+	.type	__key.33921, %object
+	.size	__key.33921, 0
+__key.33921:
+	.type	__key.34504, %object
+	.size	__key.34504, 0
+__key.34504:
+	.type	__key.34523, %object
+	.size	__key.34523, 0
+__key.34523:
+	.type	__key.34524, %object
+	.size	__key.34524, 0
+__key.34524:
+	.type	__key.34596, %object
+	.size	__key.34596, 0
+__key.34596:
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2
 .LC0:
