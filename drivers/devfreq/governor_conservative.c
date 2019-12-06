@@ -1,7 +1,5 @@
 /*
- *  governor_conservative.c
- *
- *  Copyright (C) 2013 Fluxi <linflux@arcor.de>
+ * Copyright (C) 2013-2017, Fluxi <linflux@arcor.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -12,10 +10,9 @@
 #include <linux/module.h>
 #include <linux/devfreq.h>
 #include <linux/msm_adreno_devfreq.h>
-
 #include "governor.h"
 
-#define DEVFREQ_CONSERVATIVE	"conservative"
+#define TAG			"conservative"
 
 #define DEF_UPTHRESH		50
 #define DEF_DOWNTHRESH		20
@@ -25,7 +22,7 @@
  * to up/downthresholds. It will make the governor
  * scale up later and down earlier. Values over 40
  * are generally not recommended.
-*/
+ */
 #define DEF_CONSERVATIVENESS	0
 
 /*
@@ -94,10 +91,9 @@ static int devfreq_conservative_func(struct devfreq *devfreq,
 	}
 
 	/* Apply conservativeness factor */
-	if (conservativeness) {
+	if (conservativeness > 0) {
 		upthreshold = (upthreshold * (100 + conservativeness)) / 100;
-		downthreshold =
-		    (downthreshold * (100 + conservativeness)) / 100;
+		downthreshold = (downthreshold * (100 + conservativeness)) / 100;
 	}
 
 	load = (100 * priv->bin.busy_time) / priv->bin.total_time;
@@ -128,11 +124,10 @@ static ssize_t conservative_upthreshold_store(struct kobject *kobj,
 					      struct kobj_attribute *attr,
 					      const char *buf, size_t count)
 {
-	int ret;
 	unsigned int val;
 
-	ret = sscanf(buf, "%d", &val);
-	if (ret != 1 || val > 100 || val < downthreshold)
+	sscanf(buf, "%d", &val);
+	if (val < 1 || val > 100 || val < downthreshold)
 		return -EINVAL;
 
 	upthreshold = val;
@@ -151,11 +146,10 @@ static ssize_t conservative_downthreshold_store(struct kobject *kobj,
 						struct kobj_attribute *attr,
 						const char *buf, size_t count)
 {
-	int ret;
 	unsigned int val;
 
-	ret = sscanf(buf, "%d", &val);
-	if (ret != 1 || val > upthreshold)
+	sscanf(buf, "%d", &val);
+	if (val < 1 || val > upthreshold)
 		return -EINVAL;
 
 	downthreshold = val;
@@ -175,11 +169,10 @@ static ssize_t conservative_conservativeness_store(struct kobject *kobj,
 						   const char *buf,
 						   size_t count)
 {
-	int ret;
 	unsigned int val;
 
-	ret = sscanf(buf, "%d", &val);
-	if (ret != 1 || val > 100)
+	sscanf(buf, "%d", &val);
+	if (val < 0 || val > 100)
 		return -EINVAL;
 
 	conservativeness = val;
@@ -190,9 +183,11 @@ static ssize_t conservative_conservativeness_store(struct kobject *kobj,
 static struct kobj_attribute upthreshold_attribute =
 	__ATTR(upthreshold, 0664, conservative_upthreshold_show,
 	       conservative_upthreshold_store);
+
 static struct kobj_attribute downthreshold_attribute =
 	__ATTR(downthreshold, 0664, conservative_downthreshold_show,
 	       conservative_downthreshold_store);
+
 static struct kobj_attribute conservativeness_attribute =
 	__ATTR(conservativeness, 0664, conservative_conservativeness_show,
 	       conservative_conservativeness_store);
@@ -206,7 +201,7 @@ static struct attribute *attrs[] = {
 
 static struct attribute_group attr_group = {
 	.attrs = attrs,
-	.name = DEVFREQ_CONSERVATIVE,
+	.name = TAG,
 };
 
 static int devfreq_conservative_start(struct devfreq *devfreq)
@@ -271,28 +266,23 @@ static int devfreq_conservative_handler(struct devfreq *devfreq,
 	int ret = 0;
 
 	switch (event) {
-	case DEVFREQ_GOV_START:
-		ret = devfreq_conservative_start(devfreq);
-		break;
-
-	case DEVFREQ_GOV_STOP:
-		devfreq_conservative_stop(devfreq);
-		break;
-
-	case DEVFREQ_GOV_INTERVAL:
-		devfreq_conservative_interval(devfreq, data);
-		break;
-
-	case DEVFREQ_GOV_SUSPEND:
-		devfreq_conservative_suspend(devfreq);
-		break;
-
-	case DEVFREQ_GOV_RESUME:
-		devfreq_conservative_resume(devfreq);
-		break;
-
-	default:
-		break;
+		case DEVFREQ_GOV_START:
+			ret = devfreq_conservative_start(devfreq);
+			break;
+		case DEVFREQ_GOV_STOP:
+			devfreq_conservative_stop(devfreq);
+			break;
+		case DEVFREQ_GOV_INTERVAL:
+			devfreq_conservative_interval(devfreq, data);
+			break;
+		case DEVFREQ_GOV_SUSPEND:
+			devfreq_conservative_suspend(devfreq);
+			break;
+		case DEVFREQ_GOV_RESUME:
+			devfreq_conservative_resume(devfreq);
+			break;
+		default:
+			break;
 	}
 
 	return ret;
@@ -300,7 +290,7 @@ static int devfreq_conservative_handler(struct devfreq *devfreq,
 EXPORT_SYMBOL(devfreq_conservative_handler);
 
 static struct devfreq_governor devfreq_conservative = {
-	.name = DEVFREQ_CONSERVATIVE,
+	.name = TAG,
 	.get_target_freq = devfreq_conservative_func,
 	.event_handler = devfreq_conservative_handler,
 };
