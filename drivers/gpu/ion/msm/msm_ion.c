@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2013,2016 The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -989,7 +989,7 @@ static long msm_ion_custom_ioctl(struct ion_client *client,
 		} else {
 			handle = ion_import_dma_buf(client, data.fd);
 			if (IS_ERR(handle)) {
-				pr_info("%s: Could not import handle: %p\n",
+				pr_info("%s: Could not import handle: %pK\n",
 					__func__, handle);
 				return -EINVAL;
 			}
@@ -1001,7 +1001,7 @@ static long msm_ion_custom_ioctl(struct ion_client *client,
 		end = (unsigned long) data.vaddr + data.length;
 
 		if (start && check_vaddr_bounds(start, end)) {
-			pr_err("%s: virtual address %p is out of bounds\n",
+			pr_err("%s: virtual address %pK is out of bounds\n",
 				__func__, data.vaddr);
 			ret = -EINVAL;
 		} else {
@@ -1048,14 +1048,20 @@ static long msm_ion_custom_ioctl(struct ion_client *client,
 	case ION_IOC_GET_PHYS:
 	{
 		struct ion_buffer_data data;
+// Ram
+		struct ion_handle *handle; // Ram
 		int ret = 0;
 
 		if (copy_from_user(&data, (void __user *)arg,
 					sizeof(struct ion_buffer_data)))
 			return -EFAULT;
-
-		ret = ion_phys(client, data.handle,
-				(ion_phys_addr_t*)(&data.paddr), &data.length);
+		handle = ion_handle_get_by_id(client,(int)data.handle);
+		if (IS_ERR(handle)) {
+			pr_info("%s: Could not find handle: %d\n",__func__, (int)data.handle);
+			return PTR_ERR(handle); 
+		}
+		ret = ion_phys(client, handle,
+				(ion_phys_addr_t*)(&data.paddr), &data.length); // Ram
 		if (ret < 0)
 			return ret;
 

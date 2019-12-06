@@ -30,6 +30,9 @@
 #include <mach/socinfo.h>
 #include <linux/mman.h>
 #include <linux/sort.h>
+#ifdef CONFIG_HIGHPTE
+#include <linux/highmem.h>
+#endif
 #include <asm/cacheflush.h>
 
 #include "kgsl.h"
@@ -349,14 +352,6 @@ done:
 	return ret;
 }
 
-/**
- * kgsl_mem_entry_untrack_gpuaddr() - Untrack memory that is previously tracked
- * process - Pointer to process private to which memory belongs
- * entry - Memory entry to untrack
- *
- * Function just does the opposite of kgsl_mem_entry_track_gpuaddr. Needs to be
- * called with processes spin lock held
- */
 static void
 kgsl_mem_entry_untrack_gpuaddr(struct kgsl_process_private *process,
 				struct kgsl_mem_entry *entry)
@@ -432,6 +427,7 @@ kgsl_mem_entry_attach_process(struct kgsl_mem_entry *entry,
 	ret = kgsl_process_private_get(process);
 	if (!ret)
 		return -EBADF;
+
 	idr_preload(GFP_KERNEL);
 	spin_lock(&process->mem_lock);
 	id = idr_alloc(&process->mem_idr, entry, 1, 0, GFP_NOWAIT);
@@ -1035,8 +1031,6 @@ int kgsl_close_device(struct kgsl_device *device)
 		/* Fail if the wait times out */
 		BUG_ON(atomic_read(&device->active_cnt) > 0);
 
-		/* Force power on to do the stop */
-		kgsl_pwrctrl_enable(device);
 		result = device->ftbl->stop(device);
 		kgsl_pwrctrl_set_state(device, KGSL_STATE_INIT);
 	}

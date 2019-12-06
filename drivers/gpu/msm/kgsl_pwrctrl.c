@@ -214,7 +214,6 @@ void kgsl_pwrctrl_pwrlevel_change(struct kgsl_device *device,
 
 
 	trace_kgsl_pwrlevel(device, pwr->active_pwrlevel, pwrlevel->gpu_freq);
-
 #ifdef CONFIG_CPU_FREQ_GOV_ELEMENTALX
         graphics_boost = pwr->active_pwrlevel;
 #endif
@@ -550,7 +549,6 @@ static int kgsl_pwrctrl_idle_timer_show(struct device *dev,
 					char *buf)
 {
 	struct kgsl_device *device = kgsl_device_from_dev(dev);
-
 	if (device == NULL)
 		return 0;
 

@@ -968,7 +968,7 @@ static void output_poll_execute(struct work_struct *work)
 	}
 
 	if (repoll)
-		schedule_delayed_work(delayed_work, DRM_OUTPUT_POLL_PERIOD);
+		queue_delayed_work(system_nrt_wq, delayed_work, DRM_OUTPUT_POLL_PERIOD);
 }
 
 void drm_kms_helper_poll_disable(struct drm_device *dev)
@@ -993,7 +993,7 @@ void drm_kms_helper_poll_enable(struct drm_device *dev)
 	}
 
 	if (poll)
-		schedule_delayed_work(&dev->mode_config.output_poll_work, DRM_OUTPUT_POLL_PERIOD);
+		queue_delayed_work(system_nrt_wq, &dev->mode_config.output_poll_work, DRM_OUTPUT_POLL_PERIOD);
 }
 EXPORT_SYMBOL(drm_kms_helper_poll_enable);
 
@@ -1020,7 +1020,7 @@ void drm_helper_hpd_irq_event(struct drm_device *dev)
 	/* kill timer and schedule immediate execution, this doesn't block */
 	cancel_delayed_work(&dev->mode_config.output_poll_work);
 	if (drm_kms_helper_poll)
-		schedule_delayed_work(&dev->mode_config.output_poll_work, 0);
+		queue_delayed_work(system_nrt_wq, &dev->mode_config.output_poll_work, 0);
 }
 EXPORT_SYMBOL(drm_helper_hpd_irq_event);
 
