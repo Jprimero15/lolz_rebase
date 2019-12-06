@@ -13,11 +13,11 @@ do.cleanuponabort=0
 device.name1=hlte
 device.name2=hltecan
 device.name3=hltechn
-device.name5=hltekor
-device.name6=hlteskt
-device.name7=hltespr
-device.name8=hltetmo
-device.name9=hltexx
+device.name4=hltekor
+device.name5=hlteskt
+device.name6=hltespr
+device.name7=hltetmo
+device.name8=hltexx
 supported.versions=9 - 10
 '; } # end properties
 
@@ -67,12 +67,12 @@ fi;
   ui_print "- Ramdisk has been Configured!!";
 
 # Check Mpdecision
-  ui_print "- MPDecision Found! Disabling..."
 if [ -f /system/vendor/bin/mpdecision ]; then
+  ui_print "- MPDecision Found! Disabling..."
   mv /system/vendor/bin/mpdecision /system/vendor/bin/mpdecision.bak;
   ui_print "- MPDecision has been Disabled!";
  else
-  ui_print "- MPDecision has been Disabled!";
+  ui_print "- MPDecision is Disabled!!";
 fi;
 
 # UnMount System
