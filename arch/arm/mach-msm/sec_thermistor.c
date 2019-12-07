@@ -202,8 +202,8 @@ static int sec_therm_get_adc_data(struct sec_therm_info *info)
 		rc = qpnp_vadc_read(NULL, MSM_THERM_CH , &results);
 
 		if (rc) {
-			pr_err("error reading AMUX %d, rc = %d\n",
-						MSM_THERM_CH, rc);
+//			pr_err("error reading AMUX %d, rc = %d\n",
+//						MSM_THERM_CH, rc);
 			goto err;
 		}
 		adc_data = results.adc_code;
