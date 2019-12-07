@@ -992,15 +992,6 @@ retry:
 		} else {
 			pr_debug("%s: %s: found ## bad ## phase = %d\n",
 				mmc_hostname(mmc), __func__, phase);
-			if (cmd.error)
-				pr_err("%s: %s: cmd error (%d) \n",
-					mmc_hostname(mmc), __func__, cmd.error);
-			else if (data.error)
-				pr_err("%s: %s: data error (%d) \n",
-					mmc_hostname(mmc), __func__, data.error);
-			else
-				pr_err("%s: %s: data buf != tuning_block_pattern \n",
-					mmc_hostname(mmc), __func__);
 		}
 	} while (++phase < 16);
 
