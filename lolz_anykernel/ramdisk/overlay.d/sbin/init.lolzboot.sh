@@ -52,13 +52,13 @@ echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control;
 chown root.root /proc/sys/net/ipv4/tcp_congestion_control;
 chmod 0444 /proc/sys/net/ipv4/tcp_congestion_control;
 
-# Set I/O Scheduler
-echo "bfq" > /sys/block/mmcblk1/queue/scheduler;
-echo "bfq" > /sys/block/mmcblk0/queue/scheduler;
-chown root.root /sys/block/mmcblk1/queue/scheduler;
+# Set I/O Scheduler Tweaks
+echo "fiops" > /sys/block/mmcblk0/queue/scheduler
 chown root.root /sys/block/mmcblk0/queue/scheduler;
-chmod 0444 /sys/block/mmcblk1/queue/scheduler;
 chmod 0444 /sys/block/mmcblk0/queue/scheduler;
+echo "fiops" > /sys/block/mmcblk1/queue/scheduler
+chown root.root /sys/block/mmcblk1/queue/scheduler;
+chmod 0444 /sys/block/mmcblk1/queue/scheduler;
 
 # Turn off led lights becuase we are done
 echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_red/brightness

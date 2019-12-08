@@ -41,9 +41,9 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
     echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control
 
-    # Set I/O Scheduler
-    echo "bfq" > /sys/block/mmcblk1/queue/scheduler
-    echo "bfq" > /sys/block/mmcblk0/queue/scheduler
+    # Set I/O Scheduler Tweaks
+    echo "fiops" > /sys/block/mmcblk0/queue/scheduler
+    echo "fiops" > /sys/block/mmcblk1/queue/scheduler
 
     # Turn off led lights becuase we are done
     echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_red/brightness
