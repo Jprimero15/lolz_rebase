@@ -69,10 +69,23 @@ fi;
 # Check Mpdecision
 if [ -f /system/vendor/bin/mpdecision ]; then
   ui_print "- MPDecision Found! Disabling..."
-  mv /system/vendor/bin/mpdecision /system/vendor/bin/mpdecision.bak;
+  mv /system/vendor/bin/mpdecision /system/vendor/bin/lolz.mpdecision;
   ui_print "- MPDecision has been Disabled!";
  else
   ui_print "- MPDecision is Disabled!!";
+fi;
+
+# Check Thermal Driver
+if [ -f /system/vendor/bin/thermal-engine ]; then
+  ui_print "- Thermal-Engine Found! Disabling..."
+  mv /system/vendor/bin/thermal-engine /system/vendor/bin/lolz.thermal-engine;
+  mv /system/vendor/lib/libthermalclient.so /system/vendor/lib/lolz.libthermalclient.so;
+  mv /system/vendor/lib/libthermalioctl.so /system/vendor/lib/lolz.libthermalclient.so;
+  ui_print "- Thermal-Engine has been Disabled!";
+  ui_print "- Enabling New Thermal Driver...";
+  ui_print "- New Thermal Driver Enabled!!";
+ else
+  ui_print "- New Thermal Driver is Enabled!!";
 fi;
 
 # UnMount System
