@@ -60,6 +60,14 @@ echo "fiops" > /sys/block/mmcblk1/queue/scheduler
 chown root.root /sys/block/mmcblk1/queue/scheduler;
 chmod 0444 /sys/block/mmcblk1/queue/scheduler;
 
+# Set Normal thermal Restrictions
+echo "1728000 55 53" > /sys/kernel/msm_thermal/zone0
+echo "1497600 60 56" > /sys/kernel/msm_thermal/zone1
+echo "1267200 65 59" > /sys/kernel/msm_thermal/zone2
+echo "1036800 70 64" > /sys/kernel/msm_thermal/zone3
+echo "8000" > /sys/kernel/msm_thermal/sampling_ms
+echo  "1" > /sys/kernel/msm_thermal/enabled
+
 # Turn off led lights becuase we are done
 echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_red/brightness
 echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_green/brightness
