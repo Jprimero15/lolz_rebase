@@ -13,45 +13,34 @@
 #include <linux/module.h>
 #include <linux/devfreq.h>
 #include <linux/math64.h>
-#include <linux/msm_adreno_devfreq.h>
 #include "governor.h"
 
 #define DEVFREQ_SIMPLE_ONDEMAND	"simple_ondemand"
 
 /* Default constants for DevFreq-Simple-Ondemand (DFSO) */
-#define DFSO_UPTHRESHOLD	90
-#define DFSO_DOWNDIFFERENCTIAL	5
+#define DFSO_UPTHRESHOLD	60
+#define DFSO_DOWNDIFFERENCTIAL	20
 
 static unsigned int dfso_upthreshold = DFSO_UPTHRESHOLD;
 static unsigned int dfso_downdifferential = DFSO_DOWNDIFFERENCTIAL;
+
 
 static int devfreq_simple_ondemand_func(struct devfreq *df,
 					unsigned long *freq,
 					u32 *flag)
 {
 	struct devfreq_dev_status stat;
+	struct devfreq_simple_ondemand_data *data = df->data;
 	int err;
 	unsigned long long a, b;
-	struct devfreq_simple_ondemand_data *data = df->data;
 	unsigned long max = (df->max_freq) ? df->max_freq : UINT_MAX;
 	unsigned long min = (df->min_freq) ? df->min_freq : 0;
 
 	stat.private_data = NULL;
 
 	err = df->profile->get_dev_status(df->dev.parent, &stat);
-
 	if (err)
 		return err;
-
-	if (data) {
-		if (data->upthreshold)
-			dfso_upthreshold = data->upthreshold;
-		if (data->downdifferential)
-			dfso_downdifferential = data->downdifferential;
-	}
-	if (dfso_upthreshold > 100 ||
-	    dfso_upthreshold < dfso_downdifferential)
-		return -EINVAL;
 
 	/* Prevent overflow */
 	if (stat.busy_time >= (1 << 24) || stat.total_time >= (1 << 24)) {
@@ -176,58 +165,6 @@ static struct attribute_group attr_group = {
 	.name = DEVFREQ_SIMPLE_ONDEMAND,
 };
 
-static int devfreq_simple_ondemand_start(struct devfreq *devfreq)
-{
-	struct msm_adreno_extended_profile *ext_profile = container_of(
-					(devfreq->profile),
-					struct msm_adreno_extended_profile,
-					profile);
-
-	devfreq->data = ext_profile->private_data;
-	devfreq_monitor_start(devfreq);
-
-	return devfreq_policy_add_files(devfreq, attr_group);
-}
-EXPORT_SYMBOL(devfreq_simple_ondemand_start);
-
-static int devfreq_simple_ondemand_stop(struct devfreq *devfreq)
-{
-	devfreq_policy_remove_files(devfreq, attr_group);
-	devfreq_monitor_stop(devfreq);
-	devfreq->data = NULL;
-
-	return 0;
-}
-EXPORT_SYMBOL(devfreq_simple_ondemand_stop);
-
-static int devfreq_simple_ondemand_interval(struct devfreq *devfreq, void *data)
-{
-	devfreq_interval_update(devfreq, (unsigned int *)data);
-
-	return 0;
-}
-EXPORT_SYMBOL(devfreq_simple_ondemand_interval);
-
-static int devfreq_simple_ondemand_suspend(struct devfreq *devfreq)
-{
-	devfreq_monitor_suspend(devfreq);
-
-	return 0;
-}
-EXPORT_SYMBOL(devfreq_simple_ondemand_suspend);
-
-static int devfreq_simple_ondemand_resume(struct devfreq *devfreq)
-{
-	unsigned long freq;
-	struct devfreq_dev_profile *profile = devfreq->profile;
-
-	freq = profile->initial_freq;
-	devfreq_monitor_resume(devfreq);
-
-	return profile->target(devfreq->dev.parent, &freq, 0);
-}
-EXPORT_SYMBOL(devfreq_simple_ondemand_resume);
-
 static int devfreq_simple_ondemand_handler(struct devfreq *devfreq,
 				unsigned int event, void *data)
 {
@@ -235,23 +172,25 @@ static int devfreq_simple_ondemand_handler(struct devfreq *devfreq,
 
 	switch (event) {
 	case DEVFREQ_GOV_START:
-		ret = devfreq_simple_ondemand_start(devfreq);
+		devfreq_monitor_start(devfreq);
+		ret = devfreq_policy_add_files(devfreq, attr_group);
 		break;
 
 	case DEVFREQ_GOV_STOP:
-		devfreq_simple_ondemand_stop(devfreq);
+		devfreq_policy_remove_files(devfreq, attr_group);
+		devfreq_monitor_stop(devfreq);
 		break;
 
 	case DEVFREQ_GOV_INTERVAL:
-		devfreq_simple_ondemand_interval(devfreq, data);
+		devfreq_interval_update(devfreq, (unsigned int *)data);
 		break;
 
 	case DEVFREQ_GOV_SUSPEND:
-		devfreq_simple_ondemand_suspend(devfreq);
+		devfreq_monitor_suspend(devfreq);
 		break;
 
 	case DEVFREQ_GOV_RESUME:
-		devfreq_simple_ondemand_resume(devfreq);
+		devfreq_monitor_resume(devfreq);
 		break;
 
 	default:
