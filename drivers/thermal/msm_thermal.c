@@ -1,4 +1,5 @@
-/* Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2019, The Lolz Kernel Project.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -22,9 +23,8 @@
 #include <linux/msm_thermal.h>
 #include <linux/platform_device.h>
 #include <linux/of.h>
-#include <mach/cpufreq.h>
 
-unsigned int temp_threshold = 60;
+unsigned int temp_threshold = 65;
 module_param(temp_threshold, int, 0644);
 
 static struct thermal_info {
@@ -42,25 +42,28 @@ static struct thermal_info {
 };
 
 enum thermal_freqs {
-	FREQ_NOTE_7		= 652800,
 	FREQ_HELL		= 960000,
-	FREQ_VERY_HOT		= 1190400,
+	FREQ_VERY_HOT		= 1036800,
 	FREQ_HOT		= 1574400,
 	FREQ_WARM		= 1958400,
 };
 
 enum threshold_levels {
-	LEVEL_NOTE_7		= 8,
-	LEVEL_HELL		= 6,
-	LEVEL_VERY_HOT		= 4,
-	LEVEL_HOT		= 2,
+	LEVEL_HELL		= 1 << 4,
+	LEVEL_VERY_HOT		= 1 << 3,
+	LEVEL_HOT		= 1 << 2,
 };
 
 struct qpnp_vadc_chip *vadc_dev;
+
 enum qpnp_vadc_channels adc_chan;
 
 static struct delayed_work check_temp_work;
-static struct workqueue_struct *thermal_wq;
+
+unsigned short get_threshold(void)
+{
+	return temp_threshold;
+}
 
 static int msm_thermal_cpufreq_callback(struct notifier_block *nfb,
 		unsigned long event, void *data)
@@ -88,6 +91,7 @@ static void limit_cpu_freqs(uint32_t max_freq)
 		return;
 
 	info.limited_max_freq = max_freq;
+
 	info.pending_change = true;
 
 	get_online_cpus();
@@ -118,9 +122,7 @@ static void check_temp(struct work_struct *work)
 		}
 	}
 
-	if (temp >= temp_threshold + LEVEL_NOTE_7)
-		freq = FREQ_NOTE_7;
-	else if (temp >= temp_threshold + LEVEL_HELL)
+	if (temp >= temp_threshold + LEVEL_HELL)
 		freq = FREQ_HELL;
 	else if (temp >= temp_threshold + LEVEL_VERY_HOT)
 		freq = FREQ_VERY_HOT;
@@ -137,7 +139,7 @@ static void check_temp(struct work_struct *work)
 	}
 
 reschedule:
-	queue_delayed_work(thermal_wq, &check_temp_work, msecs_to_jiffies(250));
+	schedule_delayed_work_on(0, &check_temp_work, msecs_to_jiffies(250));
 }
 
 static int __devinit msm_thermal_dev_probe(struct platform_device *pdev)
@@ -151,28 +153,17 @@ static int __devinit msm_thermal_dev_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
-	ret = cpufreq_register_notifier(&msm_thermal_cpufreq_notifier,
-		CPUFREQ_POLICY_NOTIFIER);
-	if (ret)
-		pr_err("thermals: well, if this fails here, we're fucked\n");
-
-	thermal_wq = alloc_workqueue("thermal_wq", WQ_HIGHPRI, 0);
-	if (!thermal_wq) {
-		pr_err("thermals: don't worry, if this fails we're also bananas\n");
-		goto err;
-	}
+	cpufreq_register_notifier(&msm_thermal_cpufreq_notifier,
+			CPUFREQ_POLICY_NOTIFIER);
 
 	INIT_DELAYED_WORK(&check_temp_work, check_temp);
-	queue_delayed_work(thermal_wq, &check_temp_work, 5);
+        schedule_delayed_work_on(0, &check_temp_work, 5);
 
-err:
 	return ret;
 }
 
 static int msm_thermal_dev_remove(struct platform_device *pdev)
 {
-	cancel_delayed_work_sync(&check_temp_work);
-	destroy_workqueue(thermal_wq);
 	cpufreq_unregister_notifier(&msm_thermal_cpufreq_notifier,
                         CPUFREQ_POLICY_NOTIFIER);
 	return 0;
