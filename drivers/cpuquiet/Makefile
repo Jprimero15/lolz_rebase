@@ -1,2 +1,4 @@
-obj-$(CONFIG_CPUQUIET_FRAMEWORK) += cpuquiet.o driver.o sysfs.o cpuquiet_attribute.o governor.o cpuquiet_driver.o
-obj-$(CONFIG_CPUQUIET_FRAMEWORK) += governors/
+GCOV_PROFILE := y
+
+obj-$(CONFIG_CPU_QUIET) += attribute.o cpuquiet.o governor.o governors/ sysfs.o
+obj-$(CONFIG_CPU_QUIET_MSM) += cpuquiet-msm.o
