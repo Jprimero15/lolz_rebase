@@ -503,7 +503,6 @@ struct nr_stats_s {
 #define NR_AVE_DIV_PERIOD(x)	((x) >> NR_AVE_PERIOD_EXP)
 
 DECLARE_PER_CPU(struct nr_stats_s, runqueue_stats);
-#endif
 
 #ifdef CONFIG_SMP
 
