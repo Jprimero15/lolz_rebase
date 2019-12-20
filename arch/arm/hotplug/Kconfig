@@ -1,6 +1,6 @@
 config INTELLI_HOTPLUG
         bool "Enable intelli-plug cpu hotplug driver"
-        default n
+        default y
         help
           Generic Intelli-plug cpu hotplug driver for ARM SOCs
 
