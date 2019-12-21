@@ -1488,11 +1488,11 @@ static int synaptics_rmi4_f12_abs_report(struct synaptics_rmi4_data *rmi4_data,
 
 			if (!rmi4_data->finger[finger].state) {
 #if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
-				dev_info(&rmi4_data->i2c_client->dev,
+				dev_dbg(&rmi4_data->i2c_client->dev,
 						"[%d][P] 0x%02x, x = %d, y = %d, wx = %d, wy = %d |[%d]\n",
 						finger, finger_status, x, y, wx, wy, fingers_to_process);
 #else
-				dev_info(&rmi4_data->i2c_client->dev,
+				dev_dbg(&rmi4_data->i2c_client->dev,
 						"[%d][P] 0x%02x\n",
 						finger, finger_status);
 #endif
@@ -1511,11 +1511,11 @@ static int synaptics_rmi4_f12_abs_report(struct synaptics_rmi4_data *rmi4_data,
 
 		if (rmi4_data->finger[finger].state && (!finger_status)) {
 #if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
-			dev_info(&rmi4_data->i2c_client->dev, "[%d][R] 0x%02x M[%d], Ver[%02X%02X][%X/%d]\n",
+			dev_dbg(&rmi4_data->i2c_client->dev, "[%d][R] 0x%02x M[%d], Ver[%02X%02X][%X/%d]\n",
 					finger, finger_status, rmi4_data->finger[finger].mcount,
 					rmi4_data->ic_revision_of_ic, rmi4_data->fw_version_of_ic, rmi4_data->lcd_id, system_rev);
 #else
-			dev_info(&rmi4_data->i2c_client->dev, "[%d][R] 0x%02x M[%d], Ver[%02X%02X][%X/%d]\n",
+			dev_dbg(&rmi4_data->i2c_client->dev, "[%d][R] 0x%02x M[%d], Ver[%02X%02X][%X/%d]\n",
 					finger, finger_status, rmi4_data->finger[finger].mcount,
 					rmi4_data->ic_revision_of_ic, rmi4_data->fw_version_of_ic, rmi4_data->lcd_id, system_rev);
 #endif
@@ -4054,7 +4054,7 @@ int synaptics_rmi4_free_fingers(struct synaptics_rmi4_data *rmi4_data)
 {
 	unsigned char ii;
 
-	dev_info(&rmi4_data->i2c_client->dev, "%s\n", __func__);
+	dev_dbg(&rmi4_data->i2c_client->dev, "%s\n", __func__);
 
 /* if firmware is broken, occurs null pinter exception : cause is rmi4_data->f51_handle is NULL */
 #ifdef PROXIMITY
