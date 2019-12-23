@@ -9,7 +9,7 @@
 if [ $USER == Jprimero15 ]; then
 
 # Definitions Here
-KERNEL_NAME="LolZ"
+KERNEL_NAME="LolZ-Kali"
 KERNEL_VARIANT="hlte"
 KERNEL_VERSION="13"
 KERNEL_DATE="$(date +"%Y%m%d")"
