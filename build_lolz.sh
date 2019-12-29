@@ -9,7 +9,7 @@
 if [ $USER == Jprimero15 ]; then
 
 # Definitions Here
-KERNEL_NAME="LolZ"
+KERNEL_NAME="LolZ-Kali"
 KERNEL_VARIANT="hlte"
 KERNEL_VERSION="13"
 KERNEL_DATE="$(date +"%Y%m%d")"
@@ -20,7 +20,7 @@ COMPILE_DT="y"
 USE_CLANG="y"
 if [ "y" == "$USE_CLANG" ]; then
     # Lets use AOSP CLANG 10.0.1
-    CLANG_TC="$HOME/aosp/clang-r370808/bin/clang"
+    CLANG_TC="$HOME/clang/bin/clang"
     # Lets use ARM GNU GCC 7.x
     TOOLCHAIN="$HOME/gcc7/bin/arm-linux-gnueabi-"
     TC="arm-linux-gnu"
@@ -53,7 +53,7 @@ elif [ "hltetmo" == "$KERNEL_VARIANT" ]; then
 elif [ "hltechn" == "$KERNEL_VARIANT" ]; then
     KERNEL_DEFCONFIG="lolz_hltechn_defconfig"
 else
-    KERNEL_VARIANT="hlte" && KERNEL_DEFCONFIG="lolz_hlte_defconfig"
+    KERNEL_VARIANT="hlte" && KERNEL_DEFCONFIG="nethunter_hlte_defconfig"
 fi
 
 # Initialize building...
