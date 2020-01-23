@@ -14,7 +14,7 @@
 # GNU General Public License for more details.
 #
 
-sleep 20;
+sleep 5;
 # Set Lolznappy CPU Governor
 echo "lolznappy" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor;
 echo "lolznappy" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor;
@@ -40,7 +40,6 @@ chmod 0444 /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor;
 chmod 0444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor;
 chmod 0444  /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor;
 
-sleep 20;
 # Set GPU Min/Max Frequency
 echo "100000000" > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq;
 echo "600000000" > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq;
