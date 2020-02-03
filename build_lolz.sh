@@ -19,10 +19,12 @@ COMPILE_DT="y"
 # CLANG or NO??
 USE_CLANG="y"
 if [ "y" == "$USE_CLANG" ]; then
-    # Lets use AOSP CLANG 10.0.1
-    CLANG_TC="$HOME/aosp/clang-r370808/bin/clang"
-    # Lets use ARM GNU GCC 7.x
-    TOOLCHAIN="$HOME/gcc7/bin/arm-linux-gnueabi-"
+    # Lets use LOLZ CLANG 11.0.0
+    CLANGDIR="$HOME/clang-11"
+    CLANG_TC="$CLANGDIR/bin/clang"
+    export LD_LIBRARY_PATH="$CLANGDIR/lib:$LD_LIBRARY_PATH"
+    # Lets use AOSP GCC ARM 4.9 (stability)
+    TOOLCHAIN="$HOME/gcc4_arm/bin/arm-linux-androideabi-"
     TC="arm-linux-gnu"
 else
     # Lets use ARM GCC 10.0.0(Experimental)
@@ -73,13 +75,22 @@ make $KERNEL_DEFCONFIG O=$BUILD_DIR
 sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
 
 if [ "y" == "$USE_CLANG" ]; then
+
+    # hack "as" binary
+    mv $CLANGDIR/bin/as $CLANGDIR/bin/as.bak;
+    mv $CLANGDIR/bin/as.legacy $CLANGDIR/bin/as;
+
     # Let's Compile with CLANG
     make -j$NUM_CPUS \
 		CC=$CLANG_TC \
-		HOSTCC=$CLANG_TC \
 		CROSS_COMPILE=$TOOLCHAIN \
 		CLANG_TRIPLE=$TC \
 		O=$BUILD_DIR;
+
+    # hack "as" binary
+    mv $CLANGDIR/bin/as $CLANGDIR/bin/as.legacy;
+    mv $CLANGDIR/bin/as.bak $CLANGDIR/bin/as;
+
 else
     # Let's Compile with GCC
     export CROSS_COMPILE=$TOOLCHAIN
