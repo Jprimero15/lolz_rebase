@@ -23,8 +23,8 @@ if [ "y" == "$USE_CLANG" ]; then
     CLANGDIR="$HOME/clang-11"
     CLANG_TC="$CLANGDIR/bin/clang"
     export LD_LIBRARY_PATH="$CLANGDIR/lib:$LD_LIBRARY_PATH"
-    # Lets use AOSP GCC ARM 4.9 (stability)
-    TOOLCHAIN="$HOME/gcc4_arm/bin/arm-linux-androideabi-"
+    # Lets use LINARO ARM GCC 7.5.0
+    TOOLCHAIN="$HOME/gcc7_arm/bin/arm-linux-gnueabihf-"
     TC="arm-linux-gnu"
 else
     # Lets use ARM GCC 10.0.0(Experimental)
@@ -69,16 +69,17 @@ if [ -e $BUILD_DIR ]; then
 else
     mkdir $BUILD_DIR
 fi
+
+    # hack "as" binary
+    mv $CLANGDIR/bin/as $CLANGDIR/bin/as.bak;
+    mv $CLANGDIR/bin/arm-linux-gnueabi-as $CLANGDIR/bin/as;
+
 echo -e $COLOR_NEUTRAL"\nCompiling $KERNEL_NAME-V$KERNEL_VERSION for $KERNEL_VARIANT \n"$COLOR_NEUTRAL
 make $KERNEL_DEFCONFIG O=$BUILD_DIR
 # Update Kernel version
 sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
 
 if [ "y" == "$USE_CLANG" ]; then
-
-    # hack "as" binary
-    mv $CLANGDIR/bin/as $CLANGDIR/bin/as.bak;
-    mv $CLANGDIR/bin/as.legacy $CLANGDIR/bin/as;
 
     # Let's Compile with CLANG
     make -j$NUM_CPUS \
@@ -88,7 +89,7 @@ if [ "y" == "$USE_CLANG" ]; then
 		O=$BUILD_DIR;
 
     # hack "as" binary
-    mv $CLANGDIR/bin/as $CLANGDIR/bin/as.legacy;
+    mv $CLANGDIR/bin/as $CLANGDIR/bin/arm-linux-gnueabi-as;
     mv $CLANGDIR/bin/as.bak $CLANGDIR/bin/as;
 
 else
