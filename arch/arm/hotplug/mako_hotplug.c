@@ -121,7 +121,7 @@ static inline void cpus_online_work(void)
 			cpu_up(cpu);
 	}
 
-	pr_info("Lolz_hotplug: all cpus were onlined\n");
+//	pr_info("Lolz_hotplug: all cpus were onlined\n");
 }
 
 static inline void cpus_offline_work(void)
@@ -134,7 +134,7 @@ static inline void cpus_offline_work(void)
 			cpu_down(cpu);
 	}
 
-	pr_info("Lolz_hotplug: all cpus were offlined\n");
+//	pr_info("Lolz_hotplug: all cpus were offlined\n");
 }
 
 static inline bool cpus_cpufreq_work(void)
