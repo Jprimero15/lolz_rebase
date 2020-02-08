@@ -189,7 +189,7 @@ static LIST_HEAD(xprt_info_list);
 static DECLARE_RWSEM(xprt_info_list_lock_lha5);
 
 static DECLARE_COMPLETION(msm_ipc_local_router_up);
-#define IPC_ROUTER_INIT_TIMEOUT 10000
+#define IPC_ROUTER_INIT_TIMEOUT (10 * HZ)
 
 static uint32_t next_port_id;
 static DEFINE_MUTEX(next_port_id_lock_lha1);
@@ -3270,7 +3270,7 @@ void msm_ipc_router_xprt_notify(struct msm_ipc_router_xprt *xprt,
 
 	if (!msm_ipc_router_workqueue) {
 		ret = wait_for_completion_timeout(&msm_ipc_local_router_up,
-						  msecs_to_jiffies(IPC_ROUTER_INIT_TIMEOUT));
+						  IPC_ROUTER_INIT_TIMEOUT);
 		if (!ret || !msm_ipc_router_workqueue) {
 			pr_err("%s: IPC Router not initialized\n", __func__);
 			return;
