@@ -1365,7 +1365,7 @@ putback_inactive_pages(struct mem_cgroup_zone *mz,
 			if (file)
 				SetPageWasActive(page);
 		if (is_active_lru(lru)) {
-			unsigned long numpages = hpage_nr_pages(page);
+			int numpages = hpage_nr_pages(page);
 			reclaim_stat->recent_rotated[file] += numpages;
 		}
 		if (put_page_testzero(page)) {
