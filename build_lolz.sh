@@ -9,23 +9,20 @@
 if [ $USER == Jprimero15 ]; then
 
 # Definitions Here
-KERNEL_NAME="LolZ"
+KERNEL_NAME="LOLZ"
 KERNEL_VARIANT="hlte"
 KERNEL_VERSION="14"
 KERNEL_DATE="$(date +"%Y%m%d")"
 BUILD_DIR="output_$KERNEL_VARIANT"
 KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"
+CLANG_DIR="${HOME}/clang11"
 COMPILE_DT="y"
 # CLANG or NO??
 USE_CLANG="y"
 if [ "y" == "$USE_CLANG" ]; then
     # Lets use LOLZ CLANG 11.0.0
-    CLANGDIR="$HOME/clang-11"
-    CLANG_TC="$CLANGDIR/bin/clang"
-    export LD_LIBRARY_PATH="$CLANGDIR/lib:$LD_LIBRARY_PATH"
-    # Lets use LINARO ARM GCC 7.5.0
-    TOOLCHAIN="$HOME/gcc7_arm/bin/arm-linux-gnueabihf-"
-    TC="arm-linux-gnu"
+    PATH="${CLANG_DIR}/bin:${HOME}/gcc4_arm/bin:${PATH}"
+    export LD_LIBRARY_PATH="${CLANG_DIR}/lib:${LD_LIBRARY_PATH}"
 else
     # Lets use ARM GCC 10.0.0(Experimental)
     TOOLCHAIN="$HOME/gcc10/bin/arm-eabi-"
@@ -33,20 +30,12 @@ fi
 DT="$BUILD_DIR/arch/arm/boot/dt.img"
 ANYKERNEL_DIR="lolz_anykernel"
 RELEASE_DIR="release"
-NUM_CPUS=""
 
 # ***** ***** ***** ***** ***THE END*** ***** ***** ***** ***** #
 
 COLOR_RED="\033[0;31m"
 COLOR_GREEN="\033[1;32m"
 COLOR_NEUTRAL="\033[0m"
-
-# Lolz is ARM32
-export ARCH=arm
-
-if [ -z "$NUM_CPUS" ]; then
-    NUM_CPUS=`grep -c ^processor /proc/cpuinfo`
-fi
 
 if [ "hltekor" == "$KERNEL_VARIANT" ]; then
     KERNEL_DEFCONFIG="lolz_hltekor_defconfig"
@@ -70,32 +59,22 @@ else
     mkdir $BUILD_DIR
 fi
 
-    # hack "as" binary
-    mv $CLANGDIR/bin/as $CLANGDIR/bin/as.bak;
-    mv $CLANGDIR/bin/arm-linux-gnueabi-as $CLANGDIR/bin/as;
-
 echo -e $COLOR_NEUTRAL"\nCompiling $KERNEL_NAME-V$KERNEL_VERSION for $KERNEL_VARIANT \n"$COLOR_NEUTRAL
-make $KERNEL_DEFCONFIG O=$BUILD_DIR
+
 # Update Kernel version
+make O=$BUILD_DIR $KERNEL_DEFCONFIG
 sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
 
 if [ "y" == "$USE_CLANG" ]; then
-
-    # Let's Compile with CLANG
-    make -j$NUM_CPUS \
-		CC=$CLANG_TC \
-		CROSS_COMPILE=$TOOLCHAIN \
-		CLANG_TRIPLE=$TC \
-		O=$BUILD_DIR;
-
-    # hack "as" binary
-    mv $CLANGDIR/bin/as $CLANGDIR/bin/arm-linux-gnueabi-as;
-    mv $CLANGDIR/bin/as.bak $CLANGDIR/bin/as;
-
+# Let's Compile with CLANG
+    make -j$(nproc --all) O=$BUILD_DIR \
+                          ARCH=arm \
+                          CC=clang \
+                          CROSS_COMPILE=arm-linux-gnueabi-
 else
     # Let's Compile with GCC
-    export CROSS_COMPILE=$TOOLCHAIN
-    make -j$NUM_CPUS O=$BUILD_DIR
+    CROSS_COMPILE=$TOOLCHAIN
+    make -j$(nproc --all) O=$BUILD_DIR
 fi
 
 if [ -e $KERNEL_IMAGE ]; then
@@ -133,5 +112,4 @@ else
 fi
  else
    echo "bash cannot run this script exiting now..."
-fi; 
-
+fi;
