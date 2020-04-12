@@ -42,8 +42,11 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control
 
     # Set I/O Scheduler Tweaks
-    echo "fiops" > /sys/block/mmcblk0/queue/scheduler
-    echo "fiops" > /sys/block/mmcblk1/queue/scheduler
+    echo "zen" > /sys/block/mmcblk0/queue/scheduler
+    echo "0" > /sys/block/mmcblk0/queue/iostats
+    echo "1024" > /sys/block/mmcblk0/queue/read_ahead_kb
+    echo "zen" > /sys/block/mmcblk1/queue/scheduler
+    echo "0" > /sys/block/mmcblk1/queue/iostats
 
     # Turn off led lights becuase we are done
     echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_red/brightness
