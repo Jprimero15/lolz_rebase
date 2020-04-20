@@ -1,12 +1,12 @@
 #!/system/bin/sh
 #
-# Copyright (C) 2018-2019 The Lolz Kernel Project. All rights reserved.
+# Copyright (C) 2018-2020 The LOLZ Kernel Project. All rights reserved.
 #
-# LolZ-Kernel Boot Script
+# LOLZ Kernel Boot Script
 # Author: Joshua Primero <jprimero155@gmail.com>
 #
-# This script is licensed under the terms of the GNU General Public 
-# License version 2, as published by the Free Software Foundation, 
+# This script is licensed under the terms of the GNU General Public
+# License version 2, as published by the Free Software Foundation,
 # and may be copied, distributed, and modified under those terms.
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,12 +14,13 @@
 # GNU General Public License for more details.
 #
 
-if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
+# Don't remove this check to avoid kernel crashing
+if [ "$(grep -c LOL /proc/version)" -eq "1" ]; then
     echo "LolZ-Kernel: Execute Boot Script Now !!" | tee /dev/kmsg
 
     # Set Lolznappy CPU Governor
     echo "lolznappy" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    echo "lolznappy" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor 
+    echo "lolznappy" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
     echo "lolznappy" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
     echo "lolznappy" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
     echo "20000 1190400:60000 1728000:74000 1958400:82000 2265600:120000" > /sys/devices/system/cpu/cpufreq/lolznappy/above_hispeed_delay
@@ -56,4 +57,3 @@ if [ "$(grep -c Lol /proc/version)" -eq "1" ]; then
     # We are done here
     echo "LolZ-Kernel: Boot Script Executed Sucesfully !! " | tee /dev/kmsg
 fi;
-

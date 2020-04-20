@@ -54,6 +54,12 @@ OSV="$(file_getprop /system/vendor/build.prop ro.vendor.build.version.release)";
 if [ "$OSV" == "10" ] || [ "$OSV" == "10.0" ] || [ "$OSV" == "10.0.0" ]; then
   ui_print "- Android 10 Detected!!";
   ui_print "- Configuring Ramdisk...";
+  backup_file system/vendor/etc/init/hw/init.qcom.rc;
+  insert_line /system/vendor/etc/init/hw/init.qcom.rc "init.lolz.rc" after "import /system/vendor/etc/init/hw/init.target.rc" "import /system/vendor/etc/init/hw/init.lolz.rc";
+  cp -fr $ramdisk/init.lolz.rc /system/vendor/etc/init/hw/init.lolz.rc;
+  cp -fr $ramdisk/init.lolzboot.sh /system/vendor/bin/init.lolzboot.sh;
+  chmod 755 /system/vendor/bin/init.lolzboot.sh;
+  chmod 644 /system/vendor/etc/init/hw/init.lolz.rc;
   rm $ramdisk/fstab.qcom;
   rm $ramdisk/init.lolz.rc;
   rm $ramdisk/init.lolzboot.sh;
@@ -62,7 +68,6 @@ if [ "$OSV" == "10" ] || [ "$OSV" == "10.0" ] || [ "$OSV" == "10.0.0" ]; then
  else
   ui_print "- Android 9(PIE) Detected!!";
   ui_print "- Configuring Ramdisk...";
-  rm -rf $ramdisk/overlay.d;
 fi;
   ui_print "- Ramdisk has been Configured!!";
 
