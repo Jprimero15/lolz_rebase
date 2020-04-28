@@ -33,6 +33,16 @@ if [ "$(grep -c LOL /proc/version)" -eq "1" ]; then
     echo "80000" > /sys/devices/system/cpu/cpufreq/lolznappy/timer_slack
     echo "0" > /sys/devices/system/cpu/cpufreq/lolznappy/max_freq_hysteresis
 
+    # Stop modifying scaling_governor now since we're done here
+    chown root.root /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor;
+    chown root.root /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor;
+    chown root.root /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor;
+    chown root.root /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor;
+    chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor;
+    chmod 0444 /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor;
+    chmod 0444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor;
+    chmod 0444 /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor;
+
     # Set GPU Min/Max Frequency
     echo "100000000" > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
     echo "600000000" > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
@@ -41,6 +51,8 @@ if [ "$(grep -c LOL /proc/version)" -eq "1" ]; then
     # Set TCP Congestion
     chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
     echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control
+    chown root.root /proc/sys/net/ipv4/tcp_congestion_control;
+    chmod 0444 /proc/sys/net/ipv4/tcp_congestion_control;
 
     # Set I/O Scheduler Tweaks
     echo "zen" > /sys/block/mmcblk0/queue/scheduler
@@ -48,6 +60,14 @@ if [ "$(grep -c LOL /proc/version)" -eq "1" ]; then
     echo "1024" > /sys/block/mmcblk0/queue/read_ahead_kb
     echo "zen" > /sys/block/mmcblk1/queue/scheduler
     echo "0" > /sys/block/mmcblk1/queue/iostats
+
+    # don't modify some io sched nodes anymore
+    chown root.root /sys/block/mmcblk0/queue/scheduler;
+    chmod 0444 /sys/block/mmcblk0/queue/scheduler;
+    chown root.root /sys/block/mmcblk0/queue/read_ahead_kb;
+    chmod 0444 /sys/block/mmcblk0/queue/read_ahead_kb;
+    chown root.root /sys/block/mmcblk1/queue/scheduler;
+    chmod 0444 /sys/block/mmcblk1/queue/scheduler;
 
     # Turn off led lights becuase we are done
     echo "0" > /sys/devices/leds-qpnp-24/leds/led:rgb_red/brightness
