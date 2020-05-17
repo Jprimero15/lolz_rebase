@@ -42,7 +42,7 @@
 #include <asm/div64.h>
 #endif
 
-#define LOLZ_MIN_FREQ	422400
+#define LOLZ_MIN_FREQ	268800
 #define LOLZ_MAX_FREQ	2265600
 
 #ifdef CONFIG_CPU_VOLTAGE_TABLE
