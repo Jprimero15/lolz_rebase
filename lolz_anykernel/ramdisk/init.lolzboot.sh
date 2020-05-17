@@ -48,6 +48,9 @@ if [ "$(grep -c LOL /proc/version)" -eq "1" ]; then
     echo "600000000" > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
     echo "450000000" > /sys/class/kgsl/kgsl-3d0/max_gpuclk
 
+    # adreno idler
+    echo "N" > /sys/module/adreno_idler/parameters/adreno_idler_active
+
     # Set TCP Congestion
     chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
     echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control
