@@ -43,6 +43,9 @@ if [ "$(grep -c LOL /proc/version)" -eq "1" ]; then
     chmod 0444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor;
     chmod 0444 /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor;
 
+    # MSM Thermal
+    echo "65" > /sys/module/msm_thermal/parameters/temp_threshold
+
     # Set GPU Min/Max Frequency
     echo "100000000" > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
     echo "600000000" > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
