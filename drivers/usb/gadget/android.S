@@ -30918,7 +30918,7 @@ ghsuart_ctrl_connect_w:
 	tst	r3, #1
 	beq	.L5171
 	sub	r0, r0, #20
-	movw	r1, #3000
+	mov	r1, #300
 	bl	wait_for_completion_timeout(PLT)
 	cmp	r0, #0
 	beq	.L5183
@@ -30975,7 +30975,7 @@ ghsuart_data_connect_w:
 	tst	r3, #1
 	beq	.L5188
 	sub	r0, r0, #84
-	movw	r1, #3000
+	mov	r1, #300
 	bl	wait_for_completion_timeout(PLT)
 	cmp	r0, #0
 	beq	.L5202
@@ -37399,7 +37399,7 @@ gs_close:
 	bl	_raw_spin_unlock_irq(PLT)
 	ldr	r2, .L6412
 	mov	r3, sp
-	movw	r7, #15000
+	movw	r7, #1500
 	bic	r6, r3, #8128
 	mov	r3, #0
 	bic	r6, r6, #63
@@ -104226,7 +104226,7 @@ mbim_os_string:
 	.size	_rs.51747, 24
 _rs.51747:
 	.word	0
-	.word	5000
+	.word	500
 	.word	10
 	.space	12
 	.type	audio_playback_buf_size, %object
@@ -104305,7 +104305,7 @@ qmult:
 	.size	_rs.52085, 24
 _rs.52085:
 	.word	0
-	.word	5000
+	.word	500
 	.word	10
 	.space	12
 	.type	ghsuart_data_rx_req_size, %object
@@ -104316,7 +104316,7 @@ ghsuart_data_rx_req_size:
 	.size	_rs.52136, 24
 _rs.52136:
 	.word	0
-	.word	5000
+	.word	500
 	.word	10
 	.space	12
 	.type	bam_mux_rx_fctrl_support, %object
@@ -104377,7 +104377,7 @@ ghsic_data_fctrl_dis_thld:
 	.size	_rs.51219, 24
 _rs.51219:
 	.word	0
-	.word	5000
+	.word	500
 	.word	10
 	.space	12
 	.type	ghsic_data_pend_limit_with_bridge, %object
@@ -104392,7 +104392,7 @@ ghsic_data_rx_req_size:
 	.size	_rs.51276, 24
 _rs.51276:
 	.word	0
-	.word	5000
+	.word	500
 	.word	10
 	.space	12
 	.type	mbim_ndp16_opts, %object
@@ -104439,7 +104439,7 @@ bam_mux_tx_q_size:
 	.size	_rs.38216, 24
 _rs.38216:
 	.word	0
-	.word	5000
+	.word	500
 	.word	10
 	.space	12
 	.type	as_interface_alt_1_desc, %object
@@ -105921,7 +105921,7 @@ rmnet_mux_hs_notify_desc:
 	.size	rl.52817, 24
 rl.52817:
 	.word	0
-	.word	10000
+	.word	1000
 	.word	1
 	.space	12
 	.type	midi_ac_interface_desc, %object
@@ -106001,14 +106001,14 @@ midi_ms_out_desc:
 	.size	rl.26007, 24
 rl.26007:
 	.word	0
-	.word	10000
+	.word	1000
 	.word	1
 	.space	12
 	.type	rl.26025, %object
 	.size	rl.26025, 24
 rl.26025:
 	.word	0
-	.word	10000
+	.word	1000
 	.word	1
 	.space	12
 	.type	rmnet_interface_desc, %object
@@ -106742,14 +106742,14 @@ necm_desc:
 	.size	rl.64160, 24
 rl.64160:
 	.word	0
-	.word	10000
+	.word	1000
 	.word	1
 	.space	12
 	.type	rl.52810, %object
 	.size	rl.52810, 24
 rl.52810:
 	.word	0
-	.word	10000
+	.word	1000
 	.word	1
 	.space	12
 	.type	usb_android_dt_match, %object
