@@ -18,14 +18,13 @@ KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"
 CLANG_DIR="${HOME}/clang11"
 COMPILE_DT="y"
 # CLANG or NO??
-USE_CLANG="y"
+USE_CLANG="n"
 if [ "y" == "$USE_CLANG" ]; then
     # Lets use LOLZ CLANG 11.0.0
     PATH="${CLANG_DIR}/bin:${HOME}/gcc4_arm/bin:${PATH}"
     export LD_LIBRARY_PATH="${CLANG_DIR}/lib:${LD_LIBRARY_PATH}"
 else
-    # Lets use ARM GCC 10.0.0(Experimental)
-    TOOLCHAIN="$HOME/gcc10/bin/arm-eabi-"
+  echo "GCC Build"
 fi
 DT="$BUILD_DIR/arch/arm/boot/dt.img"
 ANYKERNEL_DIR="lolz_anykernel"
@@ -64,16 +63,16 @@ echo -e $COLOR_NEUTRAL"\nCompiling $KERNEL_NAME-V$KERNEL_VERSION for $KERNEL_VAR
 # Update Kernel version
 make O=$BUILD_DIR $KERNEL_DEFCONFIG
 sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
+export ARCH=arm
 
 if [ "y" == "$USE_CLANG" ]; then
-# Let's Compile with CLANG
+ Let's Compile with CLANG
     make -j$(nproc --all) O=$BUILD_DIR \
-                          ARCH=arm \
                           CC=clang \
                           CROSS_COMPILE=arm-linux-gnueabi-
 else
     # Let's Compile with GCC
-    CROSS_COMPILE=$TOOLCHAIN
+    export CROSS_COMPILE=$HOME/gcc10.1_arm/bin/arm-none-eabi-
     make -j$(nproc --all) O=$BUILD_DIR
 fi
 
