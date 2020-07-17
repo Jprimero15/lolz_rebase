@@ -11,7 +11,6 @@
 	.eabi_attribute 18, 4
 	.file	"android.c"
 #APP
-
 	.section	.text.unlikely,"ax",%progbits
 	.align	2
 	.type	reset_config, %function
@@ -100378,9 +100377,9 @@ __func__.49800:
 __func__.57064:
 	.ascii	"mbim_setup\000"
 	.space	1
-	.type	__func__.25434, %object
-	.size	__func__.25434, 21
-__func__.25434:
+	.type	__func__.25451, %object
+	.size	__func__.25451, 21
+__func__.25451:
 	.ascii	"composite_disconnect\000"
 	.space	3
 	.type	__func__.37357, %object
@@ -100518,19 +100517,19 @@ __func__.56946:
 __func__.37519:
 	.ascii	"rmnet_close_sdio_work\000"
 	.space	2
-	.type	__func__.25087, %object
-	.size	__func__.25087, 11
-__func__.25087:
+	.type	__func__.25104, %object
+	.size	__func__.25104, 11
+__func__.25104:
 	.ascii	"config_buf\000"
 	.space	1
-	.type	__func__.25178, %object
-	.size	__func__.25178, 11
-__func__.25178:
+	.type	__func__.25195, %object
+	.size	__func__.25195, 11
+__func__.25195:
 	.ascii	"set_config\000"
 	.space	1
-	.type	__func__.25393, %object
-	.size	__func__.25393, 16
-__func__.25393:
+	.type	__func__.25410, %object
+	.size	__func__.25410, 16
+__func__.25410:
 	.ascii	"composite_setup\000"
 	.type	__func__.37591, %object
 	.size	__func__.37591, 19
@@ -100566,9 +100565,9 @@ __func__.61915:
 __func__.53085:
 	.ascii	"ccid_function_bind\000"
 	.space	1
-	.type	__func__.25239, %object
-	.size	__func__.25239, 18
-__func__.25239:
+	.type	__func__.25256, %object
+	.size	__func__.25256, 18
+__func__.25256:
 	.ascii	"usb_remove_config\000"
 	.space	2
 	.type	__func__.52819, %object
@@ -100589,9 +100588,9 @@ __func__.63272:
 __func__.44653:
 	.ascii	"ffs_data_put\000"
 	.space	3
-	.type	__func__.25470, %object
-	.size	__func__.25470, 15
-__func__.25470:
+	.type	__func__.25487, %object
+	.size	__func__.25487, 15
+__func__.25487:
 	.ascii	"composite_bind\000"
 	.space	1
 	.type	__func__.64420, %object
@@ -100628,9 +100627,9 @@ __func__.64556:
 __func__.63116:
 	.ascii	"create_terminal_attribute\000"
 	.space	2
-	.type	__func__.25514, %object
-	.size	__func__.25514, 29
-__func__.25514:
+	.type	__func__.25531, %object
+	.size	__func__.25531, 29
+__func__.25531:
 	.ascii	"usb_composite_setup_continue\000"
 	.space	3
 	.type	__func__.46143, %object
