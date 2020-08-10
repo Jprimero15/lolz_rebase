@@ -5262,7 +5262,7 @@ static int __devexit synaptics_rmi4_remove(struct i2c_client *client)
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 	}
 
-	pr_info("Dt2W is enabled! Synaptics sensor suspend is disabled\n");
+	pr_debug("Dt2W is enabled! Synaptics sensor suspend is disabled\n");
 #endif
 	return 0;
 }
@@ -5466,7 +5466,7 @@ out:
 	mutex_unlock(&rmi4_data->rmi4_device_mutex);
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 	}
-         pr_info("Dt2W is enabled! Stopping Synaptics is denied\n");
+         pr_debug("Dt2W is enabled! Stopping Synaptics is denied\n");
 #endif
 	return 0;
 }
@@ -5478,8 +5478,8 @@ static int synaptics_rmi4_start_device(struct synaptics_rmi4_data *rmi4_data)
 	bool prevent_sleep = (dt2w_switch > 0);
 
   if (prevent_sleep) {
-  	pr_info("Dt2W is enabled! Checking Dt2W status...\n");
-  	pr_info("Dt2W : Reseting Dt2W status...\n");
+  	pr_debug("Dt2W is enabled! Checking Dt2W status...\n");
+  	pr_debug("Dt2W : Reseting Dt2W status...\n");
   if ((dt2w_switch = 1)) {
   	dt2w_switch = 0;
   	mdelay(50);
@@ -5492,7 +5492,7 @@ static int synaptics_rmi4_start_device(struct synaptics_rmi4_data *rmi4_data)
   }
   if ((dt2w_switch = 0))
   	dt2w_switch = 0;
-  	pr_info("Dt2W : Dt2W status reset...\n");
+  	pr_debug("Dt2W : Dt2W status reset...\n");
   }
 #endif
 	mutex_lock(&rmi4_data->rmi4_device_mutex);
@@ -5538,8 +5538,8 @@ out:
 	mutex_unlock(&rmi4_data->rmi4_device_mutex);
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
   if (prevent_sleep) {
-  	pr_info("Dt2W is enabled! Checking Dt2W status to reset again...\n");
-  	pr_info("Dt2W : Reseting Dt2W status...\n");
+  	pr_debug("Dt2W is enabled! Checking Dt2W status to reset again...\n");
+  	pr_debug("Dt2W : Reseting Dt2W status...\n");
   if ((dt2w_switch = 1)) {
   	dt2w_switch = 0;
   	mdelay(50);
@@ -5552,7 +5552,7 @@ out:
   }
   if ((dt2w_switch = 0))
   	dt2w_switch = 0;
-  	pr_info("Dt2W : Dt2W status reset...\n");
+  	pr_debug("Dt2W : Dt2W status reset...\n");
   }
 #endif
 	return retval;
