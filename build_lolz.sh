@@ -1,32 +1,58 @@
 #!/bin/bash
-
 #
+# Copyright (C) 2020 Jprimero15
 # Lolz Kernel Build Script
-# Jprimero15@XDA
 #
 
 # DO NOT DELETE/MODIFY THIS
 if [ $USER == Jprimero15 ]; then
 
+while (( ${#} )); do
+  case ${1} in
+       "hltechn") CHN=true ;;
+       "hltekor") KOR=true ;;
+       "hltetmo") TMO=true ;;
+       "--gcc") GCC=true ;;
+  esac
+  shift
+done
+
+# Choose which variant to build
+if [[ -n ${CHN} ]]; then
+    KERNEL_VARIANT="hltechn"
+    KERNEL_DEFCONFIG="lolz_hltechn_defconfig"
+fi
+if [[ -n ${KOR} ]]; then
+    KERNEL_VARIANT="hltekor"
+    KERNEL_DEFCONFIG="lolz_hltekor_defconfig"
+fi
+if [[ -n ${TMO} ]]; then
+    KERNEL_VARIANT="hltetmo"
+    KERNEL_DEFCONFIG="lolz_hltetmo_defconfig"
+fi
+
+[[ -z ${CHN} && -z ${KOR} && -z ${TMO} ]] && {
+    KERNEL_VARIANT="hlte"
+    KERNEL_DEFCONFIG="lolz_hlte_defconfig"; }
+
+# CLANG or GCC??
+if [[ -z ${GCC} ]]; then
+    # Lets use CLANG
+    CLANG_DIR="${HOME}/proton12"
+    PATH="${CLANG_DIR}/bin:${PATH}"
+    export LD_LIBRARY_PATH="${CLANG_DIR}/lib:${LD_LIBRARY_PATH}"
+else
+    # Lets use GCC
+    TOOLCHAIN="$HOME/gcc10/bin/arm-eabi-"
+fi
+
 # Definitions Here
 KERNEL_NAME="LOLZ"
-KERNEL_VARIANT="hlte"
 KERNEL_VERSION="15"
 KERNEL_DATE="$(date +"%Y%m%d")"
 BUILD_DIR="output_$KERNEL_VARIANT"
 KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"
-CLANG_DIR="${HOME}/clang11"
 COMPILE_DT="y"
-# CLANG or NO??
-USE_CLANG="y"
-if [ "y" == "$USE_CLANG" ]; then
-    # Lets use LOLZ CLANG 11.0.0
-    PATH="${CLANG_DIR}/bin:${HOME}/gcc4_arm/bin:${PATH}"
-    export LD_LIBRARY_PATH="${CLANG_DIR}/lib:${LD_LIBRARY_PATH}"
-else
-    # Lets use ARM GCC 10.0.0(Experimental)
-    TOOLCHAIN="$HOME/gcc10/bin/arm-eabi-"
-fi
 DT="$BUILD_DIR/arch/arm/boot/dt.img"
 ANYKERNEL_DIR="lolz_anykernel"
 RELEASE_DIR="release"
@@ -36,16 +62,6 @@ RELEASE_DIR="release"
 COLOR_RED="\033[0;31m"
 COLOR_GREEN="\033[1;32m"
 COLOR_NEUTRAL="\033[0m"
-
-if [ "hltekor" == "$KERNEL_VARIANT" ]; then
-    KERNEL_DEFCONFIG="lolz_hltekor_defconfig"
-elif [ "hltetmo" == "$KERNEL_VARIANT" ]; then
-    KERNEL_DEFCONFIG="lolz_hltetmo_defconfig"
-elif [ "hltechn" == "$KERNEL_VARIANT" ]; then
-    KERNEL_DEFCONFIG="lolz_hltechn_defconfig"
-else
-    KERNEL_VARIANT="hlte" && KERNEL_DEFCONFIG="lolz_hlte_defconfig"
-fi
 
 # Initialize building...
 if [ -e $BUILD_DIR ]; then
@@ -65,7 +81,7 @@ echo -e $COLOR_NEUTRAL"\nCompiling $KERNEL_NAME-V$KERNEL_VERSION for $KERNEL_VAR
 make O=$BUILD_DIR $KERNEL_DEFCONFIG
 sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
 
-if [ "y" == "$USE_CLANG" ]; then
+if [[ -z ${GCC} ]]; then
 # Let's Compile with CLANG
     make -j$(nproc --all) O=$BUILD_DIR \
                           ARCH=arm \
@@ -111,5 +127,5 @@ else
     echo -e $COLOR_RED"\n Building failed... Please fix the derp you made and try again...\n"$COLOR_RED;
 fi
  else
-   echo "bash cannot run this script exiting now..."
+  exit
 fi;
