@@ -669,22 +669,22 @@ static int kgsl_pwrctrl_gpubusy_percentage_show(struct device *dev,
 {
 	int ret;
 	struct kgsl_device *device = kgsl_device_from_dev(dev);
-	struct kgsl_clk_stats *stats;
+	struct kgsl_clk_stats *clkstats;
 	unsigned int busy_percent = 0;
 
 	if (device == NULL)
 		return 0;
-	stats = &device->pwrctrl.clk_stats;
+	clkstats = &device->pwrctrl.clk_stats;
 
-	if (stats->total_old != 0)
-		busy_percent = (stats->busy_old * 100) / stats->total_old;
+	if (clkstats->elapsed_old != 0)
+		busy_percent = (clkstats->on_time_old * 100) / clkstats->elapsed_old;
 
 	ret = snprintf(buf, PAGE_SIZE, "%d %%\n", busy_percent);
 
 	/* Reset the stats if GPU is OFF */
 	if (!test_bit(KGSL_PWRFLAGS_AXI_ON, &device->pwrctrl.power_flags)) {
-		stats->busy_old = 0;
-		stats->total_old = 0;
+		clkstats->on_time_old = 0;
+		clkstats->elapsed_old = 0;
 	}
 	return ret;
 }
