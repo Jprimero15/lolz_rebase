@@ -46,20 +46,21 @@ dump_boot;
 # begin ramdisk changes
 
 # Mount System
-mount -o rw,remount -t auto /system;
+$bb mount -o rw,remount -t auto /system;
 
-# Get Android Version from /system/vendor
-OSV="$(file_getprop /system/vendor/build.prop ro.vendor.build.version.release)";
+# Get Android Version from /system
+OSV="$(file_getprop /system/build.prop ro.build.version.release)";
 #  Check Android Version
-if [ "$OSV" == "10" ] || [ "$OSV" == "10.0" ] || [ "$OSV" == "10.0.0" ]; then
+if [ "$OSV" == "9" ] || [ "$OSV" == "9.0" ] || [ "$OSV" == "9.0.0" ]; then
+  ui_print "- Android 9(PIE) Detected!!";
+  ui_print "- Configuring Ramdisk...";
+ else
   ui_print "- Android 10 Detected!!";
   ui_print "- Configuring Ramdisk...";
-#  backup_file /system/vendor/etc/init/hw/init.qcom.rc;
-#  insert_line /system/vendor/etc/init/hw/init.qcom.rc "init.lolz.rc" after "import /system/vendor/etc/init/hw/init.target.rc" "import /system/vendor/etc/init/hw/init.lolz.rc";
-  rm -rf /sbin/init.lolzboot.sh;
-  rm -rf /system/vendor/bin/init.lolzboot.sh;
-  rm -rf /system/vendor/etc/init/hw/init.lolzboot.sh;
-  rm -rf /system/vendor/etc/init/init.lolz.rc;
+  rm -rf /sbin/*lolz*;
+  rm -rf /system/vendor/bin/*lolz*.sh;
+  rm -rf /system/vendor/etc/init/hw/*lolz*;
+  rm -rf /system/vendor/etc/init/*lolz*;
   cp -fr $ramdisk/init.lolz.rc /system/vendor/etc/init/init.lolz.rc;
   cp -fr $ramdisk/init.lolzboot.sh /system/bin/init.lolzboot.sh;
   chmod 755 /system/bin/init.lolzboot.sh;
@@ -70,9 +71,6 @@ if [ "$OSV" == "10" ] || [ "$OSV" == "10.0" ] || [ "$OSV" == "10.0.0" ]; then
   rm $ramdisk/init.lolzboot.sh;
   rm $ramdisk/init.qcom.rc;
   rm $ramdisk/init.target.rc;
- else
-  ui_print "- Android 9(PIE) Detected!!";
-  ui_print "- Configuring Ramdisk...";
 fi;
   ui_print "- Ramdisk has been Configured!!";
 
@@ -98,8 +96,8 @@ if [ -f /system/vendor/bin/thermal-engine ] || [ -f /system/vendor/lib/libtherma
   ui_print "- New Thermal Driver is Enabled!!";
 fi;
 
-# UnMount System
-mount -o ro,remount -t auto /system;
+# Unmount System
+$bb mount -o ro,remount -t auto /system;
 
 # end ramdisk changes
 
