@@ -1,6 +1,6 @@
 # AnyKernel3 Ramdisk Mod Script
 # osm0sis @ xda-developers
-# Modified by jprimero15 @ xda-developers
+# Modified by Jprimero15 @ xda-developers
 
 ## AnyKernel setup
 # begin properties
@@ -8,6 +8,7 @@ properties() { '
 kernel.string=*   LolZ-Kernel For Android 9 and 10
 do.devicecheck=1
 do.modules=0
+do.systemless=1
 do.cleanup=1
 do.cleanuponabort=0
 device.name1=hlte
@@ -19,11 +20,12 @@ device.name6=hltespr
 device.name7=hltetmo
 device.name8=hltexx
 supported.versions=9 - 10
+supported.patchlevels=
 '; } # end properties
 
 # shell variables
 block=/dev/block/platform/msm_sdcc.1/by-name/boot;
-is_slot_device=auto;
+is_slot_device=0;
 ramdisk_compression=auto;
 
 
@@ -38,7 +40,6 @@ set_perm_recursive 0 0 750 750 $ramdisk/*;
 chmod -R 640 $ramdisk/fstab.qcom;
 chmod -R 644 $ramdisk/ueventd.qcom.rc;
 chown -R root:root $ramdisk/*;
-
 
 ## AnyKernel install
 dump_boot;
