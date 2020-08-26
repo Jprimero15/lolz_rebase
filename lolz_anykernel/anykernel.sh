@@ -25,7 +25,7 @@ supported.patchlevels=
 
 # shell variables
 block=/dev/block/platform/msm_sdcc.1/by-name/boot;
-is_slot_device=0;
+is_slot_device=auto;
 ramdisk_compression=auto;
 
 
@@ -38,7 +38,6 @@ ramdisk_compression=auto;
 # set permissions/ownership for included ramdisk files
 set_perm_recursive 0 0 750 750 $ramdisk/*;
 chmod -R 640 $ramdisk/fstab.qcom;
-chmod -R 644 $ramdisk/ueventd.qcom.rc;
 chown -R root:root $ramdisk/*;
 
 ## AnyKernel install
@@ -47,15 +46,14 @@ dump_boot;
 # begin ramdisk changes
 
 # Mount System
-$bb mount -o rw,remount -t auto /system;
+$BB mount -o rw,remount -t auto /system;
 
-# Get Android Version from /system
+# Get Android Version from system
 OSV="$(file_getprop /system/build.prop ro.build.version.release)";
-#  Check Android Version
-if [ "$OSV" == "9" ] || [ "$OSV" == "9.0" ] || [ "$OSV" == "9.0.0" ]; then
+if [ "$OSV" == "9" ]; then
   ui_print "- Android 9(PIE) Detected!!";
   ui_print "- Configuring Ramdisk...";
- else
+elif [ "$OSV" == "10" ]; then
   ui_print "- Android 10 Detected!!";
   ui_print "- Configuring Ramdisk...";
   rm -rf /sbin/*lolz*;
@@ -72,6 +70,8 @@ if [ "$OSV" == "9" ] || [ "$OSV" == "9.0" ] || [ "$OSV" == "9.0.0" ]; then
   rm $ramdisk/init.lolzboot.sh;
   rm $ramdisk/init.qcom.rc;
   rm $ramdisk/init.target.rc;
+else
+ abort "- ANDROID VERSION CAN'T BE DETECTED!!!. Aborting..."
 fi;
   ui_print "- Ramdisk has been Configured!!";
 
@@ -98,7 +98,7 @@ if [ -f /system/vendor/bin/thermal-engine ] || [ -f /system/vendor/lib/libtherma
 fi;
 
 # Unmount System
-$bb mount -o ro,remount -t auto /system;
+$BB mount -o ro,remount -t auto /system;
 
 # end ramdisk changes
 
