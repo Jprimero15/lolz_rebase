@@ -5,7 +5,7 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=*   LolZ-Kernel For Android 9 and 10
+kernel.string=*   LolZ-Kernel For Android 9/10/11
 do.devicecheck=1
 do.modules=0
 do.systemless=1
@@ -19,7 +19,7 @@ device.name5=hlteskt
 device.name6=hltespr
 device.name7=hltetmo
 device.name8=hltexx
-supported.versions=9 - 10
+supported.versions=9 - 11
 supported.patchlevels=
 '; } # end properties
 
@@ -55,6 +55,23 @@ if [ "$OSV" == "9" ]; then
   ui_print "- Configuring Ramdisk...";
 elif [ "$OSV" == "10" ]; then
   ui_print "- Android 10 Detected!!";
+  ui_print "- Configuring Ramdisk...";
+  rm -rf /sbin/*lolz*;
+  rm -rf /system/vendor/bin/*lolz*.sh;
+  rm -rf /system/vendor/etc/init/hw/*lolz*;
+  rm -rf /system/vendor/etc/init/*lolz*;
+  cp -fr $ramdisk/init.lolz.rc /system/vendor/etc/init/init.lolz.rc;
+  cp -fr $ramdisk/init.lolzboot.sh /system/bin/init.lolzboot.sh;
+  chmod 755 /system/bin/init.lolzboot.sh;
+  chown root.shell /system/bin/init.lolzboot.sh;
+  chmod 644 /system/vendor/etc/init/init.lolz.rc;
+  rm $ramdisk/fstab.qcom;
+  rm $ramdisk/init.lolz.rc;
+  rm $ramdisk/init.lolzboot.sh;
+  rm $ramdisk/init.qcom.rc;
+  rm $ramdisk/init.target.rc;
+elif [ "$OSV" == "11" ]; then
+  ui_print "- Android 11 Detected!!";
   ui_print "- Configuring Ramdisk...";
   rm -rf /sbin/*lolz*;
   rm -rf /system/vendor/bin/*lolz*.sh;
