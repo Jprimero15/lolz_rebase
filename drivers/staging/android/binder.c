@@ -2880,8 +2880,6 @@ static int binder_ioctl_set_ctx_mgr(struct file *filp,
 	struct binder_node *new_node;
 
 	if (context->binder_context_mgr_node) {
-		binder_debug(BINDER_DEBUG_TOP_ERRORS,
-			     "binder: BINDER_SET_CONTEXT_MGR already set\n");
 		ret = -EBUSY;
 		goto out;
 	}
@@ -2890,11 +2888,6 @@ static int binder_ioctl_set_ctx_mgr(struct file *filp,
 		goto out;
 	if (context->binder_context_mgr_uid != -1) {
 		if (context->binder_context_mgr_uid != current->cred->euid) {
-			binder_debug(BINDER_DEBUG_TOP_ERRORS,
-				     "binder: BINDER_SET_"
-				     "CONTEXT_MGR bad uid %d != %d\n",
-				     current->cred->euid,
-				     context->binder_context_mgr_uid);
 			ret = -EPERM;
 			goto out;
 		}
