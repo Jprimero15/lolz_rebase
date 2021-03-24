@@ -4033,10 +4033,12 @@ static int sec_bat_get_property(struct power_supply *psy,
 		val->intval = battery->voltage_avg * 1000;
 		break;
 	case POWER_SUPPLY_PROP_CURRENT_NOW:
-		val->intval = battery->current_now;
+		/* current value should be in uA */
+		val->intval = battery->current_now * 1000;
 		break;
 	case POWER_SUPPLY_PROP_CURRENT_AVG:
-		val->intval = battery->current_avg;
+		/* current value should be in uA */
+		val->intval = battery->current_avg * 1000;
 		break;
 	case POWER_SUPPLY_PROP_ENERGY_FULL:
 		val->intval = battery->topoff_current;
