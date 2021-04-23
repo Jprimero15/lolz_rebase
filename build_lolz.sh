@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (C) 2020 Jprimero15
+# Copyright (C) 2021 Jprimero15
 # Lolz Kernel Build Script
 #
 
@@ -38,7 +38,7 @@ fi
 # CLANG or GCC??
 if [[ -z ${GCC} ]]; then
     # Lets use CLANG
-    CLANG_DIR="${HOME}/proton12"
+    CLANG_DIR="${HOME}/proton13"
     PATH="${CLANG_DIR}/bin:${PATH}"
     export LD_LIBRARY_PATH="${CLANG_DIR}/lib:${LD_LIBRARY_PATH}"
 else
@@ -48,7 +48,7 @@ fi
 
 # Definitions Here
 KERNEL_NAME="LOLZ"
-KERNEL_VERSION="15"
+KERNEL_VERSION="16"
 KERNEL_DATE="$(date +"%Y%m%d")"
 BUILD_DIR="output_$KERNEL_VARIANT"
 KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"
