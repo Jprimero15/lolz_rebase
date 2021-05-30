@@ -167,6 +167,12 @@ struct msm_fb_backup_type {
 	struct mdp_display_commit disp_commit;
 };
 
+struct msm_fb_fps_info {
+	u32 frame_count;
+	ktime_t last_sampled_time_us;
+	u32 measured_fps;
+};
+
 struct msm_fb_data_type {
 	u32 key;
 	u32 index;
@@ -183,6 +189,7 @@ struct msm_fb_data_type {
 	struct fb_info *fbi;
 
 	int idle_time;
+	struct msm_fb_fps_info fps_info;
 	struct delayed_work idle_notify_work;
 
 	int op_enable;
@@ -320,6 +327,10 @@ enum TE_SETTING {
 #endif
 
 extern int boot_mode_lpm, boot_mode_recovery;
+static inline void mdss_fb_init_fps_info(struct msm_fb_data_type *mfd)
+{
+	memset(&mfd->fps_info, 0, sizeof(mfd->fps_info));
+}
 int mdss_fb_get_phys_info(unsigned long *start, unsigned long *len, int fb_num);
 int mdss_fb_get_first_cmt_flag(void);
 void mdss_fb_set_backlight(struct msm_fb_data_type *mfd, u32 bkl_lvl);
@@ -334,4 +345,5 @@ void mdss_negative_color(int is_negative_on);
 #endif
 int mdss_fb_dcm(struct msm_fb_data_type *mfd, int req_state);
 int mdss_fb_suspres_panel(struct device *dev, void *data);
+void mdss_fb_calc_fps(struct msm_fb_data_type *mfd);
 #endif /* MDSS_FB_H */

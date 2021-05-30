@@ -75,6 +75,12 @@ static u32 mdss_fb_pseudo_palette[16] = {
 	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
 };
 
+/*
+ * Time period for fps calulation in micro seconds.
+ * Default value is set to 1 sec.
+ */
+#define MDP_TIME_PERIOD_CALC_FPS_US	1000000
+
 #ifdef CONFIG_FB_MSM_CAMERA_CSC
 u8 csc_update = 1;
 u8 csc_change = 0;
@@ -444,6 +450,21 @@ static void __mdss_fb_idle_notify_work(struct work_struct *work)
 	sysfs_notify(&mfd->fbi->dev->kobj, NULL, "idle_notify");
 }
 
+static ssize_t mdss_fb_get_fps_info(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct fb_info *fbi = dev_get_drvdata(dev);
+	struct msm_fb_data_type *mfd = fbi->par;
+	unsigned int fps_int , fps_float;
+
+	if (!mfd->panel_power_on)
+		mfd->fps_info.measured_fps = 0;
+	fps_int = (unsigned int) mfd->fps_info.measured_fps;
+	fps_float = do_div(fps_int, 10);
+	return scnprintf(buf, PAGE_SIZE, "%d.%d\n", fps_int, fps_float);
+
+}
+
 static ssize_t mdss_fb_get_idle_time(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -667,6 +688,7 @@ static DEVICE_ATTR(idle_time, S_IRUGO | S_IWUSR | S_IWGRP,
 static DEVICE_ATTR(idle_notify, S_IRUGO, mdss_fb_get_idle_notify, NULL);
 static DEVICE_ATTR(msm_fb_panel_info, S_IRUGO, mdss_fb_get_panel_info, NULL);
 static DEVICE_ATTR(rgb, S_IRUGO | S_IWUSR | S_IWGRP, mdss_get_rgb, mdss_set_rgb);
+static DEVICE_ATTR(measured_fps, S_IRUGO,	mdss_fb_get_fps_info, NULL);
 
 static struct attribute *mdss_fb_attrs[] = {
 	&dev_attr_msm_fb_type.attr,
@@ -676,6 +698,7 @@ static struct attribute *mdss_fb_attrs[] = {
 	&dev_attr_idle_notify.attr,
 	&dev_attr_msm_fb_panel_info.attr,
 	&dev_attr_rgb.attr,
+	&dev_attr_measured_fps.attr,
 	NULL,
 };
 
@@ -780,6 +803,8 @@ static int mdss_fb_probe(struct platform_device *pdev)
 			return rc;
 		}
 	}
+
+    mdss_fb_init_fps_info(mfd);
 
 	rc = pm_runtime_set_active(mfd->fbi->dev);
 	if (rc < 0)
@@ -2324,6 +2349,7 @@ static int __mdss_fb_sync_buf_done_callback(struct notifier_block *p,
 	case MDP_NOTIFY_FRAME_DONE:
 		pr_debug("%s: frame done\n", sync_pt_data->fence_name);
 		mdss_fb_signal_timeline(sync_pt_data);
+		mdss_fb_calc_fps(mfd);
 		break;
 	}
 
@@ -3360,4 +3386,34 @@ int mdss_fb_suspres_panel(struct device *dev, void *data)
 			event == MDSS_EVENT_RESUME ? "resume" : "suspend",
 			mfd->index, rc);
 	return rc;
+}
+
+/*
+ * mdss_fb_calc_fps() - Calculates fps value.
+ * @mfd   : frame buffer structure associated with fb device.
+ *
+ * This function is called at frame done. It counts the number
+ * of frames done for every 1 sec. Stores the value in measured_fps.
+ * measured_fps value is 10 times the calculated fps value.
+ * For example, measured_fps= 594 for calculated fps of 59.4
+ */
+void mdss_fb_calc_fps(struct msm_fb_data_type *mfd)
+{
+	ktime_t current_time_us;
+	u64 fps, diff_us;
+
+	current_time_us = ktime_get();
+	diff_us = (u64)ktime_us_delta(current_time_us,
+			mfd->fps_info.last_sampled_time_us);
+	mfd->fps_info.frame_count++;
+
+	if (diff_us >= MDP_TIME_PERIOD_CALC_FPS_US) {
+		fps = ((u64)mfd->fps_info.frame_count) * 10000000;
+		do_div(fps, diff_us);
+		mfd->fps_info.measured_fps = (unsigned int)fps;
+		pr_debug(" MDP_FPS for fb%d is %d.%d\n",
+			mfd->index, (unsigned int)fps/10, (unsigned int)fps%10);
+		mfd->fps_info.last_sampled_time_us = current_time_us;
+		mfd->fps_info.frame_count = 0;
+	}
 }
