@@ -346,7 +346,7 @@ endmenu
 
 config LAZYPLUG
 	bool "Conservative hotplugging for generic devices"
-	default n
+	default y
 	help
 	  This enables the conservative hotplugging, lazyplug by arter97
 	  based on intelli_plug. Refer to the comments for more info.
