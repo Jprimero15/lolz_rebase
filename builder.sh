@@ -68,7 +68,14 @@ sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
                           CLANG_TRIPLE=arm-linuxgnueabi- \
                           CROSS_COMPILE=arm-linux-gnueabi-
 
-if [ -e $KERNEL_IMAGE ]; then
+  if [ -f $KERNEL_IMAGE ]; then
+    echo -e  "  LOLZ Kernel Compiled Successfully!!"
+  else
+    echo -e "  LOLZ Kernel Not Compiled!!"
+    echo -e "  Fix Your Derp First!! Aborting..."
+    exit
+  fi
+
     cp $KERNEL_IMAGE $ANYKERNEL_DIR/
     # compile dt if required
     if [ "y" == "$COMPILE_DT" ]; then
@@ -86,13 +93,13 @@ if [ -e $KERNEL_IMAGE ]; then
             mv -f $DT $ANYKERNEL_DIR/dt
         fi
     fi
-fi
 
     cd $ANYKERNEL_DIR && zip -r9 $KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.zip * -x README.md $KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.zip
     if [ -f $ANYKERNEL_DIR/$KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.zip  ]; then
-     echo  "LOLZ Kernel Installer zipped Successfully"
+     echo -e "LOLZ Kernel Installer zipped Successfully"
     else
-     echo  "Zipping LOLZ Kernel Installer Failed!"
+     echo -e "Zipping LOLZ Kernel Installer Failed!"
+     exit
     fi;
 
 curl -F "document=@$ANYKERNEL_DIR/$KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.zip" --form-string "caption=<b>LOLZ Kernel Build Compiled&#33 </b>
