@@ -9,6 +9,15 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
+# Inlined function to post a message
+export BOT_MSG_URL="https://api.telegram.org/bot$TG_BOT_TOKEN/sendMessage"
+function tg_post_msg() {
+    curl -s -X POST "$BOT_MSG_URL" -d chat_id="-1001222358827 " \
+        -d "disable_web_page_preview=true" \
+        -d "parse_mode=html" \
+        -d text="$1"
+}
+
 while (( ${#} )); do
   case ${1} in
        "hltechn") CHN=true ;;
@@ -54,6 +63,10 @@ export KBUILD_BUILD_USER="Jprimero15"
 
 # ***** ***** ***** ***** ***THE END*** ***** ***** ***** ***** #
 
+
+# Send a notificaton to TG
+tg_post_msg "<b>😎LOLZ KERNEL Compilation Started ($KERNEL_VARIANT)😎</b>" 
+
 # create the outdir
 mkdir $BUILD_DIR 
 
@@ -73,6 +86,8 @@ sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
   else
     echo -e "  LOLZ Kernel Not Compiled!!"
     echo -e "  Fix Your Derp First!! Aborting..."
+# Send a notificaton to TG
+tg_post_msg "<b>🤬LOLZ Kernel Not Compiled. Aborting🤬</b>" 
     exit
   fi
 
@@ -99,12 +114,23 @@ sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
      echo -e "LOLZ Kernel Installer zipped Successfully"
     else
      echo -e "Zipping LOLZ Kernel Installer Failed!"
+# Send a notificaton to TG
+tg_post_msg "<b>😡LOLZ Kernel Not Zipped. Aborting 😡</b>" 
      exit
     fi;
 
 curl -F "document=@$ANYKERNEL_DIR/$KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.zip" --form-string "caption=<b>LOLZ Kernel Build Compiled&#33 </b>
-<b>Build Version: <code> v17 -Test</code></b>
+<b>Build Variant: <code>💂‍♂️($KERNEL_VARIANT)💂‍♂️</code></b>
+<b>Build Version: <code>🎉v17-Test🎉</code></b>
 <b>Date: <code>$(date '+%B %d, %Y.') </code></b>
 <b>Time: <code>$(date +'%r')</code></b>" "https://api.telegram.org/bot$TG_BOT_TOKEN/sendDocument?chat_id=-1001222358827&parse_mode=html" 
- 
+
+# Send a notificaton to TG
+tg_post_msg "<b>🥳LOLZ KERNEL Compilation Completed ($KERNEL_VARIANT)🥳</b>" 
+
+rm -rf $ANYKERNEL_DIR/*.zip
+rm -rf $ANYKERNEL_DIR/zImage
+rm -rf $ANYKERNEL_DIR/dt
+rm -rf $BUILD_DIR
+
 # END of script
