@@ -12,7 +12,7 @@ export DEBIAN_FRONTEND=noninteractive
 # Inlined function to post a message
 export BOT_MSG_URL="https://api.telegram.org/bot$TG_BOT_TOKEN/sendMessage"
 function tg_post_msg() {
-    curl -s -X POST "$BOT_MSG_URL" -d chat_id="-1001222358827 " \
+    curl -s -X POST "$BOT_MSG_URL" -d chat_id="-758404376" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=html" \
         -d text="$1"
@@ -48,7 +48,7 @@ fi
 # Definitions Here
 LDIR="${PWD}" 
 KERNEL_NAME="LOLZ"
-KERNEL_VERSION="16"
+KERNEL_VERSION="17"
 COMPILE_DT="y"
 KERNEL_DATE="$(date +"%Y%m%d")"
 BUILD_DIR="$LDIR/output_$KERNEL_VARIANT"
@@ -123,7 +123,7 @@ curl -F "document=@$ANYKERNEL_DIR/$KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.
 <b>Build Variant: <code>💂‍♂️($KERNEL_VARIANT)💂‍♂️</code></b>
 <b>Build Version: <code>🎉v17-Test🎉</code></b>
 <b>Date: <code>$(date '+%B %d, %Y.') </code></b>
-<b>Time: <code>$(date +'%r')</code></b>" "https://api.telegram.org/bot$TG_BOT_TOKEN/sendDocument?chat_id=-1001222358827&parse_mode=html" 
+<b>Time: <code>$(date +'%r')</code></b>" "https://api.telegram.org/bot$TG_BOT_TOKEN/sendDocument?chat_id=-758404376&parse_mode=html"
 
 # Send a notificaton to TG
 tg_post_msg "<b>🥳LOLZ KERNEL Compilation Completed ($KERNEL_VARIANT)🥳</b>" 
