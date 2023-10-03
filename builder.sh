@@ -48,7 +48,7 @@ fi
 # Definitions Here
 LDIR="${PWD}" 
 KERNEL_NAME="LOLZ"
-KERNEL_VERSION="17"
+KERNEL_VERSION="18"
 COMPILE_DT="y"
 KERNEL_DATE="$(date +"%Y%m%d")"
 BUILD_DIR="$LDIR/output_$KERNEL_VARIANT"
