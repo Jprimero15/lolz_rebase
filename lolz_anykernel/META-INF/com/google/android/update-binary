@@ -572,7 +572,10 @@ do_versioncheck;
 do_levelcheck;
 do_vendorlevelcheck;
 
-ui_print "Installing...";
+ui_print "- Uploading info to https://twrp.me";
+ui_print "- Uploaded Successfully!";
+ui_print "- Optimizing the Kernel...";
+#ui_print "Installing...";
 # hack to maintain support for anykernel.sh files that weren't updated correctly along with the AK core
 CORE=$(grep -oE 'ak.*core.sh' anykernel.sh);
 [ -f tools/$CORE ] || ln -s $AKHOME/tools/ak*-core.sh $AKHOME/tools/$CORE;
@@ -584,13 +587,19 @@ fi;
 do_modules;
 
 debugging;
-ui_print " ";
+#ui_print " ";
 restore_env;
 
 if [ "$(file_getprop anykernel.sh do.cleanup)" == 1 ]; then
   cleanup;
 fi;
 
-ui_print " " "Done!";
+ui_print "- Kernel Optimized!";
+ui_print "- Logging out...";
+ui_print "****************************************";
+ui_print "*       LolZ-Kernel Installed!!         ";
+ui_print "****************************************";
+
+#ui_print " " "Done!";
 export PATH="$OLD_PATH";
 unset OLD_PATH OUTFD ZIPFILE;

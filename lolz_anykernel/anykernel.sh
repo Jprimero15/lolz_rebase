@@ -19,7 +19,7 @@ device.name5=hlteskt
 device.name6=hltespr
 device.name7=hltetmo
 device.name8=hltexx
-supported.versions= 9 - 13
+supported.versions=9 - 13
 supported.patchlevels=
 supported.vendorpatchlevels=
 '; } # end properties
@@ -45,7 +45,7 @@ patch_vbmeta_flag=auto;
 dump_boot; # use split_boot to skip ramdisk unpack, e.g. for devices with init_boot ramdisk
 
 # Mount System
-$BB mount -o rw,remount -t auto /system;
+mount -o rw,remount -t auto /system;
 
 # Get Android Version from system
 OSV="$(file_getprop /system/build.prop ro.build.version.release)";
@@ -148,7 +148,7 @@ if [ -f /system/vendor/bin/thermal-engine ] || [ -f /system/vendor/lib/libtherma
 fi;
 
 # Unmount System
-$BB mount -o ro,remount -t auto /system;
+mount -o ro,remount -t auto /system;
 
 write_boot; # use flash_boot to skip ramdisk repack, e.g. for devices with init_boot ramdisk
 ## end boot install
