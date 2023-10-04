@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (C) 2021 Jprimero15
+# Copyright (C) 2023 Jprimero15
 # Lolz Kernel Build Script (CI Edition)
 #
 # shellcheck disable=SC2086
@@ -9,10 +9,19 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
+# priv
+export TG_BOT_TOKEN=""
+export GITHUB_TOKEN=""
+git config user.name ""
+git config user.email ""
+
+# timezone
+export TZ="Asia/Manila"
+
 # Inlined function to post a message
 export BOT_MSG_URL="https://api.telegram.org/bot$TG_BOT_TOKEN/sendMessage"
 function tg_post_msg() {
-    curl -s -X POST "$BOT_MSG_URL" -d chat_id="-758404376" \
+    curl -s -X POST "$BOT_MSG_URL" -d chat_id="-1001222358827" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=html" \
         -d text="$1"
@@ -55,9 +64,16 @@ BUILD_DIR="$LDIR/output_$KERNEL_VARIANT"
 KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"
 DT="$BUILD_DIR/arch/arm/boot/dt.img"
 ANYKERNEL_DIR="$LDIR/lolz_anykernel"
-CLANG_DIR="${LDIR}/clang14"
+CLANG_DIR="${LDIR}/clang15"
 PATH="${CLANG_DIR}/bin:${PATH}"
 export LD_LIBRARY_PATH="${CLANG_DIR}/lib:${LD_LIBRARY_PATH}"
+
+# Clone clang repo if not present
+if [ -f "${CLANG_DIR}/bin/clang" ]; then
+ echo -e "  Clang toolchain is already present"
+else
+ git clone https://github.com/Jprimero15/lolz-clang -b main --depth=1 ${CLANG_DIR}
+fi
 
 export KBUILD_BUILD_USER="Jprimero15"
 
@@ -78,7 +94,7 @@ sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
     make -j"$(nproc --all)" O=$BUILD_DIR \
                           ARCH=arm \
                           CC=clang \
-                          CLANG_TRIPLE=arm-linuxgnueabi- \
+                          CLANG_TRIPLE=arm-linux-gnueabi- \
                           CROSS_COMPILE=arm-linux-gnueabi-
 
   if [ -f $KERNEL_IMAGE ]; then
@@ -123,7 +139,7 @@ curl -F "document=@$ANYKERNEL_DIR/$KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.
 <b>Build Variant: <code>💂‍♂️($KERNEL_VARIANT)💂‍♂️</code></b>
 <b>Build Version: <code>🎉v17-Test🎉</code></b>
 <b>Date: <code>$(date '+%B %d, %Y.') </code></b>
-<b>Time: <code>$(date +'%r')</code></b>" "https://api.telegram.org/bot$TG_BOT_TOKEN/sendDocument?chat_id=-758404376&parse_mode=html"
+<b>Time: <code>$(date +'%r')</code></b>" "https://api.telegram.org/bot$TG_BOT_TOKEN/sendDocument?chat_id=-1001222358827&parse_mode=html"
 
 # Send a notificaton to TG
 tg_post_msg "<b>🥳LOLZ KERNEL Compilation Completed ($KERNEL_VARIANT)🥳</b>" 
