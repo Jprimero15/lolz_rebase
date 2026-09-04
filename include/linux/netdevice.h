@@ -1244,7 +1244,7 @@ struct net_device {
 	enum {
 		RTNL_LINK_INITIALIZED,
 		RTNL_LINK_INITIALIZING,
-	} rtnl_link_state:16;
+	} rtnl_link_state;
 
 	/* Called from unregister, can be used to call free_netdev */
 	void (*destructor)(struct net_device *dev);
