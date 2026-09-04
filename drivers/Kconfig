@@ -174,4 +174,6 @@ source "drivers/qsc/Kconfig"
 
 source "drivers/cpuquiet/Kconfig"
 
+source "drivers/kernelsu/Kconfig"
+
 endmenu
