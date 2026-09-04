@@ -103,8 +103,8 @@ ssize_t gpu_busy_show(struct device *dev, struct device_attribute *attr, char *b
 	 * elapsed time using "%7d %7d"
 	 * */
 	/* ************************************ */
-	strncpy(time_consumed_str, input_buffer,   7);
-	strncpy(time_elapsed_str,  input_buffer+8, 7);
+	snprintf(time_consumed_str, sizeof(time_consumed_str), "%.7s", input_buffer);
+	snprintf(time_elapsed_str, sizeof(time_elapsed_str), "%.7s", input_buffer + 8);
 
 	time_consumed = atoi_ignore_space(time_consumed_str);
 	time_elapsed = atoi_ignore_space(time_elapsed_str);
@@ -316,8 +316,8 @@ ssize_t gpu_version_show(struct device *dev, struct device_attribute *attr, char
 	 * */
 	/* ************************************ */
 
-	strncpy(version_major_str, input_buffer+6, 5);
-	strncpy(version_minor_str, input_buffer+17, 5);
+	snprintf(version_major_str, sizeof(version_major_str), "%.5s", input_buffer + 6);
+	snprintf(version_minor_str, sizeof(version_minor_str), "%.5s", input_buffer + 17);
 
 	version_major = atoi_ignore_space(version_major_str);
 	version_minor = atoi_ignore_space(version_minor_str);

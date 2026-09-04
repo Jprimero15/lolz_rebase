@@ -1537,7 +1537,8 @@ int w1_ds28el15_write_authblockprotection(struct w1_slave *sl, uchar *data)
 static int get_array_value(void)
 {
 	int i, ret;
-	char str[20], *buf,  data;
+	char str[20], *buf;
+	u16 data;
 
 	pr_info("%s: W1 Read Array.\n", __func__);
 	ret = of_parse_args_on_subcmdline("array=",(char *)str);
