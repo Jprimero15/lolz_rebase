@@ -9,12 +9,6 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-# priv
-export TG_BOT_TOKEN=""
-export GITHUB_TOKEN=""
-git config user.name ""
-git config user.email ""
-
 # timezone
 export TZ="Asia/Manila"
 
@@ -32,6 +26,7 @@ while (( ${#} )); do
        "hltechn") CHN=true ;;
        "hltekor") KOR=true ;;
        "hltetmo") TMO=true ;;
+       "--gcc") IS_GCC=true ;;
   esac
   shift
 done
@@ -64,15 +59,16 @@ BUILD_DIR="$LDIR/output_$KERNEL_VARIANT"
 KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"
 DT="$BUILD_DIR/arch/arm/boot/dt.img"
 ANYKERNEL_DIR="$LDIR/lolz_anykernel"
-CLANG_DIR="${LDIR}/clang15"
-PATH="${CLANG_DIR}/bin:${PATH}"
-export LD_LIBRARY_PATH="${CLANG_DIR}/lib:${LD_LIBRARY_PATH}"
 
-# Clone clang repo if not present
-if [ -f "${CLANG_DIR}/bin/clang" ]; then
- echo -e "  Clang toolchain is already present"
+# CLANG or GCC??
+if [[ -z ${IS_GCC} ]]; then
+    # Lets use CLANG
+    CLANG_DIR="${LDIR}/clang_tc"
+    PATH="${CLANG_DIR}/bin:${PATH}"
+    export LD_LIBRARY_PATH="${CLANG_DIR}/lib:${LD_LIBRARY_PATH}"
 else
- git clone https://github.com/Jprimero15/lolz-clang -b main --depth=1 ${CLANG_DIR}
+    # Lets use GCC
+    GCC_DIR="$LDIR/gcc_tc/bin/arm-eabi-"
 fi
 
 export KBUILD_BUILD_USER="Jprimero15"
@@ -90,12 +86,17 @@ mkdir $BUILD_DIR
 make O=$BUILD_DIR ARCH=arm $KERNEL_DEFCONFIG
 sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
 
+if [[ -z ${IS_GCC} ]]; then
 # Let's Compile with CLANG
-    make -j"$(nproc --all)" O=$BUILD_DIR \
+    make -j$(nproc --all) O=$BUILD_DIR \
                           ARCH=arm \
                           CC=clang \
-                          CLANG_TRIPLE=arm-linux-gnueabi- \
                           CROSS_COMPILE=arm-linux-gnueabi-
+else
+    # Let's Compile with GCC
+    CROSS_COMPILE=$GCC_DIR
+    make -j$(nproc --all) O=$BUILD_DIR
+fi
 
   if [ -f $KERNEL_IMAGE ]; then
     echo -e  "  LOLZ Kernel Compiled Successfully!!"
