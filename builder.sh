@@ -52,7 +52,7 @@ fi
 # Definitions Here
 LDIR="${PWD}" 
 KERNEL_NAME="LOLZ"
-KERNEL_VERSION="18"
+KERNEL_VERSION="19-test"
 COMPILE_DT="y"
 KERNEL_DATE="$(date +"%Y%m%d")"
 BUILD_DIR="$LDIR/output_$KERNEL_VARIANT"
