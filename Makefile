@@ -371,9 +371,6 @@ CFLAGS_KERNEL	=
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
-# Lets use this Optimization for Krait
-ARM_ARCH_OPT := -mcpu=cortex-a15 -mtune=cortex-a15
-
 # Use LINUXINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
 LINUXINCLUDE    := -I$(srctree)/arch/$(hdr-arch)/include \
@@ -388,14 +385,13 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
    		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -std=gnu89 \
-		   $(ARM_ARCH_OPT) \
    		   $(CLANG_FLAGS)
 
-KBUILD_AFLAGS_KERNEL := $(ARM_ARCH_OPT)
-KBUILD_CFLAGS_KERNEL := $(ARM_ARCH_OPT)
+KBUILD_AFLAGS_KERNEL :=
+KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__ $(CLANG_FLAGS)
-KBUILD_AFLAGS_MODULE  := -DMODULE $(ARM_ARCH_OPT)
-KBUILD_CFLAGS_MODULE  := -DMODULE -fno-pic $(ARM_ARCH_OPT)
+KBUILD_AFLAGS_MODULE  := -DMODULE
+KBUILD_CFLAGS_MODULE  := -DMODULE -fno-pic
 KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
 
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
