@@ -567,7 +567,7 @@ void tick_broadcast_oneshot_control(unsigned long reason)
 		 * shutdown.
 		 */
 		if (broadcast_needs_cpu(bc, cpu))
-			cpumask_clear_cpu(cpu, tick_broadcast_oneshot_mask);
+			cpumask_clear_cpu(cpu, to_cpumask(tick_broadcast_oneshot_mask));
 	} else {
 		if (cpumask_test_cpu(cpu, tick_get_broadcast_oneshot_mask())) {
 			cpumask_clear_cpu(cpu,
