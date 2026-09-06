@@ -29,11 +29,11 @@ AFLAGS_head.o += -DFIPS_KERNEL_RAM_BASE=0x00008000
 endif
 
 AFLAGS_head.o += -Wa,-march=armv7-a$(plus_sec)
-AFLAGS_head.o += -Wa,-mcpu=krait
+AFLAGS_head.o += -Wa,-mcpu=cortex-a15
 AFLAGS_misc.o +=-Wa,-march=armv7-a$(plus_sec)
-AFLAGS_misc.o += -Wa,-mcpu=krait
+AFLAGS_misc.o += -Wa,-mcpu=cortex-a15
 AFLAGS_decompress.o += -Wa,-march=armv7-a$(plus_sec)
-AFLAGS_decompress.o += -Wa,-mcpu=krait
+AFLAGS_decompress.o += -Wa,-mcpu=cortex-a15
 
 HEAD	= head.o
 OBJS	+= misc.o decompress.o
@@ -162,7 +162,7 @@ LDFLAGS_vmlinux += -T
 
 # For __aeabi_uidivmod
 AFLAGS_lib1funcs.o +=-Wa,-march=armv7-a$(plus_sec)
-AFLAGS_lib1funcs.o += -Wa,-mcpu=krait
+AFLAGS_lib1funcs.o += -Wa,-mcpu=cortex-a15
 lib1funcs = $(obj)/lib1funcs.o
 
 $(obj)/lib1funcs.S: $(srctree)/arch/$(SRCARCH)/lib/lib1funcs.S
@@ -205,7 +205,7 @@ $(obj)/piggy.$(suffix_y): $(obj)/../Image FORCE
 	$(call if_changed,$(suffix_y))
 
 AFLAGS_piggy.$(suffix_y).o += -Wa,-march=armv7-a$(plus_sec)
-AFLAGS_piggy.$(suffix_y).o += -Wa,-mcpu=krait
+AFLAGS_piggy.$(suffix_y).o += -Wa,-mcpu=cortex-a15
 $(obj)/piggy.$(suffix_y).o:  $(obj)/piggy.$(suffix_y) FORCE
 
 CFLAGS_font.o := -Dstatic=
