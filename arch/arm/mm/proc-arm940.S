@@ -356,7 +356,7 @@ __arm940_setup:
 
 	.align
 
-	.section ".proc.info.init", #alloc, #execinstr
+	.section ".proc.info.init", "ax"
 
 	.type	__arm940_proc_info,#object
 __arm940_proc_info:

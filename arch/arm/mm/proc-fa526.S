@@ -193,7 +193,7 @@ fa526_cr1_set:
 
 	.align
 
-	.section ".proc.info.init", #alloc, #execinstr
+	.section ".proc.info.init", "ax"
 
 	.type	__fa526_proc_info,#object
 __fa526_proc_info:

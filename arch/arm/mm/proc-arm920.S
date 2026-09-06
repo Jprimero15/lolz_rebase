@@ -449,7 +449,7 @@ arm920_crval:
 
 	.align
 
-	.section ".proc.info.init", #alloc, #execinstr
+	.section ".proc.info.init", "ax"
 
 	.type	__arm920_proc_info,#object
 __arm920_proc_info:

@@ -286,7 +286,7 @@ __arm7_setup:	mov	r0, #0
 
 		.align
 
-		.section ".proc.info.init", #alloc, #execinstr
+		.section ".proc.info.init", "ax"
 
 .macro arm67_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req, \
 	cpu_mm_mmu_flags:req, cpu_flush:req, cpu_proc_funcs:req
