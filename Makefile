@@ -372,7 +372,7 @@ AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 # Lets use this Optimization for Krait
-ARM_ARCH_OPT := -mcpu=cortex-a15 -mtune=cortex-a15
+ARM_ARCH_OPT := -mcpu=krait -mtune=krait
 
 # Use LINUXINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
