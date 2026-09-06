@@ -521,6 +521,7 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
 KBUILD_CFLAGS += -Wno-incompatible-pointer-types
 KBUILD_CFLAGS += -fno-builtin
 KBUILD_CFLAGS += -Xassembler -mno-warn-deprecated
+KBUILD_CFLAGS += -mno-unaligned-access
 
 # Quiet clang warning: comparison of unsigned expression < 0 is always false
 
@@ -634,9 +635,9 @@ endif # $(dot-config)
 all: vmlinux
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS	+=  $(call cc-option,-Oz,-Os) $(call cc-disable-warning,maybe-uninitialized,)
+KBUILD_CFLAGS	+= -O2
 else
-KBUILD_CFLAGS	+= -O3
+KBUILD_CFLAGS	+= -O2
 endif
 
 
