@@ -94,15 +94,34 @@ make O=$BUILD_DIR ARCH=arm $KERNEL_DEFCONFIG
 sed -i "s;Lolz;$KERNEL_NAME-V$KERNEL_VERSION;" $BUILD_DIR/.config;
 
 if [[ -z ${IS_GCC} ]]; then
-# Let's Compile with CLANG
+    TMP_LOG=$(mktemp)
+
     make -j$(nproc --all) O=$BUILD_DIR \
-                          ARCH=arm \
-                          CC=clang \
-                          CROSS_COMPILE=arm-linux-gnueabi-
+        ARCH=arm \
+        CC=clang \
+        CROSS_COMPILE=arm-linux-gnueabi- 2>&1 | tee "$TMP_LOG"
+
+    status=${PIPESTATUS[0]}
+
+    if [[ $status -ne 0 ]]; then
+        mv "$TMP_LOG" "$LDIR/error.log"
+    else
+        rm -f "$TMP_LOG"
+    fi
+
 else
-    # Let's Compile with GCC
     CROSS_COMPILE=$GCC_DIR
-    make -j$(nproc --all) O=$BUILD_DIR
+    TMP_LOG=$(mktemp)
+
+    make -j$(nproc --all) O=$BUILD_DIR 2>&1 | tee "$TMP_LOG"
+
+    status=${PIPESTATUS[0]}
+
+    if [[ $status -ne 0 ]]; then
+        mv "$TMP_LOG" "$LDIR/error.log"
+    else
+        rm -f "$TMP_LOG"
+    fi
 fi
 
   if [ -f $KERNEL_IMAGE ]; then
