@@ -1547,10 +1547,10 @@ static int get_array_value(void)
 		return -1;
 	}
 	buf = str;
-	for(i=0;i<5;i++){
-		memcpy(&data,&buf[i*2],2);
-		sscanf(&data, "%x", (unsigned int *)&ret);
-		w1_array[i]=ret;
+	for (i = 0; i < 5; i++) {
+		sscanf(buf, "%x", &ret);
+		w1_array[i] = ret;
+		buf += 3;
 	}
 	return 0;
 }
