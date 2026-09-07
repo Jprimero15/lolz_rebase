@@ -77,7 +77,14 @@ export KBUILD_BUILD_USER="Jprimero15"
 
 
 # Send a notificaton to TG
-tg_post_msg "<b>😎LOLZ KERNEL Compilation Started ($KERNEL_VARIANT)😎</b>" 
+tg_post_msg "<b>LOLZ KERNEL Compilation Started ($KERNEL_VARIANT)</b>"
+
+# Repo link (to show on telegram)
+KERN_REPO="$(git -C ${LDIR} config --get remote.origin.url)"
+
+# Always reset changes and get latest commit head
+git reset --hard origin/"$(git rev-parse --abbrev-ref HEAD)";
+lolz_commit="$(git rev-parse HEAD)";
 
 # create the outdir
 mkdir $BUILD_DIR 
@@ -103,8 +110,12 @@ fi
   else
     echo -e "  LOLZ Kernel Not Compiled!!"
     echo -e "  Fix Your Derp First!! Aborting..."
-# Send a notificaton to TG
-tg_post_msg "<b>🤬LOLZ Kernel Not Compiled. Aborting🤬</b>" 
+# Upload to telegram with more info
+curl -F "document=@${LDIR}/error.log" --form-string "caption=<b>LOLZ Kernel NOT Compiled</b>
+<b>LOLZ Commits: ${KERN_REPO}/commits/${lolz_commit}</b>
+<b>TimeZone: <code>GMT+8 (timezone)</code></b>
+<b>Date: <code>$(date '+%B %d, %Y.') </code></b>
+<b>Time: <code>$(date +'%r')</code></b>" "https://api.telegram.org/bot${TG_BOT_TOKEN}/sendDocument?chat_id=-1001222358827&parse_mode=html"
     exit
   fi
 
@@ -131,19 +142,45 @@ tg_post_msg "<b>🤬LOLZ Kernel Not Compiled. Aborting🤬</b>"
      echo -e "LOLZ Kernel Installer zipped Successfully"
     else
      echo -e "Zipping LOLZ Kernel Installer Failed!"
-# Send a notificaton to TG
-tg_post_msg "<b>😡LOLZ Kernel Not Zipped. Aborting 😡</b>" 
+     # Send a notificaton to TG
+     tg_post_msg "<b>LOLZ Kernel Not Zipped. Aborting</b>"
      exit
     fi;
 
-curl -F "document=@$ANYKERNEL_DIR/$KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.zip" --form-string "caption=<b>LOLZ Kernel Build Compiled&#33 </b>
-<b>Build Variant: <code>💂‍♂️($KERNEL_VARIANT)💂‍♂️</code></b>
-<b>Build Version: <code>🎉v17-Test🎉</code></b>
+LHASH="$(md5sum $ANYKERNEL_DIR/$KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.zip | sed -r 's:\\*([^ ]*).*:\1:')"
+
+# Upload to telegram with more info
+curl -F "document=@$ANYKERNEL_DIR/$KERNEL_NAME-V$KERNEL_VERSION-$KERNEL_VARIANT.zip" --form-string "caption=<b>V${LOLZ_VERSION} Kernel Build Compiled&#33 </b>
+<b>MD5 Hash: <code>${LHASH}</code></b>
+<b>Build Version: <code>$KERNEL_VERSION</code></b>
+<b>Build Status: <code>Test Build</code></b>
+<b>Device Variant: <code>($KERNEL_VARIANT)</code></b>
+<b>TimeZone: <code>GMT+8 (timezone)</code></b>
 <b>Date: <code>$(date '+%B %d, %Y.') </code></b>
-<b>Time: <code>$(date +'%r')</code></b>" "https://api.telegram.org/bot$TG_BOT_TOKEN/sendDocument?chat_id=-1001222358827&parse_mode=html"
+<b>Time: <code>$(date +'%r')</code></b>" "https://api.telegram.org/bot${TG_BOT_TOKEN}/sendDocument?chat_id=-1001222358827&parse_mode=html"
+
+cd $BUILD_DIR
+
+# Rename before zipping
+mv ${BUILD_DIR}/.config ${BUILD_DIR}/${lolz_commit}_config.txt
+
+# Zip .config
+zip -r9 config.zip ${BUILD_DIR}/${lolz_commit}_config.txt
+zip -r9 debugkernel.zip ${BUILD_DIR}/vmlinux ${BUILD_DIR}/System.map
+
+# upload to other site just incase
+curl https://up.sb -T debugkernel.zip > debugl.txt
+
+MR_LINK="$(cat debugl.txt)"
+
+# upload config to telegram while vmlinux and system.map on mirror site
+curl -F "document=@${BUILD_DIR}/config.zip" --form-string "caption=<b>Files for Debugging Purposes(Ignore This)</b>
+<b>MD5 Hash: <code>${LHASH}</code></b>
+<b>Debug Files: ${MR_LINK}</b>
+<b>LOLZ Commits: ${KERN_REPO}/commits/${lolz_commit}</b>" "https://api.telegram.org/bot${TG_BOT_TOKEN}/sendDocument?chat_id=-1001222358827&parse_mode=html"
 
 # Send a notificaton to TG
-tg_post_msg "<b>🥳LOLZ KERNEL Compilation Completed ($KERNEL_VARIANT)🥳</b>" 
+tg_post_msg "<b>LOLZ KERNEL Compilation Completed ($KERNEL_VARIANT)</b>"
 
 rm -rf $ANYKERNEL_DIR/*.zip
 rm -rf $ANYKERNEL_DIR/zImage
