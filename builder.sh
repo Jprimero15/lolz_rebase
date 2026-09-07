@@ -60,17 +60,6 @@ KERNEL_IMAGE="$BUILD_DIR/arch/arm/boot/zImage"
 DT="$BUILD_DIR/arch/arm/boot/dt.img"
 ANYKERNEL_DIR="$LDIR/lolz_anykernel"
 
-# CLANG or GCC??
-if [[ -z ${IS_GCC} ]]; then
-    # Lets use CLANG
-    CLANG_DIR="${LDIR}/clang_tc"
-    PATH="${CLANG_DIR}/bin:${PATH}"
-    export LD_LIBRARY_PATH="${CLANG_DIR}/lib:${LD_LIBRARY_PATH}"
-else
-    # Lets use GCC
-    GCC_DIR="$LDIR/gcc_tc/bin/arm-eabi-"
-fi
-
 export KBUILD_BUILD_USER="Jprimero15"
 
 # ***** ***** ***** ***** ***THE END*** ***** ***** ***** ***** #
@@ -86,6 +75,11 @@ KERN_REPO="$(git -C ${LDIR} config --get remote.origin.url)"
 git reset --hard origin/"$(git rev-parse --abbrev-ref HEAD)";
 lolz_commit="$(git rev-parse HEAD)";
 
+# Check tools version
+clang --version
+ld.lld --version
+arm-none-eabi-ld --version
+
 # create the outdir
 mkdir $BUILD_DIR 
 
@@ -99,7 +93,7 @@ if [[ -z ${IS_GCC} ]]; then
     make -j$(nproc --all) O=$BUILD_DIR \
         ARCH=arm \
         CC=clang \
-        CROSS_COMPILE=arm-linux-gnueabi- 2>&1 | tee "$TMP_LOG"
+        CROSS_COMPILE=arm-none-eabi- 2>&1 | tee "$TMP_LOG"
 
     status=${PIPESTATUS[0]}
 
@@ -110,7 +104,7 @@ if [[ -z ${IS_GCC} ]]; then
     fi
 
 else
-    CROSS_COMPILE=$GCC_DIR
+    CROSS_COMPILE=arm-none-eabi-
     TMP_LOG=$(mktemp)
 
     make -j$(nproc --all) O=$BUILD_DIR 2>&1 | tee "$TMP_LOG"
